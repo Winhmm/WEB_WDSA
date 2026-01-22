@@ -1,0 +1,151 @@
+<!DOCTYPE html> <!-- Loại tài liệu được viết bằng HTML -->
+<html lang="en"> <!-- Có nhiệm vụ đóng gói tất cả những gì của HTML -->
+<head> <!-- Không thấy được trên trình duyệt -->
+    <meta charset="UTF-8">
+    <meta name="keywords" content="WDSA, Data Structures, Algorithms, C++, Programming">
+    <meta name="description" content="Master Data Structures and Algorithms with C++ at WDSA - Your path to competitive programming excellence.">
+    <meta name="author" content="Winhmm">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDSA | Master DSA & Programming</title> <!-- Tiêu đề trên tab cho web -->
+    <link rel="stylesheet" href="Homepage.css">
+</head>
+
+
+<body> <!-- Tất cả những gì hiển thị trong web đều nằm ở body -->
+    <header> <!-- Header dùng để làm phần top của trang web -->
+        <nav class="navbar"> <!-- Chứa các liên kết để di chuyển giữa các trang, CSS sẽ dùng .navbar làm đẹp thông qua class -->
+            <div class="container"> <!-- <div> là cái hộp để bọc lại, .container tí sẽ được CSS điều chỉnh thông qua class -->
+                <div class="nav-wrapper">
+                    <div class="logo"> <!-- Bọc logo -->
+                        <img> <!---->                    
+                    </div>
+
+                    <ul class="nav-menu"> <!-- Danh sách không thứ tự, có <li> là các item -->
+                        <li><a href="#home">Home</a></li> <!-- Là item trong <ul>, <li> phải đứng trong <ul> -->
+                        <li><a href="#about">About Us</a></li>
+                        
+                        <li class="dropdown">
+                            <a href="#courses" class="dropdown-toggle">Curriculum</a> <!-- <a> dùng để ấn vào chuyển sang trang web khác -->
+                            <ul class="dropdown-menu">
+                                <li><a href="#dsa-course">Data Structures & Algorithms</a></li>
+                                <li><a href="#cpp-fundamentals">C++ Fundamentals</a></li>
+                                <li><a href="#java-oop">Java OOP Mastery</a></li>
+                                <li><a href="#db-systems">Database Systems</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"> <!-- Định dạng vị trí trên thanh menu ngang (như cái ví) -->
+                            <a href="#contests" class="dropdown-toggle">Competitive Hub</a> <!-- Cho biết rằng bên trong mục này chứa nhiều mục con -->
+                            <ul class="dropdown-menu"> <!-- Cho xem các item bên trong (tiền) -->
+                                <li><a href="#Leetcode">LeetCode Challenges</a></li>
+                                <li><a href="#GFG">GeeksforGeeks Contests</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#blog" class="dropdown-toggle">Insights</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#DSA">Algorithm Tips</a></li>
+                                <li><a href="#Java">Java Development</a></li>
+                                <li><a href="#Database">DB Architecture</a></li>
+                            </ul>
+                        </li>
+
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#community">Conmmunity</a></li>
+                    </ul>
+
+                    <div class="auth-buttons">
+                        <a href="#login" class="btn btn-login">Sign In</a>
+                        <a href="#register" class="btn btn-register">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <section class="hero" id="home">
+        <div class="container">
+
+            <div class="hero-lang-switch">
+                <a href="#" class="lang-item active">EN</a>
+                <span class="sep">|</span>
+                <a href="#" class="lang-item">VN</a>
+
+            </div>
+            <div class="hero-content">
+                <h1>Programming Sharing</h1>
+
+                <div class="teachers-containers">
+                    <div class="teacher-card">
+                        <div class="teacher-image">
+                            <img src="Picture\PSX_20260122_003317.jpg" alt="Mentor Nguyễn Thanh Phong">
+                        </div>
+                        <div class="teacher-badge">
+                            <span class="badge-text">1 Year DSA Mentor</span>
+                        </div>
+                        <h3>Nguyễn Thanh Phong</h3>
+                        <p>Student at Ho Chi Minh City University of Education</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+   <section class="info-banner" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose WDSA?</h2>
+                <div class="title-decoration-shape"></div>
+            </div>
+
+            <div class="features-grid">
+                
+                <div class="feature-card card-blue">
+                    <div class="card-icon">
+                        <img src="Gif\success.gif" alt="Certificate Icon" width="60">
+                    </div>
+                    <h3>Comprehensive Curriculum</h3>
+                    <p>
+                        Through a structured curriculum, we move beyond theory to apply these concepts in practical, project-based scenarios. You will learn to analyze algorithmic efficiency and optimize memory usage, which are critical skills for high-performance computing. Our step-by-step approach ensures that you master the logic behind the code, rather than just memorizing syntax. We also provide code reviews and best-practice guidelines to refine your programming style in both C++ and Java. Ultimately, you will emerge with a diverse toolkit capable of tackling any software development challenge.
+                    </p>
+                </div>
+
+                <div class="feature-card card-beige">
+                    <div class="card-icon">
+                        <img src="Gif\workspace.gif" alt="Certificate Icon" width="60">
+                    </div>
+                    <h3>Practical Coding</h3>
+                    <p>
+                        Our approach simulates the environment of actual technical interviews, teaching you how to articulate your thought process clearly while coding. You will gain exposure to frequently asked questions from major tech companies, giving you a competitive edge in the recruitment process. Beyond just finding the correct solution, we emphasize writing clean, maintainable, and production-ready code. We also provide detailed code reviews to help you debug logic errors and refine your implementation style. By the end of this module, you will approach competitive exams and whiteboard interviews with total confidence.
+                    </p>
+                </div>
+
+                <div class="feature-card card-pink">
+                    <div class="card-icon">
+                        <img src="Gif\training.gif" alt="Certificate Icon" width="60">
+                    </div>
+                    <h3>Expert Mentorship</h3>
+                    <p>
+                        Being part of a high-achieving peer group pushes you to elevate your own coding standards and consistency. You will engage in deep technical discussions that mimic the rigorous code review processes found in major tech companies. Mentor Nguyen Thanh Phong provides the strategic oversight needed to navigate complex topics, ensuring you understand not just the how, but the why behind every algorithm. This direct access allows you to learn from the successes and mistakes of others, significantly refining your debugging skills. Ultimately, you are building a professional network that will support your career development long after the course ends.
+                    </p>
+                </div>
+
+            </div>
+            
+            <div class="cta-container">
+                <a href="#register" class="btn btn-primary">Join Our Community Now</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    
+
+</body>
+
+</html>
