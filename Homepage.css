@@ -377,7 +377,7 @@ header {
 
 .lang-item {
     font-size: 13px;
-    font-weight: 500;
+    font-weight: bold;
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     transition: all 0.3s;
@@ -390,7 +390,7 @@ header {
 
 .lang-item.active {
     color: #fff;
-    font-weight: 800;
+    font-weight: bold;
 }
 
 .hero-lang-switch:hover {
