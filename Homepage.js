@@ -198,10 +198,18 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll(".feature-card, .teacher-card, .section-header").forEach(el => {
-    el.classList.add("reveal");
+
+// Chọn tất cả các phần tử cần hiệu ứng
+const animatedElements = document.querySelectorAll(".feature-card, .teacher-card, .section-header");
+
+animatedElements.forEach(el => {
+    // Đảm bảo class reveal luôn có (phòng trường hợp quên thêm ở HTML)
+    el.classList.add("reveal"); 
+    
+    // Bắt đầu theo dõi
     observer.observe(el);
 });
+
 
 // Hiệu ứng Parallax: Icon di chuyển ngược hướng chuột
 document.addEventListener("mousemove", (e) => {
