@@ -96,6 +96,21 @@ header {
     z-index: 1000; /* đảm bảo khi cuộn web header vẫn nằm trên cùng */
 }
 
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.85); /* Màu trắng trong suốt */
+    backdrop-filter: blur(12px); /* Làm mờ nội dung đằng sau */
+    -webkit-backdrop-filter: blur(12px); /* Hỗ trợ Safari */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Viền mỏng tinh tế */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); /* Bóng đổ nhẹ hơn */
+}
+
+.dropdown-toggle::after {
+    content: ' ▾';
+    font-size: 10px;
+    vertical-align: middle;
+    opacity: 0.6;
+}
+
 .navbar { 
     padding: 15px 0; /* Logo và các chữ menu không dính sát vào nhau */
 }
@@ -362,6 +377,17 @@ header {
     box-shadow: 0px 20px 50px rgba(45, 122, 78, 0.2);
 }
 
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 2.5s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .teacher-image {
     position: relative;
     z-index: 1;
@@ -556,6 +582,45 @@ header {
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
+/* --- TRẠNG THÁI BAN ĐẦU (KHI CHƯA HIỆN) --- */
+.feature-card.reveal {
+    opacity: 0;
+    /* Dịch xuống dưới 50px và thu nhỏ nhẹ 0.9 để tạo hiệu ứng 'nở' ra */
+    transform: translateY(50px) scale(0.95);
+    
+    /* Thời gian chuyển động 1s, dùng cubic-bezier để mượt (nhanh đầu, chậm đuôi) */
+    transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- TRẠNG THÁI KHI ĐÃ HIỆN (ACTIVE) --- */
+.feature-card.reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* --- HIỆU ỨNG DELAY (XUẤT HIỆN LẦN LƯỢT) --- */
+/* Thẻ thứ 1: Hiện ngay lập tức */
+.feature-card:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+/* Thẻ thứ 2: Chậm hơn 0.2s */
+.feature-card:nth-child(2) {
+    transition-delay: 0.3s;
+}
+
+/* Thẻ thứ 3: Chậm hơn 0.4s */
+.feature-card:nth-child(3) {
+    transition-delay: 0.5s;
+}
+
+/* --- TĂNG CƯỜNG HIỆU ỨNG HOVER (RÊ CHUỘT) --- */
+/* Khi rê chuột vào, thẻ nổi lên cao hơn và bóng đổ đậm hơn */
+.feature-card:hover {
+    transform: translateY(-15px) !important; /* Dùng !important để ghi đè transform cũ */
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15); /* Bóng đổ mềm và sâu hơn */
+}
+
 .card-blue {
     background-color: #E0F2F1;
 }
@@ -694,7 +759,7 @@ header {
 .slider-track {
     display: flex;
     transition: transform 1s ease-in-out; /* Hiệu ứng trượt mượt */
-    width: 100%;
+    align-items: stretch;
 }
 
 .testimonial-card {
@@ -967,11 +1032,12 @@ header {
     font-weight: bold;
     font-family: inherit;
     min-width: 200px;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .mad-lib-form select option {
-    background-color: white; /* Nền trắng cho danh sách xổ xuống */
-    color: black;            /* Chữ màu đen dễ đọc */
+    background-color: #2d7a4e; /* Nền trắng cho danh sách xổ xuống */
+    color: white;            /* Chữ màu đen dễ đọc */
     font-size: 16px;
     padding: 10px;
 }
@@ -983,13 +1049,20 @@ header {
 
 .mad-lib-form input:focus,
 .mad-lib-form select:focus {
-    border-bottom-color: #fff;
-    background: rgba(255, 255, 255, 0.1);
+    border-bottom-color: #FDE2E4; /* Đổi màu gạch chân sang màu hồng nhạt hoặc màu nổi bật */
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
 }
 
 .mad-lib-form select {
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.7);
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+    padding-right: 30px;
+    appearance: none; /* Xóa style mặc định của trình duyệt */
+    -webkit-appearance: none;
 }
 
 .mad-lib-form input:-webkit-autofill,

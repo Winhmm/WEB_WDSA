@@ -184,3 +184,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("✅ WDSA Website loaded successfully!");
 });
+
+window.addEventListener("scroll", function() {
+    const header = document.querySelector("header");
+    header.classList.toggle("scrolled", window.scrollY > 50);
+});
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll(".feature-card, .teacher-card, .section-header").forEach(el => {
+    el.classList.add("reveal");
+    observer.observe(el);
+});
+
+// Hiệu ứng Parallax: Icon di chuyển ngược hướng chuột
+document.addEventListener("mousemove", (e) => {
+    const icons = document.querySelectorAll(".float-icon");
+    // Lấy tọa độ chuột
+    const x = (window.innerWidth - e.pageX * 2) / 100;
+    const y = (window.innerHeight - e.pageY * 2) / 100;
+
+    icons.forEach((icon, index) => {
+        // Mỗi icon di chuyển với tốc độ khác nhau dựa trên index
+        const speed = (index + 1) * 0.5;
+        // Sử dụng translate để di chuyển
+        icon.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
+    });
+});
