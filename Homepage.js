@@ -224,4 +224,31 @@ document.addEventListener("mousemove", (e) => {
         // Sử dụng translate để di chuyển
         icon.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
     });
+
+   // ==========================================
+    // VIEW MODE SWITCHER (MOBILE <-> PC)
+    // ==========================================
+    const viewSwitcher = document.getElementById('viewSwitcher');
+    
+    if (viewSwitcher) {
+        viewSwitcher.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const currentPath = window.location.pathname;
+            // Kiểm tra xem đang ở file nào (đơn giản hơn)
+            const isMobilePage = currentPath.includes('mobile.html');
+
+            // Lưu trạng thái vào bộ nhớ
+            if (isMobilePage) {
+                localStorage.setItem('prefer_mode', 'pc');
+                // XÓA DÒNG ALERT Ở ĐÂY -> Chuyển hướng luôn
+                window.location.href = 'index.html';
+            } else {
+                localStorage.setItem('prefer_mode', 'mobile');
+                // XÓA DÒNG ALERT Ở ĐÂY -> Chuyển hướng luôn
+                window.location.href = 'mobile.html';
+            }
+        });
+    }
 });
+

@@ -5,7 +5,7 @@
     <meta name="keywords" content="WDSA, Data Structures, Algorithms, C++, Programming">
     <meta name="description" content="Master Data Structures and Algorithms with C++ at WDSA - Your path to competitive programming excellence.">
     <meta name="author" content="Winhmm">
-    <meta name="viewport" content="width=1280, initial-scale=0.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WDSA | Master DSA & Programming</title> <!-- Tiêu đề trên tab cho web -->
     <link rel="stylesheet" href="Homepage.css">
 </head>
@@ -16,47 +16,32 @@
         <nav class="navbar"> <!-- Chứa các liên kết để di chuyển giữa các trang, CSS sẽ dùng .navbar làm đẹp thông qua class -->
             <div class="container"> <!-- <div> là cái hộp để bọc lại, .container tí sẽ được CSS điều chỉnh thông qua class -->
                 <div class="nav-wrapper">
-                    <div class="logo"> <!-- Bọc logo -->
-                        <!-- <img src="logo.png" alt="WDSA Logo"> -->
+                    <div class="menu-toggle" id="mobile-menu">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
                     </div>
 
-                    <ul class="nav-menu"> <!-- Danh sách không thứ tự, có <li> là các item -->
-                        <li><a href="#home">Home</a></li> <!-- Là item trong <ul>, <li> phải đứng trong <ul> -->
+                    <ul class="nav-menu">
+                        <li><a href="#home">Home</a></li>
                         <li><a href="#about">About Us</a></li>
                         
                         <li class="dropdown">
-                            <a href="#courses" class="dropdown-toggle">Curriculum</a> <!-- <a> dùng để ấn vào chuyển sang trang web khác -->
+                            <a href="#courses" class="dropdown-toggle">Curriculum</a>
                             <ul class="dropdown-menu">
-                                <li><a href="#dsa-course">Data Structures & Algorithms</a></li>
+                                <li><a href="#dsa-course">Data Structures</a></li>
                                 <li><a href="#cpp-fundamentals">C++ Fundamentals</a></li>
-                                <li><a href="#java-oop">Java OOP Mastery</a></li>
-                                <li><a href="#db-systems">Database Systems</a></li>
                             </ul>
                         </li>
-
-                        <li class="dropdown"> <!-- Định dạng vị trí trên thanh menu ngang (như cái ví) -->
-                            <a href="#contests" class="dropdown-toggle">Competitive Hub</a> <!-- Cho biết rằng bên trong mục này chứa nhiều mục con -->
-                            <ul class="dropdown-menu"> <!-- Cho xem các item bên trong (tiền) -->
-                                <li><a href="#Leetcode">LeetCode Challenges</a></li>
-                                <li><a href="#GFG">GeeksforGeeks Contests</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#blog" class="dropdown-toggle">Insights</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#DSA">Algorithm Tips</a></li>
-                                <li><a href="#Java">Java Development</a></li>
-                                <li><a href="#Database">DB Architecture</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a href="#resources">Resources</a></li>
                         <li><a href="#contact">Contact</a></li>
-                        <li><a href="#community">Community</a></li>
+
+                        <li class="mobile-auth">
+                            <a href="#login" class="btn btn-login">Sign In</a>
+                            <a href="#register" class="btn btn-register">Get Started</a>
+                        </li>
                     </ul>
 
-                    <div class="auth-buttons">
+                    <div class="auth-buttons desktop-auth">
                         <a href="#login" class="btn btn-login">Sign In</a>
                         <a href="#register" class="btn btn-register">Get Started</a>
                     </div>
@@ -77,7 +62,7 @@
             </div>
 
             <div class="hero-lang-switch" id="viewSwitcher" style="cursor: pointer;">
-                <span class="lang-item active">Mobile View</span>
+                <span class="lang-item active">PC View</span>
             </div>
 
             <div class="hero-content">
@@ -381,25 +366,13 @@
 
     <script src="Homepage.js" defer></script>
     <script>
-        // KIỂM TRA ĐIỀU HƯỚNG TỰ ĐỘNG
-        (function() {
-            // Kiểm tra xem thiết bị có phải là điện thoại không
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            // Kiểm tra xem người dùng có từng chọn "Thích xem bản PC" không
-            const preferPC = localStorage.getItem('prefer_mode') === 'pc';
-
-            // Nếu là điện thoại VÀ chưa từng chọn xem bản PC -> Đẩy sang mobile.html
-            if (isMobile && !preferPC) {
-                window.location.href = 'mobile.html';
-            }
-
-            // Xử lý nút bấm thủ công
-            document.getElementById('btnSwitchToMobile').addEventListener('click', function() {
-                localStorage.setItem('prefer_mode', 'mobile'); // Lưu lại sở thích
-                window.location.href = 'mobile.html';
-            });
-        })();
+        // Xử lý nút bấm thủ công
+        document.getElementById('btnSwitchToPC').addEventListener('click', function() {
+            // Lưu lại là người dùng muốn xem PC
+            localStorage.setItem('prefer_mode', 'pc'); 
+            // Chuyển hướng
+            window.location.href = 'index.html';
+        });
     </script>
 
 </body>
