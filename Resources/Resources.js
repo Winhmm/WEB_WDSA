@@ -8,69 +8,70 @@
 //    Thêm bài tập mới: push vào array problems của chương đó
 // ============================================
 
-const CHAPTERS = [
-    {
-        id: 1,
-        title: "Sorting & Searching",
-        problems: [
-            {
-                lcNumber: 704,
-                title: "Binary Search",
-                difficulty: "easy",
-                tags: ["Array", "Binary Search"],
-                lcUrl: "https://leetcode.com/problems/binary-search/",
-                description: `Write a C++ program to search for a <strong>target</strong> value in an ascending sorted array.<br><br>
-                <strong>Input:</strong> The first line contains an integer n (number of elements). The second line contains n integers (the sorted array). The third line contains the target value.<br><br>
-                <strong>Output:</strong> Print the index of the target in the array (0-indexed). If not found, print -1.<br><br>
-                <strong>Requirement:</strong> The algorithm must have a time complexity of <strong>O(log n)</strong> (using Binary Search).`,
-                examples: [
-                    { 
-                        input: "n = 6, arr[] = {-1, 0, 3, 5, 9, 12}, target = 9", 
-                        output: "4", 
-                        explain: "Explanation: The number 9 exists at index 4 in the array." 
-                    },
-                    { 
-                        input: "n = 6, arr[] = {-1, 0, 3, 5, 9, 12}, target = 2", 
-                        output: "-1", 
-                        explain: "Explanation: The number 2 does not exist in the array, so return -1." 
-                    }
-                ],
+// const CHAPTERS = [
+//     {
+//         id: 1,
+//         title: "Sorting & Searching",
+//         problems: [
+//             {
+//                 lcNumber: 704,
+//                 customId: 1,
+//                 title: "Binary Search",
+//                 difficulty: "easy",
+//                 tags: ["Array", "Binary Search"],
+//                 lcUrl: "https://leetcode.com/problems/binary-search/",
+//                 description: `Write a C++ program to search for a <strong>target</strong> value in an ascending sorted array.<br><br>
+//                 <strong>Input:</strong> The first line contains an integer n (number of elements). The second line contains n integers (the sorted array). The third line contains the target value.<br><br>
+//                 <strong>Output:</strong> Print the index of the target in the array (0-indexed). If not found, print -1.<br><br>
+//                 <strong>Requirement:</strong> The algorithm must have a time complexity of <strong>O(log n)</strong> (using Binary Search).`,
+//                 examples: [
+//                     { 
+//                         input: "n = 6, arr[] = {-1, 0, 3, 5, 9, 12}, target = 9", 
+//                         output: "4", 
+//                         explain: "Explanation: The number 9 exists at index 4 in the array." 
+//                     },
+//                     { 
+//                         input: "n = 6, arr[] = {-1, 0, 3, 5, 9, 12}, target = 2", 
+//                         output: "-1", 
+//                         explain: "Explanation: The number 2 does not exist in the array, so return -1." 
+//                     }
+//                 ],
 
-                timeComplexity: "O(log n)",
-                spaceComplexity: "O(1)",
+//                 timeComplexity: "O(log n)",
+//                 spaceComplexity: "O(1)",
 
-                // Test cases for code execution
-                testCases: [
-                    {
-                        input: "6\n-1 0 3 5 9 12\n9",
-                        expectedOutput: "4",
-                        description: "Test case 1"
-                    },
-                    {
-                        input: "6\n-1 0 3 5 9 12\n2",
-                        expectedOutput: "-1",
-                        description: "Test case 2"
-                    },
-                    {
-                        input: "1\n5\n5",
-                        expectedOutput: "0",
-                        description: "Test case 3"
-                    },
-                    {
-                        input: "10\n1 2 3 4 5 6 7 8 9 10\n10",
-                        expectedOutput: "9",
-                        description: "Test case 4"
-                    },
-                    {
-                        input: "5\n2 4 6 8 10\n1",
-                        expectedOutput: "-1",
-                        description: "Test case 5"
-                    }
-                ],
-            }
-        ]
-    }
-];
+//                 // Test cases for code execution
+//                 testCases: [
+//                     {
+//                         input: "6\n-1 0 3 5 9 12\n9",
+//                         expectedOutput: "4",
+//                         description: "Test case 1"
+//                     },
+//                     {
+//                         input: "6\n-1 0 3 5 9 12\n2",
+//                         expectedOutput: "-1",
+//                         description: "Test case 2"
+//                     },
+//                     {
+//                         input: "1\n5\n5",
+//                         expectedOutput: "0",
+//                         description: "Test case 3"
+//                     },
+//                     {
+//                         input: "10\n1 2 3 4 5 6 7 8 9 10\n10",
+//                         expectedOutput: "9",
+//                         description: "Test case 4"
+//                     },
+//                     {
+//                         input: "5\n2 4 6 8 10\n1",
+//                         expectedOutput: "-1",
+//                         description: "Test case 5"
+//                     }
+//                 ],
+//             }
+//         ]
+//     }
+// ];
 
 // ============================================
 // 2. STATE
@@ -138,7 +139,7 @@ function showProblemList(chapter) {
     grid.innerHTML = chapter.problems.map((p, idx) => `
         <div class="res-problem-card" onclick="openProblem(${idx})">
             <div class="res-pc-top">
-                <span class="res-pc-number">#${p.lcNumber}</span>
+                <span class="res-pc-number">#${p.customId || p.lcNumber}</span>
                 <span class="res-diff ${p.difficulty}">${p.difficulty}</span>
             </div>
             <div class="res-pc-title">${p.title}</div>
@@ -147,8 +148,7 @@ function showProblemList(chapter) {
             </div>
             <div class="res-pc-footer">
                 <span class="res-pc-lc">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    LeetCode #${p.lcNumber}
+                    Source: Internet
                 </span>
                 <span class="res-pc-open">View →</span>
             </div>
@@ -159,62 +159,16 @@ function showProblemList(chapter) {
 // ============================================
 // 6. OPEN PROBLEM DETAIL
 // ============================================
+// Trong Resources.js
+
+// Sửa hàm openProblem
 function openProblem(idx) {
+    // Lấy bài tập từ biến CHAPTERS (đã có nhờ Data.js)
     const problem = currentChapterProblems[idx];
     if (!problem) return;
-    selectedProblem = { ...problem, idx };
-
-    // hide list, show detail
-    document.getElementById('problemListView').style.display  = 'none';
-    document.getElementById('problemDetailView').style.display = 'block';
-
-    // fill data
-    document.getElementById('detailNumber').textContent  = '#' + problem.lcNumber;
-    document.getElementById('detailDiff').className      = 'res-diff ' + problem.difficulty;
-    document.getElementById('detailDiff').textContent    = problem.difficulty;
-    document.getElementById('detailLcLink').href         = problem.lcUrl;
-    document.getElementById('detailTitle').textContent   = problem.title;
-
-    document.getElementById('detailTags').innerHTML = problem.tags
-        .map(t => `<span class="res-detail-tag">${t}</span>`).join('');
-
-    document.getElementById('detailDesc').innerHTML = problem.description;
-
-    // examples
-    document.getElementById('detailExamples').innerHTML = problem.examples.map((ex, i) => `
-        <div class="res-example-box">
-            <div class="res-ex-label">Ví dụ ${i + 1}</div>
-            <div class="res-ex-row"><strong>Input:</strong>  <code>${escapeHtml(ex.input)}</code></div>
-            <div class="res-ex-row"><strong>Output:</strong> <code>${escapeHtml(ex.output)}</code></div>
-            ${ex.explain ? `<div class="res-ex-explain"> ${ex.explain}</div>` : ''}
-        </div>
-    `).join('');
-
-    // solution code
-    const codeEl = document.getElementById('detailCode');
-    codeEl.textContent = problem.solution;
-    // re-highlight (Prism)
-    if (window.Prism) Prism.highlightElement(codeEl);
-
-    // complexity
-    document.getElementById('detailTime').textContent  = problem.timeComplexity;
-    document.getElementById('detailSpace').textContent = problem.spaceComplexity;
-
-    // copy btn reset
-    const copyBtn = document.getElementById('copyBtn');
-    copyBtn.classList.remove('copied');
-    copyBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
-
-    // Initialize code editor with starter code
-    initializeCodeEditor();
     
-    // Render test cases
-    renderTestCases();
-
-    updateBreadcrumb();
-
-    // scroll to top of content
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Chuyển hướng sang trang Editor với ID bài tập
+    window.location.href = `Editor.html?id=${problem.lcNumber}`;
 }
 
 // ============================================
