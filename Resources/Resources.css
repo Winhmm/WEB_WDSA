@@ -1,10 +1,3 @@
-/* ================================================
-   RESOURCES PAGE — Resources.css
-   Mọi class đều có prefix "res-" để không conflict
-   với Homepage.css
-   ================================================ */
-
-/* ---------- HERO ---------- */
 .res-hero {
     background: linear-gradient(135deg, #1a472a 0%, #2d7a4e 60%, #3d9b6a 100%);
     padding: 72px 0 56px;
@@ -12,7 +5,6 @@
     overflow: hidden;
 }
 
-/* Vòng tròn trang trí mờ */
 .res-hero::before,
 .res-hero::after {
     content: '';
@@ -225,7 +217,6 @@
     text-transform: capitalize;
 }
 
-/* ---- Problem grid ---- */
 .res-problem-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -279,7 +270,6 @@
     border-radius: 8px;
 }
 
-/* difficulty badges */
 .res-diff {
     font-size: 11px;
     font-weight: 700;
@@ -332,7 +322,6 @@
     font-weight: 700;
 }
 
-/* ---- Empty state ---- */
 .res-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -342,7 +331,6 @@
 .res-empty svg { margin: 0 auto 16px; display: block; }
 .res-empty p { font-size: 15px; }
 
-/* ---------- DETAIL VIEW ---------- */
 .res-back-btn {
     display: inline-flex;
     align-items: center;
@@ -418,7 +406,6 @@
     font-weight: 600;
 }
 
-/* ---- Detail sections ---- */
 .res-detail-section {
     background: #fff;
     border-radius: 18px;
@@ -438,7 +425,6 @@
 }
 .res-detail-section h3 svg { flex-shrink: 0; color: #2d7a4e; }
 
-/* Description prose */
 .res-detail-desc {
     font-size: 15px;
     color: #444;
@@ -446,7 +432,6 @@
 }
 .res-detail-desc strong { color: #1a472a; }
 
-/* Examples box */
 .res-examples { display: flex; flex-direction: column; gap: 12px; }
 .res-example-box {
     background: #f4f7f5;
@@ -482,7 +467,6 @@
     font-style: italic;
 }
 
-/* Copy button & code block */
 .res-copy-btn {
     margin-left: auto;
     display: inline-flex;
@@ -501,71 +485,67 @@
 .res-copy-btn:hover { background: #2d7a4e; color: #fff; }
 .res-copy-btn.copied { background: #dcfce7; color: #16a34a; }
 
-/* 1. Áp dụng font Inter cho toàn bộ website */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased; /* Giúp chữ mượt hơn trên Mac/iOS */
+    -webkit-font-smoothing: antialiased; 
 }
 
-/* 2. Cập nhật font tiêu đề cho mạnh mẽ hơn */
+
 h1, h2, h3, .res-hero-badge, .res-detail-title {
     font-family: 'Inter', sans-serif;
-    letter-spacing: -0.02em; /* Thu hẹp khoảng cách chữ một chút cho hiện đại */
+    letter-spacing: -0.02em; 
 }
 
-/* 3. Áp dụng font JetBrains Mono cho Code & các thẻ tag kỹ thuật */
+
 .res-code-block pre, 
 code, 
 .res-pc-number, 
 .res-detail-number,
 .res-complexity-val {
     font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-    font-variant-ligatures: none; /* Tắt nối chữ nếu không thích */
+    font-variant-ligatures: none; 
 }
 
 .res-code-block {
     position: relative;
     background: #011627;
-    border-radius: 10px; /* Bo góc nhỏ hơn xíu */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Giảm độ đổ bóng cho bớt nặng nề */
+    border-radius: 10px; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); 
     overflow: hidden;
     border: 1px solid #1d3b53;
     margin-top: 10px;
     max-width: 100%;
 }
 
-/* Tạo 3 dấu chấm (Red, Yellow, Green) giả lập nút window */
+
 .res-code-block::before {
     content: '';
     position: absolute;
-    top: 14px; /* Dịch lên trên một chút */
+    top: 14px; 
     left: 15px;
-    width: 10px; /* Thu nhỏ size chấm */
+    width: 10px; 
     height: 10px;
     border-radius: 50%;
     background: #ff5f56;
-    box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f; /* Thu hẹp khoảng cách chấm */
+    box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f; 
     z-index: 10;
 }
 
-/* Tinh chỉnh nội dung code bên trong */
+
 .res-code-block pre {
     margin: 0;
-    padding: 42px 18px 18px 18px !important; /* Giảm padding (Top giảm từ 55px xuống 42px) */
+    padding: 42px 18px 18px 18px !important; 
     overflow-x: auto;
     font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-    font-size: 13px; /* Giảm size chữ xuống một chút */
-    line-height: 1.5; /* Khoảng cách dòng hẹp lại */
+    font-size: 13px; 
+    line-height: 1.5; 
     background: #011627 !important;
     color: #d6deeb;
-    max-height: 450px; /* Giới hạn chiều cao, nếu code dài quá sẽ tự scroll dọc */
+    max-height: 450px; 
 }
 
-/* .res-code-block code { font-size: 14px; } */
-
-/* Tùy chỉnh thanh cuộn (Scrollbar) cho giống editor xịn */
 .res-code-block pre::-webkit-scrollbar {
-    height: 8px; /* Thanh ngang mảnh */
+    height: 8px; 
 }
 
 .res-code-block pre::-webkit-scrollbar-track {
@@ -581,7 +561,6 @@ code,
     background: #7e9eb9;
 }
 
-/* Complexity box */
 .res-complexity-box {
     display: flex;
     gap: 16px;
@@ -606,20 +585,17 @@ code,
 }
 
 .res-complexity-val {
-    /* Đổi từ JetBrains Mono sang Inter/Sans-serif giống phần description */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     
-    /* Chỉnh size chữ và độ đậm giống với .res-detail-desc */
     font-size: 19px; 
-    font-weight: 800; /* Không để quá đậm nếu muốn giống hệt văn bản */
-    color: #444;      /* Màu xám tối của phần nội dung mô tả */
+    font-weight: 800; 
+    color: #444;      
     
-    /* Reset các thuộc tính khác có thể gây khác biệt */
+   
     letter-spacing: normal;
     text-transform: none;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .res-layout { flex-direction: column; }
     .res-sidebar {
@@ -655,9 +631,7 @@ code,
     .res-ch-icon { width: 28px; height: 28px; font-size: 14px; }
 }
 
-/* ================================================
-   SUBMIT CODE SECTION
-   ================================================ */
+
 
 .res-submit-section {
     background: #fff;
@@ -667,46 +641,46 @@ code,
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
-/* Code Editor Wrapper */
+
 .res-code-editor-wrapper {
-    background: #011627; /* Màu nền xanh đậm Night Owl */
-    border-radius: 12px; /* Bo góc mềm mại */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Bóng đổ lớn, sâu giống hình */
+    background: #011627; 
+    border-radius: 12px; 
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); 
     margin-top: 20px;
-    border: 1px solid #1d3b53; /* Viền mỏng để tách biệt với nền */
+    border: 1px solid #1d3b53; 
     overflow: hidden;
     position: relative;
-    font-family: 'JetBrains Mono', monospace; /* Đảm bảo font code xịn */
+    font-family: 'JetBrains Mono', monospace; 
 }
 
 .res-editor-header {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Đẩy các nút chức năng sang phải */
+    justify-content: flex-end; 
     padding: 14px 20px;
-    background: #011627; /* Cùng màu nền để tạo cảm giác liền mạch */
-    border-bottom: none; /* Bỏ gạch chân để giống hình */
+    background: #011627; 
+    border-bottom: none; 
     position: relative;
 }
 
 .res-editor-header::before {
     content: '';
     position: absolute;
-    left: 20px; /* Căn trái */
+    left: 20px; 
     top: 50%;
     transform: translateY(-50%);
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #ff5f56; /* Chấm đỏ */
+    background: #ff5f56; 
     box-shadow: 
-        20px 0 0 #ffbd2e, /* Chấm vàng (cách đỏ 20px) */
-        40px 0 0 #27c93f; /* Chấm xanh (cách đỏ 40px) */
+        20px 0 0 #ffbd2e, 
+        40px 0 0 #27c93f; 
 }
 
 .res-lang-select {
     background: rgba(255, 255, 255, 0.05);
-    color: #ffffff; /* Màu xanh nhạt dễ đọc */
+    color: #ffffff; 
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     padding: 6px 12px;
@@ -714,7 +688,7 @@ code,
     font-family: 'JetBrains Mono', monospace;
     cursor: pointer;
     outline: none;
-    margin-right: 10px; /* Cách nút Reset ra */
+    margin-right: 10px; 
     transition: all 0.2s;
 }
 
@@ -728,7 +702,7 @@ code,
     align-items: center;
     gap: 6px;
     background: transparent;
-    color: #ffffff; /* Màu chữ xám mờ */
+    color: #ffffff; 
     border: 1px solid transparent;
     border-radius: 6px;
     padding: 6px 10px;
@@ -739,32 +713,30 @@ code,
 }
 
 .res-reset-code-btn:hover {
-    background: rgba(255, 59, 48, 0.1); /* Hover đỏ nhạt */
+    background: rgba(255, 59, 48, 0.1); 
     color: #ff5f56;
 }
 
 .res-code-editor {
     width: 100%;
     min-height: 400px;
-    background: #011627; /* Nền xanh đậm trùng wrapper */
-    color: #d6deeb; /* Màu chữ sáng dịu mắt */
+    background: #011627; 
+    color: #d6deeb; 
     border: none;
-    padding: 10px 25px 30px 25px; /* Padding rộng rãi giống hình */
+    padding: 10px 25px 30px 25px; 
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 14px;
     line-height: 1.6;
     resize: vertical;
     outline: none;
     tab-size: 4;
-    caret-color: #82aaff; /* Màu con trỏ nhấp nháy */
+    caret-color: #82aaff; 
 }
 
-/* Placeholder màu tối hơn chút */
 .res-code-editor::placeholder {
     color: #5f7e97;
 }
 
-/* Scrollbar đẹp cho vùng code */
 .res-code-editor::-webkit-scrollbar {
     width: 10px;
 }
@@ -1095,35 +1067,28 @@ code,
     }
 }
 
+/* Thêm vào cuối file Resources.css */
 
-/* Tùy chỉnh CodeMirror để khớp với giao diện */
-.CodeMirror {
-    height: 400px !important; /* Chiều cao cố định */
-    font-family: 'JetBrains Mono', 'Fira Code', monospace; /* Font xịn */
-    font-size: 14px;
-    background-color: #011627 !important; /* Màu nền trùng với theme */
-    color: #d6deeb !important;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+.res-sidebar-history-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: #fff7ed; /* Màu nền cam nhạt */
+    color: #d97706;      /* Chữ màu cam đậm */
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid #fed7aa;
+    transition: all 0.2s ease;
 }
 
-/* Chỉnh màu theme Dracula cho khớp Night Owl (nếu muốn) */
-.cm-s-dracula.CodeMirror {
-    background-color: #011627 !important; /* Xanh đậm */
-    color: #f8f8f2;
+.res-sidebar-history-btn:hover {
+    background: #ffedd5;
+    color: #c2410c;
+    padding-left: 26px; /* Hiệu ứng đẩy sang phải nhẹ khi hover */
 }
 
-/* Thanh cuộn đẹp */
-.CodeMirror-scroll::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+.res-sidebar-history-btn svg {
+    flex-shrink: 0;
 }
-.CodeMirror-scroll::-webkit-scrollbar-track {
-    background: #011627;
-}
-.CodeMirror-scroll::-webkit-scrollbar-thumb {
-    background: #5f7e97;
-    border-radius: 4px;
-}
-
-

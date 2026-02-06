@@ -2,7 +2,6 @@ let editorInstance = null;
 let currentProblem = null;
 let isSubmitting = false;
 
-// Default template constant
 const DEFAULT_TEMPLATE = `// Write your C++ code here...
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,12 +16,9 @@ int main() {
     
 }`;
 
-// ==========================================
-// 1. INIT WITH ERROR HANDLING
-// ==========================================
+
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        // Validate CHAPTERS data
         if (typeof CHAPTERS === 'undefined' || !Array.isArray(CHAPTERS)) {
             throw new Error('CHAPTERS data not loaded properly');
         }
@@ -51,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         loadSavedCode();
         
-        // Auto-save code every 5 seconds (increased from 3 to reduce storage writes)
         setInterval(saveCodeToStorage, 5000);
     } catch (error) {
         console.error('Initialization error:', error);
@@ -59,9 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ==========================================
-// 2. RENDER UI WITH SANITIZATION
-// ==========================================
+
 function renderProblemUI() {
     const displayNum = currentProblem.customId || currentProblem.lcNumber;
     document.getElementById('pTitle').textContent = `${displayNum}. ${currentProblem.title}`;
@@ -70,10 +63,10 @@ function renderProblemUI() {
     diffEl.textContent = currentProblem.difficulty;
     diffEl.className = `badge ${currentProblem.difficulty.toLowerCase()}`;
     
-    // Safely set HTML content
+
     document.getElementById('pDesc').innerHTML = currentProblem.description;
     
-    // Render examples with proper escaping
+
     document.getElementById('pExamples').innerHTML = currentProblem.examples.map((ex, i) => `
         <div class="example-box">
             <strong>Example ${i + 1}:</strong><br>
@@ -91,9 +84,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ==========================================
-// 3. RESIZABLE PANES WITH TOUCH SUPPORT
-// ==========================================
+
 function initResizablePanes() {
     const divider = document.getElementById('divider');
     const leftPane = document.querySelector('.problem-pane');
@@ -107,10 +98,9 @@ function initResizablePanes() {
     
     let isResizing = false;
     
-    // Mouse events
     divider.addEventListener('mousedown', startResize);
     
-    // Touch events for mobile
+
     divider.addEventListener('touchstart', startResize);
     
     function startResize(e) {
@@ -128,13 +118,11 @@ function initResizablePanes() {
         const workspaceRect = workspace.getBoundingClientRect();
         const offsetX = clientX - workspaceRect.left;
         const percentage = (offsetX / workspaceRect.width) * 100;
-        
-        // Limit between 25% and 75%
+
         if (percentage >= 25 && percentage <= 75) {
             leftPane.style.width = `${percentage}%`;
             rightPane.style.width = `${100 - percentage}%`;
-            
-            // Trigger Monaco resize
+
             if (editorInstance) {
                 editorInstance.layout();
             }
@@ -156,11 +144,9 @@ function initResizablePanes() {
     document.addEventListener('touchend', stopResize);
 }
 
-// ==========================================
-// 4. MONACO SETUP WITH ERROR HANDLING
-// ==========================================
+
 function initMonaco() {
-    // Check if Monaco is available
+
     if (typeof require === 'undefined') {
         showNotification("Editor failed to load. Please refresh the page.", "error");
         console.error('Monaco loader not available');
@@ -187,7 +173,7 @@ function initMonaco() {
                 fontSize: 15,
                 padding: { top: 12, bottom: 12 },
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                minimap: { enabled: window.innerWidth > 768 }, // Disable minimap on mobile
+                minimap: { enabled: window.innerWidth > 768 }, 
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
                 lineNumbers: 'on',
@@ -203,16 +189,14 @@ function initMonaco() {
                 bracketPairColorization: { enabled: true },
                 formatOnPaste: true,
                 formatOnType: true,
-                wordWrap: window.innerWidth <= 768 ? 'on' : 'off' // Enable word wrap on mobile
+                wordWrap: window.innerWidth <= 768 ? 'on' : 'off' 
             });
             
-            // Load saved code after editor is ready
             const savedCode = getSavedCode();
             if (savedCode) {
                 editorInstance.setValue(savedCode);
             }
 
-            // Handle window resize
             window.addEventListener('resize', () => {
                 if (editorInstance) {
                     editorInstance.layout();
@@ -242,15 +226,13 @@ function resetToTemplate() {
     }
 }
 
-// ==========================================
-// 5. LOCALSTORAGE - AUTO SAVE WITH ERROR HANDLING
-// ==========================================
+
 function saveCodeToStorage() {
     try {
         if (!editorInstance || !currentProblem) return;
         const code = editorInstance.getValue();
         
-        // Check if localStorage is available
+
         if (typeof localStorage === 'undefined') {
             console.warn('LocalStorage not available');
             return;
@@ -258,7 +240,7 @@ function saveCodeToStorage() {
         
         localStorage.setItem(`code_${currentProblem.lcNumber}`, code);
     } catch (error) {
-        // Handle quota exceeded errors
+
         if (error.name === 'QuotaExceededError') {
             console.warn('LocalStorage quota exceeded');
         } else {
@@ -278,13 +260,22 @@ function getSavedCode() {
 }
 
 function loadSavedCode() {
-    // Called after Monaco is initialized
+
 }
 
-// ==========================================
-// 6. SUBMIT LOGIC WITH IMPROVED ERROR HANDLING
-// ==========================================
+
 async function submitSolution() {
+    const nameEl = document.getElementById('userNameInput');
+    const userName = nameEl ? nameEl.value.trim() : "Anonymous";
+    if (!userName) {
+        showNotification("Please enter your name before submitting!", "error");
+        nameInput.focus();
+        return; // Dừng lại nếu chưa nhập tên
+    }
+    
+    // Lưu tên vào máy để lần sau không phải nhập lại
+    localStorage.setItem('wdsa_user_name', userName);
+    // ----------------------------------
     if (isSubmitting) {
         showNotification("Please wait, submission in progress...", "info");
         return;
@@ -301,7 +292,6 @@ async function submitSolution() {
         return;
     }
 
-    // Basic validation
     if (!code.includes('main')) {
         showNotification("Your code must contain a main() function!", "error");
         return;
@@ -329,7 +319,6 @@ async function submitSolution() {
         const totalCount = results.length;
         const allPassed = passedCount === totalCount;
 
-        // Calculate average execution time and memory
         const validResults = results.filter(r => r.executionTime !== null);
         const avgTime = validResults.length > 0 
             ? (validResults.reduce((sum, r) => sum + r.executionTime, 0) / validResults.length / 1000).toFixed(3)
@@ -356,7 +345,6 @@ async function submitSolution() {
         saveSubmissionToDB(currentProblem.lcNumber, code, allPassed, stats, errorDetails);
 
         if (allPassed) {
-            // SUCCESS UI - Compact design
             contentDiv.innerHTML = `
                 <div class="result-success-container">
                     <div class="status-header">
@@ -383,7 +371,6 @@ async function submitSolution() {
             
             showNotification("All test cases passed!", "success");
         } else {
-            // FAILED - Show details
             let failedTests = results.filter(r => !r.passed);
             let firstFailed = failedTests[0];
             
@@ -459,17 +446,19 @@ async function submitSolution() {
         isSubmitting = false;
         btn.innerHTML = originalText;
     }
+    const savedName = localStorage.getItem('wdsa_user_name');
+    const nameInput = document.getElementById('userNameInput');
+    if (savedName && nameInput) {
+        nameInput.value = savedName;
+    }
 }
 
-// ==========================================
-// 7. ERROR SUGGESTIONS
-// ==========================================
+
 function getSuggestions(msg) {
     if (!msg) return '';
     
     const suggestions = [];
     
-    // Common C++ errors
     if (msg.includes("expected ';'") || msg.includes("expected '}'") || msg.includes("expected ')'")) {
         suggestions.push('Check for missing semicolons, braces, or parentheses');
         suggestions.push('Make sure all opening brackets { ( [ have matching closing brackets } ) ]');
@@ -497,7 +486,6 @@ function getSuggestions(msg) {
         suggestions.push('Ensure you\'re not accessing freed or uninitialized memory');
     }
     
-    // Generic compilation
     if (msg.includes('error:') && suggestions.length === 0) {
         suggestions.push('Read the error message carefully - it usually points to the exact line');
         suggestions.push('Check syntax around the line number mentioned in the error');
@@ -515,12 +503,9 @@ function getSuggestions(msg) {
     `;
 }
 
-// ==========================================
-// 8. PARALLEL TEST EXECUTION (OPTIMIZED)
-// ==========================================
 const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
-const MAX_CONCURRENT = 2; // Execute 2 tests at a time
-const BATCH_DELAY = 800; // Increased delay between batches
+const MAX_CONCURRENT = 2; 
+const BATCH_DELAY = 800; 
 
 async function executeCodeParallel(userCode, testCases) {
     if (!userCode.includes('main')) {
@@ -529,14 +514,12 @@ async function executeCodeParallel(userCode, testCases) {
 
     const results = [];
     
-    // Split into batches for parallel execution
     for (let i = 0; i < testCases.length; i += MAX_CONCURRENT) {
         const batch = testCases.slice(i, i + MAX_CONCURRENT);
         const batchPromises = batch.map((tc, idx) => executeTestCase(userCode, tc, i + idx));
         const batchResults = await Promise.all(batchPromises);
         results.push(...batchResults);
         
-        // Add delay between batches to avoid rate limiting
         if (i + MAX_CONCURRENT < testCases.length) {
             await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
         }
@@ -599,7 +582,6 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
             throw new Error(data.compile.stderr || data.compile.output || "Unknown Compilation Error");
         }
 
-        // --- [NÂNG CẤP] TÍNH TOÁN MEMORY THÔNG MINH ---
         let memoryUsageMB = 0;
         
         // 1. Ưu tiên lấy từ API (nếu có)
@@ -671,9 +653,7 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
     }
 }
 
-// ==========================================
-// 9. HELPER: NOTIFICATION TOAST
-// ==========================================
+
 function showNotification(message, type = 'info') {
     // Remove existing notification
     const existing = document.querySelector('.notification');
@@ -697,9 +677,7 @@ function showNotification(message, type = 'info') {
     }, 4000); // Increased from 3000 to 4000ms
 }
 
-// ==========================================
-// 10. CLEANUP ON PAGE UNLOAD
-// ==========================================
+
 window.addEventListener('beforeunload', () => {
     saveCodeToStorage();
     
@@ -708,7 +686,6 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
-// Add CSS animation for spinning icon (if not already in HTML)
 if (!document.getElementById('spin-animation-style')) {
     const style = document.createElement('style');
     style.id = 'spin-animation-style';
@@ -722,13 +699,11 @@ if (!document.getElementById('spin-animation-style')) {
 }
 
 
-// ==========================================
-// 11. REALTIME DATABASE INTEGRATION
-// ==========================================
-
 function saveSubmissionToDB(problemId, code, isPassed, stats, errorDetails) {
     try {
-        // Tạo ID người dùng ảo
+        // Lấy tên người dùng hiện tại từ Input
+        const userName = document.getElementById('userNameInput').value.trim() || "Anonymous";
+
         let userId = localStorage.getItem('wdsa_user_id');
         if (!userId) {
             userId = 'user_' + Math.random().toString(36).substr(2, 9);
@@ -739,25 +714,19 @@ function saveSubmissionToDB(problemId, code, isPassed, stats, errorDetails) {
             problemId: problemId,
             problemTitle: currentProblem ? currentProblem.title : "Unknown",
             userId: userId,
+            userName: userName, 
             code: code,
             status: isPassed ? "Accepted" : "Wrong Answer",
             passCount: stats.passedCount,
             totalCount: stats.totalCount,
             runtime: stats.avgTime,
             memory: stats.avgMemory,
-            // Dùng ServerValue.TIMESTAMP của Realtime Database
             timestamp: firebase.database.ServerValue.TIMESTAMP, 
             errorType: errorDetails ? errorDetails.type : null
         };
 
-        // Ghi vào nhánh 'submissions'
-        db.ref('submissions').push(submissionData, (error) => {
-            if (error) {
-                console.error("Data could not be saved." + error);
-            } else {
-                console.log("Data saved successfully.");
-            }
-        });
+        // Ghi vào Firebase
+        db.ref('submissions').push(submissionData);
         
     } catch (error) {
         console.error("Error saving to DB:", error);

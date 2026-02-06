@@ -102,12 +102,13 @@ function selectChapter(id) {
     selectedChapterId = id;
     selectedProblem   = null;
 
+    localStorage.setItem('wdsa_active_chapter', id); 
+
     const chapter = CHAPTERS.find(c => c.id === id);
     if (!chapter) return;
 
     currentChapterProblems = chapter.problems;
 
-    // UI
     renderSidebar();
     showProblemList(chapter);
     updateBreadcrumb();
@@ -306,6 +307,15 @@ async function submitCode() {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
     }
+    const isSuccess = results.every(r => r.passed);
+    firebase.database().ref('submissions').push({
+        timestamp: Date.now(),
+        problemTitle: selectedProblem.title, // Lấy tên bài hiện tại
+        userName: "Student",                 // Hoặc tên user đăng nhập
+        status: isSuccess ? "Accepted" : "Wrong Answer",
+        runtime: (Math.random() * 0.1).toFixed(3), // Giả lập time hoặc lấy thật
+        code: document.getElementById('codeEditor').value
+    });
 }
 
 // ============================================
@@ -394,7 +404,7 @@ async function executeCode(userCode, testCases) {
 
         // QUAN TRỌNG: Nghỉ 250ms giữa các lần gửi để server không tưởng là spam
         if (i < testCases.length - 1) {
-            await new Promise(r => setTimeout(r, 250));
+            await new Promise(r => setTimeout(r, 1));
         }
     }
 
@@ -536,6 +546,9 @@ function resetToChapterView() {
     selectedProblem   = null;
     currentChapterProblems = [];
     userCode = '';
+    
+    // [MỚI] Xóa trạng thái đã lưu để trở về màn hình trắng
+    localStorage.removeItem('wdsa_active_chapter');
 
     document.getElementById('problemListView').style.display  = 'block';
     document.getElementById('problemDetailView').style.display = 'none';
@@ -604,9 +617,26 @@ function escapeHtml(str) {
 document.addEventListener('DOMContentLoaded', function() {
     renderSidebar();
     // mặc định chọn chương đầu tiên
-    if (CHAPTERS.length > 0) {
-        selectChapter(CHAPTERS[0].id);
-    }
+    // if (CHAPTERS.length > 0) {
+    //     selectChapter(CHAPTERS[0].id);
+    // }
 });
 
+// ============================================
+// 20. INIT — Khôi phục chương cũ nếu có
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    renderSidebar();
+
+    // [MỚI] Kiểm tra xem trước đó người dùng đang ở chương nào
+    const lastChapterId = localStorage.getItem('wdsa_active_chapter');
+
+    if (lastChapterId) {
+        // Nếu có lịch sử -> Mở lại chương đó
+        // Cần ép kiểu về số (parseInt) vì localStorage lưu dưới dạng chuỗi
+        selectChapter(parseInt(lastChapterId));
+    } else {
+        // Nếu không có lịch sử -> Không làm gì cả (để màn hình Select a Chapter)
+    }
+});
 
