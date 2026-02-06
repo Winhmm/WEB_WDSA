@@ -222,6 +222,7 @@
     background: #2d7a4e;
     padding: 4px 12px;
     border-radius: 20px;
+    text-transform: capitalize;
 }
 
 /* ---- Problem grid ---- */
