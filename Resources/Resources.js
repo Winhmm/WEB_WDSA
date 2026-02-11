@@ -118,43 +118,19 @@ function selectChapter(id) {
 // 5. RENDER PROBLEM LIST
 // ============================================
 function showProblemList(chapter) {
-    // hide detail, show list
+    // Hide detail, show list
     document.getElementById('problemListView').style.display  = 'block';
     document.getElementById('problemDetailView').style.display = 'none';
 
     document.getElementById('currentChapterTitle').textContent = chapter.title;
     document.getElementById('problemCount').textContent        = chapter.problems.length + ' problems';
 
-    const grid = document.getElementById('problemGrid');
-    if (chapter.problems.length === 0) {
-        grid.innerHTML = `
-            <div class="res-empty">
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-                <p>No problems available in this chapter.</p>
-            </div>`;
-        return;
-    }
+    // Reset thanh tìm kiếm về rỗng khi chuyển chương
+    const searchInput = document.getElementById('problemSearchInput');
+    if (searchInput) searchInput.value = '';
 
-    grid.innerHTML = chapter.problems.map((p, idx) => `
-        <div class="res-problem-card" onclick="openProblem(${idx})">
-            <div class="res-pc-top">
-                <span class="res-pc-number">#${p.customId || p.lcNumber}</span>
-                <span class="res-diff ${p.difficulty}">${p.difficulty}</span>
-            </div>
-            <div class="res-pc-title">${p.title}</div>
-            <div class="res-pc-tags">
-                ${p.tags.map(t => `<span class="res-pc-tag">${t}</span>`).join('')}
-            </div>
-            <div class="res-pc-footer">
-                <span class="res-pc-lc">
-                    Source: Internet
-                </span>
-                <span class="res-pc-open">View →</span>
-            </div>
-        </div>
-    `).join('');
+    // Render toàn bộ bài tập của chương
+    renderProblemGrid(chapter.problems);
 }
 
 // ============================================
@@ -640,3 +616,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function renderProblemGrid(problemsToRender) {
+    const grid = document.getElementById('problemGrid');
+    
+    if (!problemsToRender || problemsToRender.length === 0) {
+        grid.innerHTML = `
+            <div class="res-empty">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <p>No problems found.</p>
+            </div>`;
+        return;
+    }
+
+    grid.innerHTML = problemsToRender.map((p) => {
+        // Tìm index gốc trong mảng currentChapterProblems để khi click vào mở đúng bài
+        // Lưu ý: p là object bài tập, ta cần tìm vị trí của nó trong list gốc
+        const originalIndex = currentChapterProblems.indexOf(p);
+        
+        return `
+        <div class="res-problem-card" onclick="openProblem(${originalIndex})">
+            <div class="res-pc-top">
+                <span class="res-pc-number">#${p.customId || p.lcNumber}</span>
+                <span class="res-diff ${p.difficulty}">${p.difficulty}</span>
+            </div>
+            <div class="res-pc-title">${p.title}</div>
+            <div class="res-pc-tags">
+                ${p.tags.map(t => `<span class="res-pc-tag">${t}</span>`).join('')}
+            </div>
+            <div class="res-pc-footer">
+                <span class="res-pc-lc">Source: Internet</span>
+                <span class="res-pc-open">View →</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// 3. THÊM HÀM LỌC BÀI TẬP (Gắn vào sự kiện oninput ở HTML)
+function filterProblems() {
+    const query = document.getElementById('problemSearchInput').value.toLowerCase().trim();
+    
+    if (!query) {
+        // Nếu không nhập gì thì hiện hết
+        renderProblemGrid(currentChapterProblems);
+        return;
+    }
+
+    // Lọc theo Title hoặc ID hoặc Tag
+    const filtered = currentChapterProblems.filter(p => {
+        const titleMatch = p.title.toLowerCase().includes(query);
+        const idMatch = (p.customId || p.lcNumber).toString().includes(query);
+        const tagMatch = p.tags.some(t => t.toLowerCase().includes(query));
+        
+        return titleMatch || idMatch || tagMatch;
+    });
+
+    renderProblemGrid(filtered);
+}

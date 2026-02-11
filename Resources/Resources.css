@@ -219,10 +219,76 @@ header,
 .res-chapter-title-row {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Đẩy tiêu đề sang trái, search sang phải */
     gap: 14px;
     margin-bottom: 22px;
     flex-wrap: wrap;
 }
+
+/* Style cho khung tìm kiếm */
+.res-search-box {
+    position: relative;
+    width: 280px;
+    max-width: 100%;
+    /* Sử dụng transition mượt mà */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center center; /* Phóng to từ tâm */
+}
+
+.res-search-box:hover {
+    transform: scale(1.05); /* Thay đổi kích thước thay vì vị trí */
+    z-index: 10; /* Đảm bảo nó nổi lên trên các phần tử khác */
+}
+
+.res-search-box svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+}
+
+.res-search-box input {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    border: 1px solid #e2ece8;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    color: #1a472a;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.res-search-box:hover input {
+    border-color: #2d7a4e;
+    box-shadow: 0 8px 20px rgba(45, 122, 78, 0.15); /* Bóng đổ mềm mại hơn */
+}
+
+.res-search-box input:focus {
+    border-color: #2d7a4e;
+    box-shadow: 0 0 0 4px rgba(45, 122, 78, 0.1); /* Viền sáng bao quanh */
+}
+
+.res-search-box input::placeholder {
+    color: #aaa;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 600px) {
+    .res-chapter-title-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+    
+    .res-search-box {
+        width: 100%;
+    }
+}
+
 .res-chapter-title-row h2 {
     font-size: 24px;
     color: #1a472a;
