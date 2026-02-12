@@ -289,11 +289,20 @@ header,
     }
 }
 
+/* Thêm class này để xếp tiêu đề và số lượng nằm ngang */
+.res-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Khoảng cách giữa tên chương và số lượng */
+}
+
 .res-chapter-title-row h2 {
     font-size: 24px;
     color: #1a472a;
     font-weight: 700;
+    margin-bottom: 0; /* Quan trọng: Xóa margin dưới để nó thẳng hàng với số lượng */
 }
+
 .res-problem-count {
     font-size: 13px;
     font-weight: 600;

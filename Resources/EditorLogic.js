@@ -1,19 +1,33 @@
 let editorInstance = null;
 let currentProblem = null;
 let isSubmitting = false;
+let currentLanguage = 'cpp';
 
-const DEFAULT_TEMPLATE = `#include <bits/stdc++.h>
+// Thêm template cho Python
+const TEMPLATES = {
+    cpp: `#include <bits/stdc++.h>
 using namespace std;
-const int MOD = 1e9 + 7;
-
 
 int main() {
-\tios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     
+    // Code here
     
-}`;
+return 0;
+}`,
+    python: `import sys
 
+# Fast I/O
+input = sys.stdin.readline
+
+def solve():
+    # Write your code here
+    pass
+
+if __name__ == "__main__":
+    solve()`
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -208,8 +222,8 @@ function initMonaco() {
             }
 
             editorInstance = monaco.editor.create(container, {
-                value: currentProblem.starterCode || DEFAULT_TEMPLATE,
-                language: 'cpp',
+                value: TEMPLATES[currentLanguage],
+                language: currentLanguage,
                 theme: 'vs',
                 fontSize: 15,
                 padding: { top: 12, bottom: 12 },
@@ -254,6 +268,29 @@ function initMonaco() {
     });
 }
 
+function changeLanguage() {
+    const select = document.getElementById('languageSelect');
+    const newLang = select.value;
+    
+    if (newLang === currentLanguage) return;
+
+    if (confirm("Switching language will reset your current code. Continue?")) {
+        currentLanguage = newLang;
+        
+        // Cập nhật ngôn ngữ cho Monaco Editor
+        monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
+        
+        // Load template mới
+        editorInstance.setValue(TEMPLATES[currentLanguage]);
+        
+        // Xóa cache cũ trong localStorage để tránh load nhầm code ngôn ngữ khác
+        localStorage.removeItem(`code_${currentProblem.lcNumber}`);
+    } else {
+        // Nếu user hủy, trả lại giá trị cũ cho dropdown
+        select.value = currentLanguage;
+    }
+}
+
 function resetToTemplate() {
     if (!editorInstance) {
         showNotification("Editor not ready", "error");
@@ -261,7 +298,7 @@ function resetToTemplate() {
     }
 
     if(confirm("Reset code to starter template? This will delete your current code.")) {
-        editorInstance.setValue(currentProblem.starterCode || DEFAULT_TEMPLATE);
+        editorInstance.setValue(TEMPLATES[currentLanguage]);
         showNotification("Code reset successfully", "info");
         localStorage.removeItem(`code_${currentProblem.lcNumber}`);
     }
@@ -568,82 +605,120 @@ const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
 const SEPARATOR = "|||WDSA_SEP|||"; // Mốc phân cách output
 
 async function executeCodeParallel(userCode, testCases) {
-    if (!userCode.includes('main')) {
-        throw new Error("Code must contain a main() function!");
+    // Kiểm tra cơ bản
+    if (currentLanguage === 'cpp' && !userCode.includes('main')) {
+        throw new Error("C++ code must contain a main() function!");
     }
 
-    // 1. Chuẩn bị "Code Quản Lý" (Wrapper) bằng C++
-    // Kỹ thuật: Dùng Raw String Literal của C++ (R"TAG(...)TAG") để nhúng code user và input vào
-    
-    let cppWrapper = `
-    #include <iostream>
-    #include <fstream>
-    #include <cstdlib>
-    #include <string>
-    #include <vector>
+    let payload = {};
 
-    // Hàm tiện ích để ghi file xuống đĩa
-    void writeFile(const std::string& name, const std::string& content) {
-        std::ofstream f(name);
-        f << content;
-        f.close();
-    }
+    // --- TRƯỜNG HỢP 1: C++ (Giữ nguyên logic cũ nhưng gói gọn lại) ---
+    if (currentLanguage === 'cpp') {
+        let cppWrapper = `
+        #include <iostream>
+        #include <fstream>
+        #include <cstdlib>
+        #include <string>
+        #include <vector>
 
-    int main() {
-        // A. Ghi code của người dùng ra file
-        std::string userCode = R"WDSA_CODE(${userCode})WDSA_CODE";
-        writeFile("solution.cpp", userCode);
-
-        // B. Biên dịch code người dùng
-        // system() trả về 0 nếu thành công
-        int compileStatus = system("g++ -O2 solution.cpp -o app");
-        if (compileStatus != 0) {
-            std::cout << "COMPILATION_ERROR" << std::endl;
-            return 0;
+        void writeFile(const std::string& name, const std::string& content) {
+            std::ofstream f(name);
+            f << content;
+            f.close();
         }
 
-        // C. Chạy lần lượt từng Test Case
-    `;
+        int main() {
+            std::string userCode = R"WDSA_CODE(${userCode})WDSA_CODE";
+            writeFile("solution.cpp", userCode);
 
-    // Nhúng dữ liệu của từng test case vào logic C++
-    testCases.forEach((tc, index) => {
-        cppWrapper += `
-        {
-            // 1. Ghi file input
-            std::string input = R"WDSA_IN(${tc.input})WDSA_IN";
-            writeFile("in_${index}.txt", input);
-
-            // 2. Gọi chương trình user với input này
-            // Lưu ý: Output của user sẽ in thẳng ra stdout chung
-            int ret = system("./app < in_${index}.txt");
-
-            // 3. Kiểm tra Runtime Error (nếu return code != 0)
-            if (ret != 0) {
-                std::cout << "RUNTIME_ERROR_MARKER";
+            int compileStatus = system("g++ -O2 solution.cpp -o app");
+            if (compileStatus != 0) {
+                std::cout << "COMPILATION_ERROR" << std::endl;
+                return 0;
             }
 
-            // 4. In dấu phân cách để JS cắt chuỗi sau này
-            std::cout << "${SEPARATOR}" << std::endl;
+            // Loop Test Cases
+            ${testCases.map((tc, index) => `
+            {
+                std::string input = R"WDSA_IN(${tc.input})WDSA_IN";
+                writeFile("in_${index}.txt", input);
+                int ret = system("./app < in_${index}.txt");
+                if (ret != 0) std::cout << "RUNTIME_ERROR_MARKER";
+                std::cout << "${SEPARATOR}" << std::endl;
+            }
+            `).join('\n')}
+            return 0;
         }
         `;
-    });
 
-    cppWrapper += `
-        return 0;
-    }
-    `;
-
-    // 2. Gửi Request (Chỉ 1 file duy nhất => Không bị Piston tự compile nhầm)
-    try {
-        const payload = {
+        payload = {
             language: "cpp",
             version: "10.2.0",
-            files: [
-                { name: "main.cpp", content: cppWrapper } 
-            ],
-            run_timeout: 5000,
+            files: [{ name: "main.cpp", content: cppWrapper }]
         };
+    } 
+    
+    // --- TRƯỜNG HỢP 2: PYTHON (Mới) ---
+    else if (currentLanguage === 'python') {
+        // Chúng ta tạo một script Python "Runner" để chạy code của user
+        // Script này sẽ giả lập input/output cho từng test case
+        
+        // Chuyển code user và input thành chuỗi JSON an toàn để nhúng vào wrapper
+        const safeUserCode = JSON.stringify(userCode);
+        const safeInputs = JSON.stringify(testCases.map(tc => tc.input));
+        const safeSeparator = JSON.stringify(SEPARATOR);
 
+        let pythonWrapper = `
+import sys
+import io
+import traceback
+
+# 1. Dữ liệu từ JS
+user_code = ${safeUserCode}
+inputs = ${safeInputs}
+separator = ${safeSeparator}
+
+# 2. Hàm chạy 1 test case
+def run_test(input_str):
+    # Mock Stdin (Giả lập nhập liệu từ bàn phím)
+    sys.stdin = io.StringIO(input_str)
+    
+    # Capture Stdout (Bắt kết quả in ra màn hình)
+    capture_out = io.StringIO()
+    original_stdout = sys.stdout
+    sys.stdout = capture_out
+    
+    try:
+        # Tạo môi trường chạy code riêng biệt
+        # globals() được truyền vào để user dùng import, biến toàn cục bình thường
+        exec(user_code, {'__name__': '__main__'})
+    except Exception:
+        sys.stdout = original_stdout # Trả lại stdout để in lỗi
+        print("RUNTIME_ERROR_MARKER")
+        # In chi tiết lỗi (Traceback)
+        traceback.print_exc()
+        return
+    finally:
+        sys.stdout = original_stdout # Luôn trả lại stdout
+
+    # In kết quả đã bắt được ra stdout thật
+    print(capture_out.getvalue(), end='')
+
+# 3. Vòng lặp chạy tất cả test case
+for inp in inputs:
+    run_test(inp)
+    print(separator)
+`;
+
+        payload = {
+            language: "python",
+            version: "3.10.0",
+            files: [{ name: "main.py", content: pythonWrapper }]
+        };
+    }
+
+    // --- Gửi Request chung (Phần này giống nhau cho cả 2 ngôn ngữ) ---
+    try {
         const response = await fetch(PISTON_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -652,36 +727,34 @@ async function executeCodeParallel(userCode, testCases) {
 
         const data = await response.json();
 
-        // 3. Xử lý kết quả trả về
+        // Xử lý lỗi hệ thống (Piston)
         if (data.run && data.run.stderr && !data.run.stdout) {
-            throw new Error(data.run.stderr); // Lỗi hệ thống nghiêm trọng
+             // Nếu Python lỗi cú pháp ngay lúc đầu (IndentationError, SyntaxError...)
+             // Nó sẽ rơi vào stderr của wrapper
+             throw new Error(data.run.stderr);
         }
 
         const rawOutput = data.run.stdout || "";
-
-        // Kiểm tra lỗi biên dịch (do Wrapper in ra)
+        
+        // Kiểm tra lỗi biên dịch C++ (Do wrapper in ra)
         if (rawOutput.includes("COMPILATION_ERROR")) {
-            // Lấy chi tiết lỗi từ stderr (nơi g++ in ra lỗi)
             throw new Error(data.run.stderr || "Compilation Failed");
         }
 
-        // Cắt chuỗi kết quả
         const resultsParts = rawOutput.split(SEPARATOR);
 
+        // Map kết quả
         const finalResults = testCases.map((tc, index) => {
             let part = resultsParts[index] || "";
             
-            // Kiểm tra Runtime Error
             let errorType = null;
             if (part.includes("RUNTIME_ERROR_MARKER")) {
                 errorType = "Runtime Error";
-                part = part.replace("RUNTIME_ERROR_MARKER", "").trim(); // Lọc bỏ marker
-                // Nếu runtime error, thường output sẽ rỗng hoặc lỗi, ta lấy stderr chung nếu cần
-                if (!part) part = "Error: Program crashed (SegFault/DivByZero)";
+                // Lọc bỏ marker để lấy thông báo lỗi thực tế
+                part = part.replace("RUNTIME_ERROR_MARKER", "").trim();
             }
 
-            // Chuẩn hóa output để so sánh
-            const actual = part.trim(); 
+            const actual = part.trim();
             const expected = tc.expectedOutput.replace(/\r\n/g, '\n').trim();
 
             return {
@@ -689,7 +762,7 @@ async function executeCodeParallel(userCode, testCases) {
                 input: tc.input,
                 expected: tc.expectedOutput,
                 actual: actual,
-                executionTime: 0, // Batch run không đo time từng case chính xác
+                executionTime: 0, 
                 memory: 0,
                 errorType: errorType
             };
@@ -698,7 +771,6 @@ async function executeCodeParallel(userCode, testCases) {
         return finalResults;
 
     } catch (error) {
-        // Fallback hiển thị lỗi
         console.error("Execution Error:", error);
         throw error;
     }
@@ -893,6 +965,7 @@ function saveSubmissionToDB(problemId, code, isPassed, stats, errorDetails) {
             userId: userId,
             userName: userName, 
             code: code,
+            language: currentLanguage || 'cpp',
             status: isPassed ? "Accepted" : "Wrong Answer",
             passCount: stats.passedCount,
             totalCount: stats.totalCount,
