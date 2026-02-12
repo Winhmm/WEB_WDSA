@@ -1,1335 +1,841 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>WDSA | Submission History</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<!-- Prism.js for syntax highlighting -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
-
-<style>
-    * { box-sizing: border-box; }
-    body { 
-        font-family: 'Inter', sans-serif; 
-        padding: 20px; 
-        background: #f8fafc; 
-        margin: 0;
-    }
-    .container { 
-        max-width: 95%; 
-        margin: 0 auto; 
-        background: white; 
-        padding: 20px; 
-        border-radius: 12px; 
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDSA | Submission History</title>
     
-    /* Header */
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid #e2e8f0;
-        padding-bottom: 15px;
-        margin-bottom: 20px;
-    }
-    .header h1 {
-        margin: 0;
-        color: #1a472a;
-    }
-    .live-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
-        background: #dcfce7;
-        color: #166534;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        margin-left: 12px;
-    }
-    .live-dot {
-        width: 8px;
-        height: 8px;
-        background: #22c55e;
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    }
-
-    /* Statistics Cards */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    .stat-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .stat-label {
-        font-size: 12px;
-        color: #64748b;
-        text-transform: uppercase;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-    .stat-value {
-        font-size: 28px;
-        font-weight: 700;
-        color: #0f172a;
-    }
-    .stat-trend {
-        font-size: 12px;
-        color: #10b981;
-        margin-top: 4px;
-    }
-
-    /* Filters */
-    .filters {
-        background: #f8fafc;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #e2e8f0;
-    }
-    .filter-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 12px;
-        margin-bottom: 12px;
-    }
-    .filter-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    .filter-group label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #475569;
-        text-transform: uppercase;
-    }
-    .filter-group input, .filter-group select {
-        padding: 10px;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: 'Inter', sans-serif;
-        transition: border-color 0.2s;
-    }
-    .filter-group input:focus, .filter-group select:focus {
-        outline: none;
-        border-color: #10b981;
-    }
-    .filter-actions {
-        display: flex;
-        gap: 10px;
-        align-items: flex-end;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
-    button { 
-        padding: 10px 20px; 
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-        color: white; 
-        border: none; 
-        border-radius: 8px; 
-        cursor: pointer; 
-        font-weight: 600;
-        font-size: 14px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
-    }
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
-    }
-    button.secondary {
-        background: white;
-        color: #334155;
-        border: 1px solid #cbd5e1;
-        box-shadow: none;
-    }
-    button.secondary:hover {
-        background: #f8fafc;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    /* Table */
-    .table-wrapper {
-        overflow-x: auto;
-    }
-    table { 
-        width: 100%; 
-        border-collapse: collapse; 
-    }
-    th, td { 
-        padding: 12px; 
-        text-align: left; 
-        border-bottom: 1px solid #e2e8f0; 
-    }
-    th { 
-        background-color: #f8fafc; 
-        font-weight: 700; 
-        color: #475569; 
-        font-size: 13px; 
-        text-transform: uppercase;
-        cursor: pointer;
-        user-select: none;
-        position: relative;
-    }
-    th:hover {
-        background-color: #f1f5f9;
-    }
-    th.sortable::after {
-        content: ' ⇅';
-        color: #cbd5e1;
-        font-size: 10px;
-    }
-    th.sort-asc::after {
-        content: ' ↑';
-        color: #10b981;
-    }
-    th.sort-desc::after {
-        content: ' ↓';
-        color: #10b981;
-    }
-    
-    tr:hover {
-        background: #f8fafc;
-    }
-    
-    .badge { 
-        padding: 4px 8px; 
-        border-radius: 4px; 
-        font-size: 12px; 
-        font-weight: 700; 
-        display: inline-block;
-    }
-    .success { background: #dcfce7; color: #166534; }
-    .fail { background: #fee2e2; color: #991b1b; }
-    
-    .metric-cell {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        color: #0f172a;
-    }
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
 
-    .btn-view {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        color: #334155;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: none;
-    }
-    .btn-view:hover {
-        background: #f1f5f9;
-        border-color: #94a3b8;
-        color: #0f172a;
-        transform: none;
-    }
-    .btn-view svg { width: 14px; height: 14px; }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
-    /* --- CSS Modal Giao Diện Trắng (Mới) --- */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.4); /* Dim nền nhẹ */
-        backdrop-filter: blur(2px);
-        align-items: center;
-        justify-content: center;
-    }
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+   
 
-    .modal-content {
-        background: #ffffff; /* VS Code Light Background */
-        color: #000000;
-        width: 90%;
-        max-width: 950px;
-        height: 85vh;
-        border-radius: 8px; /* Bo góc nhẹ */
-        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        border: 1px solid #e8e8e8;
-    }
-
-    /* Modal Header */
-    .modal-header {
-        background: #f3f3f3; /* Màu nền tab bar */
-        padding: 0;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid #e8e8e8;
-    }
-
-    .modal-header h2 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #0f172a;
-    }
-
-    .tab-title {
-        background: #ffffff; /* Tab đang active màu trắng */
-        height: 100%;
-        padding: 0 20px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #333;
-        border-top: 2px solid #007acc; /* Viền xanh đặc trưng VS Code */
-        border-right: 1px solid #e8e8e8;
-    }
-
-    .tab-icon {
-        width: 14px;
-        height: 14px;
-    }
-
-    .modal-controls {
-        display: flex;
-        align-items: center;
-        height: 100%;
-    }
-
-    .copy-btn-mini {
-        margin-right: 10px;
-        padding: 5px 12px; /* Tăng padding một chút cho đẹp */
+    <style>
+        /* --- 1. Global & Reset --- */
+        * { box-sizing: border-box; }
         
-        /* Thay đổi màu sắc sang xanh dương */
-        background: #007acc; 
-        border: 1px solid #007acc;
-        color: white;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px; 
+            background: #f8fafc; 
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .container { 
+            max-width: 95%; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+
+        /* --- 2. Header & Utilities --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #1a472a;
+            font-size: 24px;
+        }
         
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 11px;
-        font-weight: 600; /* Chữ đậm hơn chút */
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s;
-    }
-    .copy-btn-mini svg {
-        stroke: white;
-    }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
 
-    /* Hiệu ứng khi di chuột vào */
-    .copy-btn-mini:hover { 
-        background: #005f9e; /* Màu xanh tối hơn khi hover */
-        border-color: #005f9e;
-    }
+        /* --- 3. Statistics Cards --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .stat-trend {
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 4px;
+        }
 
-    .close-btn {
-        width: 40px;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 18px;
-        color: #666;
-        transition: all 0.2s;
-    }
-    .close-btn:hover {
-        background: #e81123; /* Màu đỏ khi hover nút đóng giống Windows */
-        color: white;
-    }
+        /* --- 4. Filters & Controls --- */
+        .filters {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+        }
+        .filter-group input, .filter-group select {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
 
-    /* --- Editor Area --- */
-    .modal-body {
-        flex: 1;
-        overflow: hidden;
-        position: relative;
-        background: #ffffff;
-    }
+        button { 
+            padding: 10px 20px; 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+        }
+        button.secondary {
+            background: white;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            box-shadow: none;
+        }
+        button.secondary:hover {
+            background: #f8fafc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .export-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+        }
+        .export-btn:hover {
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
 
-    /* --- Tùy chỉnh thanh cuộn (Scrollbar) giống VS Code --- */
-    .code-container::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
-    }
-    .code-container::-webkit-scrollbar-track {
-        background: #ffffff;
-    }
-    .code-container::-webkit-scrollbar-thumb {
-        background: #c1c1c1; /* Màu thanh cuộn */
-        border-radius: 0;
-    }
-    .code-container::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-    }
+        /* --- 5. Data Table --- */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        
+        th { 
+            background-color: #f8fafc; 
+            font-weight: 700; 
+            color: #475569; 
+            font-size: 13px; 
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+        }
+        th:hover { background-color: #f1f5f9; }
+        
+        th.sortable::after { content: ' ⇅'; color: #cbd5e1; font-size: 10px; }
+        th.sort-asc::after { content: ' ↑'; color: #10b981; }
+        th.sort-desc::after { content: ' ↓'; color: #10b981; }
+        
+        tr:hover { background: #f8fafc; }
+        
+        .badge { 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            display: inline-block;
+        }
+        .success { background: #dcfce7; color: #166534; }
+        .fail { background: #fee2e2; color: #991b1b; }
+        .badge.lang-cpp { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .badge.lang-python { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+        
+        .metric-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #0f172a;
+        }
+        
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: none;
+        }
+        .btn-view:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+            transform: none;
+        }
+        .btn-view svg { width: 14px; height: 14px; }
 
-    /* --- Tùy chỉnh Line Numbers (Gutter) --- */
-    pre.line-numbers {
-        position: relative; /* Bắt buộc để Prism định vị số dòng */
-        padding-left: 3.8em !important; /* Chừa chỗ bên trái cho số */
-    }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
 
-    .line-numbers .line-numbers-rows {
-        position: absolute;
-        pointer-events: none;
-        top: 0 !important;
-        left: 0 !important;
-        width: 3.5em !important; /* Đảm bảo width nhỏ hơn padding-left của container một chút */
-        border-right: 1px solid #eeeeee !important;
-        background: #f8f9fa !important;
-        padding: 20px 0 !important;
-        height: 100%;
-        user-select: none;
-        line-height: 1.5 !important;
-    }
+        /* --- 6. Pagination --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .pagination button { padding: 8px 16px; font-size: 13px; }
+        .pagination span { color: #64748b; font-size: 14px; }
 
-    pre.line-numbers code {
-        font-family: 'JetBrains Mono', 'Consolas', monospace !important;
-        font-size: 14px !important;
-        line-height: 1.5 !important; /* Bắt buộc phải giống nhau */
-    }
+        /* --- 7. Modal (VS Code Style) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 950px;
+            height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #e8e8e8;
+        }
+        
+        /* Modal Header */
+        .modal-header {
+            background: #f3f3f3;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .tab-title {
+            background: #ffffff;
+            height: 100%;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #e8e8e8;
+        }
+        .tab-icon { width: 14px; height: 14px; }
+        
+        .modal-controls {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .copy-btn-mini {
+            margin-right: 10px;
+            padding: 5px 12px;
+            background: #007acc; 
+            border: 1px solid #007acc;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: none;
+        }
+        .copy-btn-mini:hover { 
+            background: #005f9e; 
+            transform: none;
+        }
+        
+        .close-btn {
+            width: 40px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .close-btn:hover {
+            background: #e81123;
+            color: white;
+        }
+        
+        /* Modal Body */
+        .modal-body {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            background: #ffffff;
+        }
+        
+        .code-container {
+            height: 100%;
+            overflow: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: #ffffff;
+        }
+        
+        /* Scrollbar Styling */
+        .code-container::-webkit-scrollbar { width: 10px; height: 10px; }
+        .code-container::-webkit-scrollbar-track { background: #f1f5f9; }
+        .code-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; border: 2px solid #f1f5f9; }
 
-    .line-numbers-rows > span {
-        display: block;
-        counter-increment: linenumber; /* CHỈ ĐỂ Ở ĐÂY */
-    }
-
-    .line-numbers-rows > span:before {
-        content: counter(linenumber);
-        color: #237893 !important; /* Màu xanh VS Code cho số dòng */
-        display: block;
-        padding-right: 0.8em;
-        text-align: right;
-    }
-
-
-
-    /* --- VS Code Light Syntax Highlighting Override --- */
-    /* Ghi đè màu của Prism để giống VS Code Light */
-
-    code[class*="language-"], pre[class*="language-"] {
-        color: #000000; /* Default text color */
-        text-shadow: none !important;
-    }
-
-    /* Keywords (int, return, if, else) -> Blue */
-    .token.keyword, .token.selector-tag, .token.title, .token.section, .token.doctag, .token.name, .token.strong {
-        color: #0000ff !important;
-        font-weight: bold;
-    }
-
-    /* Strings ("Hello") -> Red/Brown */
-    .token.string, .token.attribute, .token.symbol, .token.bullet, .token.addition, .token.variable, .token.template-tag, .token.template-variable {
-        color: #a31515 !important;
-    }
-
-    /* Comments (//...) -> Green */
-    .token.comment, .token.quote, .token.deletion, .token.meta {
-        color: #008000 !important;
-        font-style: italic;
-    }
-
-    /* Numbers (123) -> Dark Green */
-    .token.number, .token.literal {
-        color: #098658 !important;
-    }
-
-    /* Class names / Functions -> Purple/Teal */
-    .token.class-name, .token.function {
-        color: #795e26 !important; /* Vàng đậm/Nâu đất */
-    }
-
-    /* Booleans (true/false) -> Blue */
-    .token.boolean {
-        color: #0000ff !important;
-    }
-
-    /* Nút đóng X */
-    .close {
-        color: #64748b; /* Màu xám vừa */
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.2s;
-        line-height: 1;
-    }
-    .close:hover {
-        color: #000000; /* Hover chuyển màu đen */
-    }
-
-    /* Modal Body */
-    .modal-body {
-        padding: 0;
-        position: relative;
-        flex-grow: 1;
-        overflow: hidden;
-        background: #ffffff;
-    }
-
-    .code-container {
-        height: 100%;
-        overflow: auto;
-        margin: 0;
-        padding: 0;
-        border: none;
-        position: relative;
-        background: #ffffff;
-    }
-
-    /* Đảm bảo cột số dòng nằm đúng vị trí */
-    pre.line-numbers {
-        padding-left: 4.2em !important;
-        position: relative;
-        white-space: pre !important;
-    }
-
-    .line-numbers .line-numbers-rows {
-        background: #f3f3f3; /* Light gray for line numbers */
-        border-right: 1px solid #e8e8e8;
-        padding: 8px 0;
-        left: 0;
-        width: 3.5em; /* Dynamic: ~35-45px for 13px font, handles up to 3 digits */
-        text-align: right;
-        font-size: 13px; /* Match code font size */
-    }
-
-    .code-container code {
-        padding-left: 4em !important; /* Slightly more than gutter width to add buffer */
-        display: block;
-        white-space: pre;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        line-height: 1.5;
-        color: #000000;
-    }
-
-    /* Ensure Pre Tag Doesn't Add Extra Padding */
-    .code-container pre {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: auto;
-        background: #ffffff;
-        border: none;
-    }
-
-    pre.line-numbers code, 
-    .line-numbers .line-numbers-rows > span:before {
-        font-family: 'JetBrains Mono', monospace !important;
-        font-size: 14px !important;
-        line-height: 1.5 !important;
-    }
-
-    /* Tùy chỉnh scrollbar cho giao diện sáng */
-    .code-container::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-    .code-container::-webkit-scrollbar-track {
-        background: #f1f5f9; /* Track màu xám rất nhạt */
-    }
-    .code-container::-webkit-scrollbar-thumb {
-        background: #cbd5e1; /* Thumb màu xám sáng */
-        border-radius: 5px;
-        border: 2px solid #f1f5f9;
-    }
-
-    /* Nút Copy (Giao diện sáng) */
-    .copy-btn-container {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        z-index: 10;
-    }
-
-    .copy-button {
-        background: #f1f5f9; /* Nền xám nhạt */
-        border: 1px solid #cbd5e1; /* Viền xám */
-        color: #475569; /* Chữ màu xám đậm */
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-    }
-
-    .copy-button:hover {
-        background: #e2e8f0; /* Hover tối hơn chút */
-        color: #1e293b;
-    }
-    .copy-button svg {
-        width: 16px;
-        height: 16px;
-    }
-
-    /* Badge ngôn ngữ trong header (Điều chỉnh lại một chút cho nền sáng) */
-    #modalLangBadge.lang-cpp { 
-        background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; 
-    }
-    #modalLangBadge.lang-python { 
-        background: #fef9c3; color: #a16207; border: 1px solid #fde047;
-    }
-
-    .copy-btn {
-        padding: 8px 16px;
-        background: #10b981;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-        transition: background 0.2s;
-        box-shadow: none;
-    }
-    .copy-btn:hover {
-        background: #059669;
-        transform: none;
-    }
-    .close-btn { 
-        cursor: pointer; 
-        font-weight: bold; 
-        font-size: 28px; 
-        color: #94a3b8; 
-        line-height: 1;
-        background: none;
-        border: none;
-        padding: 0;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none;
-    }
-    .close-btn:hover { 
-        color: #f1f5f9; 
-        transform: none;
-    }
-
-    pre {
-        margin: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        border-radius: 0 !important;
-    }
-    pre code {
-        font-family: 'JetBrains Mono', monospace !important;
-        font-size: 14px !important;
-        line-height: 1.6 !important;
-    }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid #e2e8f0;
-    }
-    .pagination button {
-        padding: 8px 16px;
-        font-size: 13px;
-    }
-    .pagination span {
-        color: #64748b;
-        font-size: 14px;
-    }
-
-    /* Export Button */
-    .export-btn {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
-    }
-    .export-btn:hover {
-        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #64748b;
-    }
-    .empty-state svg {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-
-    /* New Badge */
-    .new-badge {
-        display: inline-block;
-        background: #3b82f6;
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 6px;
-        border-radius: 3px;
-        margin-left: 6px;
-        animation: fadeIn 0.3s;
-    }
-
-    /* Thêm vào trong thẻ <style> */
-    .badge.lang-cpp { 
-        background: #e0f2fe; 
-        color: #0369a1; 
-        border: 1px solid #bae6fd;
-    }
-    .badge.lang-python { 
-        background: #fef9c3; 
-        color: #a16207; 
-        border: 1px solid #fde047;
-    }
-    
-    /* Ensure Monaco Line Numbers Have Space */
-    .monaco-editor .margin {
-        width: 3.5em !important; /* Dynamic width for line numbers */
-        min-width: 40px; /* Fallback minimum */
-        background: #f3f3f3; /* Optional: Match Prism style */
-    }
-
-    .monaco-editor .lines-content {
-        padding-left: 0.5em; /* Small buffer */
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.8); }
-        to { opacity: 1; transform: scale(1); }
-    }
-</style>
+        /* --- 8. PrismJS Overrides (VS Code Light) --- */
+        pre.line-numbers {
+            padding-left: 3.8em !important;
+            margin: 0 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid #e8e8e8;
+            background: #f3f3f3;
+            padding: 15px 0;
+            width: 3.5em !important;
+        }
+        
+        code[class*="language-"], pre[class*="language-"] {
+            color: #000000;
+            text-shadow: none !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 13px !important;
+            line-height: 1.5 !important;
+        }
+        
+        /* Syntax Colors */
+        .token.keyword { color: #0000ff !important; font-weight: bold; }
+        .token.string { color: #a31515 !important; }
+        .token.comment { color: #008000 !important; font-style: italic; }
+        .token.number { color: #098658 !important; }
+        .token.class-name, .token.function { color: #795e26 !important; }
+        .token.boolean { color: #0000ff !important; }
+    </style>
 </head>
 <body>
 
 <div class="container">
-<!-- Header -->
-<div class="header">
-    <div>
-        <h1>Submission History<span class="live-badge"><span class="live-dot"></span>Live</span></h1>
-    </div>
-    <div style="display: flex; gap: 10px;">
-        <button class="export-btn" onclick="exportToCSV()">
-            <!-- <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> -->
-            Export CSV
-        </button>
-        <button onclick="loadData()">
-            <!-- <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> -->
-            Refresh
-        </button>
-    </div>
-</div>
-
-<!-- Statistics Dashboard -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label">Total Submissions</div>
-        <div class="stat-value" id="totalSubmissions">0</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Accepted</div>
-        <div class="stat-value" style="color: #10b981;" id="acceptedCount">0</div>
-        <div class="stat-trend" id="acceptanceRate">0% acceptance</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Failed</div>
-        <div class="stat-value" style="color: #ef4444;" id="failedCount">0</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Unique Users</div>
-        <div class="stat-value" style="color: #3b82f6;" id="uniqueUsers">0</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Avg Runtime</div>
-        <div class="stat-value" style="font-size: 22px; color: #8b5cf6;" id="avgRuntime">0ms</div>
-    </div>
-</div>
-
-<!-- Filters -->
-<div class="filters">
-    <div class="filter-row">
-        <div class="filter-group">
-            <label>Search User / Problem</label>
-            <input type="text" id="searchInput" placeholder="Type to search...">
+    <div class="header">
+        <div>
+            <h1>Submission History</h1>
         </div>
-        <div class="filter-group">
-            <label>Status</label>
-            <select id="statusFilter">
-                <option value="">All Status</option>
-                <option value="Accepted">Accepted</option>
-                <option value="Failed">Failed</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label>Language</label>
-            <select id="languageFilter">
-                <option value="">All Languages</option>
-                <option value="cpp">C++</option>
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label>Problem</label>
-            <select id="problemFilter">
-                <option value="">All Problems</option>
-            </select>
-        </div>
-        <div class="filter-actions">
-            <button onclick="applyFilters()">Apply Filters</button>
-            <button class="secondary" onclick="resetFilters()">Reset</button>
+        <div style="display: flex; gap: 10px;">
+            <button class="export-btn" onclick="exportToCSV()">Export CSV</button>
+            <button onclick="loadData()">Refresh</button>
         </div>
     </div>
-</div>
 
-<!-- Table -->
-<div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th class="sortable" onclick="sortTable('timestamp')" style="width: 180px;">Time Submit</th>
-                <th class="sortable" onclick="sortTable('userName')">User ID</th>
-                <th class="sortable" onclick="sortTable('problemTitle')">Problem</th>
-                <th class="sortable" onclick="sortTable('language')">Language</th>
-                <th class="sortable" onclick="sortTable('status')">Result</th>
-                <th class="sortable" onclick="sortTable('runtime')">Runtime</th>
-                <th class="sortable" onclick="sortTable('memory')">Memory</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <tr><td colspan="8" class="empty-state">Loading data...</td></tr>
-        </tbody>
-    </table>
-</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Submissions</div>
+            <div class="stat-value" id="totalSubmissions">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Accepted</div>
+            <div class="stat-value" style="color: #10b981;" id="acceptedCount">0</div>
+            <div class="stat-trend" id="acceptanceRate">0% acceptance</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Failed</div>
+            <div class="stat-value" style="color: #ef4444;" id="failedCount">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Unique Users</div>
+            <div class="stat-value" style="color: #3b82f6;" id="uniqueUsers">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Avg Runtime</div>
+            <div class="stat-value" style="font-size: 22px; color: #8b5cf6;" id="avgRuntime">0ms</div>
+        </div>
+    </div>
 
-<!-- Pagination -->
-<div class="pagination">
-    <button onclick="previousPage()" id="prevBtn">← Previous</button>
-    <span id="pageInfo">Page 1 of 1</span>
-    <button onclick="nextPage()" id="nextBtn">Next →</button>
-</div>
-</div>
-
-<!-- Code Modal -->
-    <div id="codeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="tab-title">
-                    <img id="fileIcon" src="https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_cpp.svg" class="tab-icon">
-                    <span id="fileNameDisplay" style="font-weight: 500;">main.cpp</span>
-                </div>
-                
-                <div class="modal-controls">
-                    <button class="copy-btn-mini" onclick="copyCode()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        <span id="copyText">Copy</span>
-                    </button>
-                    <div class="close-btn" onclick="closeModal()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </div>
-                </div>
+    <div class="filters">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Search User / Problem</label>
+                <input type="text" id="searchInput" placeholder="Type to search...">
             </div>
-
-            <div class="modal-body">
-                <pre class="code-container line-numbers"><code id="codeContent" class="language-cpp"></code></pre>
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Failed">Failed</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Language</label>
+                <select id="languageFilter">
+                    <option value="">All Languages</option>
+                    <option value="cpp">C++</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Problem</label>
+                <select id="problemFilter">
+                    <option value="">All Problems</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button onclick="applyFilters()">Apply Filters</button>
+                <button class="secondary" onclick="resetFilters()">Reset</button>
             </div>
         </div>
     </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="sortable" onclick="sortTable('timestamp')" style="width: 180px;">Time Submit</th>
+                    <th class="sortable" onclick="sortTable('userName')">User ID</th>
+                    <th class="sortable" onclick="sortTable('problemTitle')">Problem</th>
+                    <th class="sortable" onclick="sortTable('language')">Language</th>
+                    <th class="sortable" onclick="sortTable('status')">Result</th>
+                    <th class="sortable" onclick="sortTable('runtime')">Runtime</th>
+                    <th class="sortable" onclick="sortTable('memory')">Memory</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="8" class="empty-state">Loading data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button onclick="previousPage()" id="prevBtn">← Previous</button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button onclick="nextPage()" id="nextBtn">Next →</button>
+    </div>
 </div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+<div id="codeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="tab-title">
+                <img id="fileIcon" src="https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_cpp.svg" class="tab-icon">
+                <span id="fileNameDisplay" style="font-weight: 500;">main.cpp</span>
+            </div>
+            
+            <div class="modal-controls">
+                <button class="copy-btn-mini" onclick="copyCode()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span id="copyText">Copy</span>
+                </button>
+                <div class="close-btn" onclick="closeModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <pre class="code-container line-numbers"><code id="codeContent" class="language-cpp"></code></pre>
+        </div>
+    </div>
+</div>
 
 <script>
-// Firebase Config
-const firebaseConfig = {
-    apiKey: "AIzaSyCFW6cLg1Xh9j8BJOlPXC1IPpxRNFWcNS4",
-    authDomain: "wdsa-6c250.firebaseapp.com",
-    projectId: "wdsa-6c250",
-    storageBucket: "wdsa-6c250.firebasestorage.app",
-    messagingSenderId: "279867470204",
-    appId: "1:279867470204:web:973c0736c69f5779cff4f9",
-    measurementId: "G-SE28C7Y619",
-    databaseURL: "https://wdsa-6c250-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
+    // --- 1. CONFIGURATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyCFW6cLg1Xh9j8BJOlPXC1IPpxRNFWcNS4",
+        authDomain: "wdsa-6c250.firebaseapp.com",
+        projectId: "wdsa-6c250",
+        storageBucket: "wdsa-6c250.firebasestorage.app",
+        messagingSenderId: "279867470204",
+        appId: "1:279867470204:web:973c0736c69f5779cff4f9",
+        measurementId: "G-SE28C7Y619",
+        databaseURL: "https://wdsa-6c250-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const db = firebase.database();
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
 
-// Global Variables
-let allSubmissions = [];
-let filteredSubmissions = [];
-let currentSort = { column: 'timestamp', direction: 'desc' };
-let currentPage = 1;
-let itemsPerPage = 20;
-let recentSubmissionIds = new Set();
+    // --- 2. GLOBAL STATE ---
+    let allSubmissions = [];
+    let filteredSubmissions = [];
+    let currentSort = { column: 'timestamp', direction: 'desc' };
+    let currentPage = 1;
+    let itemsPerPage = 20;
+    let recentSubmissionIds = new Set();
 
-// Load Data with Real-time Listener
-function loadData() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Updating...</td></tr>';
-    
-    // Listen for new submissions in real-time
-    db.ref('submissions').limitToLast(100).on('value', (snapshot) => {
-        const data = snapshot.val();
+    // --- 3. DATA FETCHING ---
+    function loadData() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Updating...</td></tr>';
         
-        if (!data) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div>No submissions found.</div></td></tr>';
+        db.ref('submissions').limitToLast(100).on('value', (snapshot) => {
+            const data = snapshot.val();
+            
+            if (!data) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div>No submissions found.</div></td></tr>';
+                return;
+            }
+
+            const newIds = Object.keys(data);
+            const hasNewSubmissions = newIds.some(id => !recentSubmissionIds.has(id));
+            recentSubmissionIds = new Set(newIds);
+
+            allSubmissions = Object.entries(data).map(([key, val]) => ({
+                id: key,
+                isNew: hasNewSubmissions && !allSubmissions.some(s => s.id === key),
+                ...val
+            }));
+
+            populateProblemFilter();
+            updateStatistics();
+            applyFilters();
+        });
+    }
+
+    // --- 4. FILTERS & SORTING ---
+    function populateProblemFilter() {
+        const problemSet = new Set(allSubmissions.map(s => s.problemTitle));
+        const select = document.getElementById('problemFilter');
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">All Problems</option>';
+        
+        Array.from(problemSet).sort().forEach(problem => {
+            const option = document.createElement('option');
+            option.value = problem;
+            option.textContent = problem;
+            select.appendChild(option);
+        });
+        select.value = currentValue;
+    }
+
+    function applyFilters() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value;
+        const languageFilter = document.getElementById('languageFilter').value;
+        const problemFilter = document.getElementById('problemFilter').value;
+        
+        filteredSubmissions = allSubmissions.filter(item => {
+            const userName = (item.userName || 'Anonymous').toLowerCase();
+            const problemTitle = (item.problemTitle || '').toLowerCase();
+            const matchesSearch = userName.includes(searchTerm) || problemTitle.includes(searchTerm);
+            const matchesStatus = !statusFilter || item.status === statusFilter;
+            const matchesLanguage = !languageFilter || (item.language || 'cpp') === languageFilter;
+            const matchesProblem = !problemFilter || item.problemTitle === problemFilter;
+            return matchesSearch && matchesStatus && matchesLanguage && matchesProblem;
+        });
+        
+        sortData();
+        currentPage = 1;
+        renderTable();
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('languageFilter').value = '';
+        document.getElementById('problemFilter').value = '';
+        applyFilters();
+    }
+
+    function sortTable(column) {
+        if (currentSort.column === column) {
+            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSort.column = column;
+            currentSort.direction = 'desc';
+        }
+        
+        document.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+        const activeHeader = Array.from(document.querySelectorAll('th')).find(th => 
+            th.textContent.toLowerCase().includes(column === 'userName' ? 'user' : column.replace('Title',''))
+        );
+        if (activeHeader) activeHeader.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+        
+        sortData();
+        renderTable();
+    }
+
+    function sortData() {
+        filteredSubmissions.sort((a, b) => {
+            let aVal = a[currentSort.column], bVal = b[currentSort.column];
+            
+            if (currentSort.column === 'userName') {
+                aVal = (aVal || 'Anonymous').toLowerCase();
+                bVal = (bVal || 'Anonymous').toLowerCase();
+            } else if (['runtime', 'memory', 'timestamp'].includes(currentSort.column)) {
+                aVal = parseFloat(aVal || 0);
+                bVal = parseFloat(bVal || 0);
+            } else {
+                aVal = (aVal || '').toLowerCase();
+                bVal = (bVal || '').toLowerCase();
+            }
+            
+            return currentSort.direction === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+        });
+    }
+
+    // --- 5. UI RENDERING ---
+    function updateStatistics() {
+        const total = allSubmissions.length;
+        const accepted = allSubmissions.filter(s => s.status === 'Accepted').length;
+        const failed = total - accepted;
+        const uniqueUsers = new Set(allSubmissions.map(s => s.userName || 'Anonymous')).size;
+        
+        let totalRuntime = 0;
+        allSubmissions.forEach(s => {
+            let runtime = parseFloat(s.runtime || 0);
+            if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
+            totalRuntime += runtime;
+        });
+        const avgRuntime = total > 0 ? (totalRuntime / total * 1000).toFixed(1) : 0;
+        
+        document.getElementById('totalSubmissions').textContent = total;
+        document.getElementById('acceptedCount').textContent = accepted;
+        document.getElementById('failedCount').textContent = failed;
+        document.getElementById('uniqueUsers').textContent = uniqueUsers;
+        document.getElementById('avgRuntime').textContent = avgRuntime + 'ms';
+        document.getElementById('acceptanceRate').textContent = total > 0 ? ((accepted / total) * 100).toFixed(1) + '% acceptance' : '0% acceptance';
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageData = filteredSubmissions.slice(start, end);
+        
+        if (pageData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><div>No submissions match your filters.</div></td></tr>';
             return;
         }
-
-        // Check for new submissions
-        const newIds = Object.keys(data);
-        const hasNewSubmissions = newIds.some(id => !recentSubmissionIds.has(id));
         
-        // Update the recent IDs set
-        recentSubmissionIds = new Set(newIds);
-
-        // Convert to array
-        allSubmissions = Object.entries(data).map(([key, val]) => ({
-            id: key,
-            isNew: hasNewSubmissions && !allSubmissions.some(s => s.id === key),
-            ...val
-        }));
-
-        // Populate problem filter
-        populateProblemFilter();
-        
-        // Update statistics
-        updateStatistics();
-        
-        // Apply current filters
-        applyFilters();
-    });
-}
-
-// Populate Problem Filter Dropdown
-function populateProblemFilter() {
-    const problemSet = new Set();
-    allSubmissions.forEach(s => problemSet.add(s.problemTitle));
-    
-    const select = document.getElementById('problemFilter');
-    const currentValue = select.value;
-    select.innerHTML = '<option value="">All Problems</option>';
-    
-    Array.from(problemSet).sort().forEach(problem => {
-        const option = document.createElement('option');
-        option.value = problem;
-        option.textContent = problem;
-        select.appendChild(option);
-    });
-    
-    select.value = currentValue;
-}
-
-// Update Statistics Dashboard
-function updateStatistics() {
-    const total = allSubmissions.length;
-    const accepted = allSubmissions.filter(s => s.status === 'Accepted').length;
-    const failed = total - accepted;
-    const uniqueUsers = new Set(allSubmissions.map(s => s.userName || 'Anonymous')).size;
-    
-    // Calculate average runtime
-    let totalRuntime = 0;
-    allSubmissions.forEach(s => {
-        let runtime = parseFloat(s.runtime || 0);
-        if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
-        totalRuntime += runtime;
-    });
-    const avgRuntime = total > 0 ? (totalRuntime / total * 1000).toFixed(1) : 0;
-    
-    document.getElementById('totalSubmissions').textContent = total;
-    document.getElementById('acceptedCount').textContent = accepted;
-    document.getElementById('failedCount').textContent = failed;
-    document.getElementById('uniqueUsers').textContent = uniqueUsers;
-    document.getElementById('avgRuntime').textContent = avgRuntime + 'ms';
-    
-    const acceptanceRate = total > 0 ? ((accepted / total) * 100).toFixed(1) : 0;
-    document.getElementById('acceptanceRate').textContent = acceptanceRate + '% acceptance';
-}
-
-// Apply Filters
-function applyFilters() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const statusFilter = document.getElementById('statusFilter').value;
-    const languageFilter = document.getElementById('languageFilter').value;
-    const problemFilter = document.getElementById('problemFilter').value;
-    
-    filteredSubmissions = allSubmissions.filter(item => {
-        const userName = (item.userName || 'Anonymous').toLowerCase();
-        const problemTitle = item.problemTitle.toLowerCase();
-        const matchesSearch = userName.includes(searchTerm) || problemTitle.includes(searchTerm);
-        const matchesStatus = !statusFilter || item.status === statusFilter;
-        const matchesLanguage = !languageFilter || (item.language || 'cpp') === languageFilter;
-        const matchesProblem = !problemFilter || item.problemTitle === problemFilter;
-        
-        return matchesSearch && matchesStatus && matchesLanguage && matchesProblem;
-    });
-    
-    // Apply sorting
-    sortData();
-    
-    // Reset to page 1
-    currentPage = 1;
-    
-    // Render table
-    renderTable();
-}
-
-// Reset Filters
-function resetFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('statusFilter').value = '';
-    document.getElementById('languageFilter').value = '';
-    document.getElementById('problemFilter').value = '';
-    applyFilters();
-}
-
-// Sort Table
-function sortTable(column) {
-    if (currentSort.column === column) {
-        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-    } else {
-        currentSort.column = column;
-        currentSort.direction = 'desc';
+        tbody.innerHTML = '';
+        pageData.forEach(item => {
+            const date = new Date(item.timestamp).toLocaleString();
+            const statusClass = item.status === 'Accepted' ? 'success' : 'fail';
+            const langKey = item.language || 'cpp';
+            const langDisplay = langKey === 'python' ? 'Python' : 'C++';
+            const langBadgeClass = langKey === 'python' ? 'lang-python' : 'lang-cpp';
+            
+            let runtime = parseFloat(item.runtime || 0);
+            let memory = parseFloat(item.memory || 0);
+            if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
+            if (memory < 0.5) memory = 3.1 + (Math.random() * 1.5);
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="font-size: 13px; color: #64748b;">${date}</td>
+                <td style="font-weight:600; color: #1e293b;">${item.userName || "Anonymous"}</td>
+                <td style="color: #334155;">${item.problemTitle}</td>
+                <td><span class="badge ${langBadgeClass}">${langDisplay}</span></td>
+                <td><span class="badge ${statusClass}">${item.status}</span></td>
+                <td class="metric-cell">${runtime.toFixed(3)}s</td>
+                <td class="metric-cell">${memory.toFixed(2)} MB</td>
+                <td>
+                    <button class="btn-view" onclick="viewCode('${item.id}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        Code
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        updatePagination();
     }
-    
-    // Update header UI
-    document.querySelectorAll('th').forEach(th => {
-        th.classList.remove('sort-asc', 'sort-desc');
-    });
-    
-    const activeHeader = Array.from(document.querySelectorAll('th')).find(
-        th => th.textContent.includes(getColumnDisplayName(column))
-    );
-    
-    if (activeHeader) {
-        activeHeader.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
     }
-    
-    sortData();
-    renderTable();
-}
 
-function getColumnDisplayName(column) {
-    const map = {
-        'timestamp': 'Time Submit',
-        'userName': 'User ID',
-        'problemTitle': 'Problem',
-        'language': 'Language',
-        'status': 'Result',
-        'runtime': 'Runtime',
-        'memory': 'Memory'
-    };
-    return map[column] || column;
-}
+    function previousPage() { if (currentPage > 1) { currentPage--; renderTable(); } }
+    function nextPage() { if (currentPage < Math.ceil(filteredSubmissions.length / itemsPerPage)) { currentPage++; renderTable(); } }
 
-// Sort Data
-function sortData() {
-    filteredSubmissions.sort((a, b) => {
-        let aVal = a[currentSort.column];
-        let bVal = b[currentSort.column];
+    // --- 6. MODAL & ACTIONS ---
+    function viewCode(id) {
+        const submission = allSubmissions.find(item => item.id === id);
+        if (!submission) return;
         
-        // Handle special cases
-        if (currentSort.column === 'userName') {
-            aVal = (aVal || 'Anonymous').toLowerCase();
-            bVal = (bVal || 'Anonymous').toLowerCase();
-        } else if (currentSort.column === 'runtime' || currentSort.column === 'memory') {
-            aVal = parseFloat(aVal || 0);
-            bVal = parseFloat(bVal || 0);
-        } else if (currentSort.column === 'timestamp') {
-            aVal = aVal || 0;
-            bVal = bVal || 0;
-        } else if (currentSort.column === 'problemTitle' || currentSort.column === 'status' || currentSort.column === 'language') {
-            aVal = (aVal || '').toLowerCase();
-            bVal = (bVal || '').toLowerCase();
-        }
+        const modal = document.getElementById('codeModal');
+        const codeContent = document.getElementById('codeContent');
+        const preElement = codeContent.parentElement;
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileIcon = document.getElementById('fileIcon');
         
-        if (currentSort.direction === 'asc') {
-            return aVal > bVal ? 1 : -1;
-        } else {
-            return aVal < bVal ? 1 : -1;
-        }
-    });
-}
-
-// Render Table
-// Thay thế hàm renderTable cũ bằng hàm này
-function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageData = filteredSubmissions.slice(start, end);
-    
-    if (pageData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><div>No submissions match your filters.</div></td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = '';
-    
-    pageData.forEach(item => {
-        const date = new Date(item.timestamp).toLocaleString();
-        const statusClass = item.status === 'Accepted' ? 'success' : 'fail';
-        const displayName = item.userName || "Anonymous";
+        document.getElementById('copyText').textContent = "Copy";
+        codeContent.textContent = submission.code; 
         
-        // --- LOGIC XỬ LÝ NGÔN NGỮ (MỚI) ---
-        // Lấy key ngôn ngữ (nếu data cũ không có thì mặc định là cpp)
-        const langKey = item.language || 'cpp'; 
+        const langKey = submission.language || 'cpp';
+        codeContent.className = 'language-' + langKey;
+        preElement.classList.add('line-numbers');
         
-        let langDisplay = 'C++';
-        let langBadgeClass = 'lang-cpp';
-
         if (langKey === 'python') {
-            langDisplay = 'Python';
-            langBadgeClass = 'lang-python';
+            fileNameDisplay.textContent = 'main.py';
+            fileIcon.src = 'https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_python.svg';
+        } else {
+            fileNameDisplay.textContent = 'main.cpp';
+            fileIcon.src = 'https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_cpp.svg';
         }
-        // ----------------------------------
         
-        // Xử lý hiển thị Runtime/Memory (Giữ nguyên logic làm đẹp số liệu)
-        let runtime = parseFloat(item.runtime || 0);
-        let memory = parseFloat(item.memory || 0);
-        
-        if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
-        if (memory < 0.5) memory = 3.1 + (Math.random() * 1.5);
-        
-        const runtimeStr = runtime.toFixed(3) + 's';
-        const memoryStr = memory.toFixed(2) + ' MB';
-        
-        const row = document.createElement('tr');
-        row.style.transition = 'background 0.1s';
-        
-        row.innerHTML = `
-            <td style="font-size: 13px; color: #64748b;">${date}</td>
-            <td style="font-weight:600; color: #1e293b;">
-                ${displayName}
-                ${item.isNew ? '' : ''}
-            </td>
-            <td style="color: #334155;">${item.problemTitle}</td>
+        modal.style.display = 'flex';
+        setTimeout(() => Prism.highlightElement(codeContent), 10);
+    }
+
+    function copyCode() {
+        const codeText = document.getElementById('codeContent').textContent;
+        navigator.clipboard.writeText(codeText).then(() => {
+            const copyText = document.getElementById('copyText');
+            copyText.textContent = "Copied!";
+            setTimeout(() => copyText.textContent = "Copy", 2000);
+        });
+    }
+
+    function closeModal() {
+        document.getElementById('codeModal').style.display = 'none';
+    }
+
+    function exportToCSV() {
+        const headers = ['Timestamp', 'User ID', 'Problem', 'Language', 'Status', 'Runtime', 'Memory'];
+        const rows = filteredSubmissions.map(item => {
+            const date = new Date(item.timestamp).toLocaleString();
+            let runtime = parseFloat(item.runtime || 0);
+            let memory = parseFloat(item.memory || 0);
+            if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
+            if (memory < 0.5) memory = 3.1 + (Math.random() * 1.5);
             
-            <td><span class="badge ${langBadgeClass}">${langDisplay}</span></td>
-            
-            <td><span class="badge ${statusClass}">${item.status}</span></td>
-            <td class="metric-cell">${runtimeStr}</td>
-            <td class="metric-cell">${memoryStr}</td>
-            <td>
-                <button class="btn-view" onclick="viewCode('${item.id}')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                    Code
-                </button>
-            </td>
-        `;
-        tbody.appendChild(row);
+            const lang = item.language === 'python' ? 'Python' : 'C++';
+            return [
+                date, item.userName || 'Anonymous', item.problemTitle, lang,
+                item.status, runtime.toFixed(3) + 's', memory.toFixed(2) + ' MB'
+            ];
+        });
         
-        if (item.isNew) {
-            setTimeout(() => { item.isNew = false; }, 3000);
-        }
-    });
-    
-    updatePagination();
-}
-
-// Pagination
-function updatePagination() {
-    const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
-    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
-    document.getElementById('prevBtn').disabled = currentPage === 1;
-    document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
-}
-
-function previousPage() {
-    if (currentPage > 1) {
-        currentPage--;
-        renderTable();
-    }
-}
-
-function nextPage() {
-    const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
-    if (currentPage < totalPages) {
-        currentPage++;
-        renderTable();
-    }
-}
-
-// View Code Modal
-function viewCode(id) {
-    const submission = allSubmissions.find(item => item.id === id);
-    if (!submission) return;
-    
-    const modal = document.getElementById('codeModal');
-    const codeContent = document.getElementById('codeContent');
-    const preElement = codeContent.parentElement;
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
-    const fileIcon = document.getElementById('fileIcon');
-    const copyText = document.getElementById('copyText');
-    
-    copyText.textContent = "Copy";
-
-    // 1. Gán nội dung code
-    codeContent.textContent = submission.code; 
-
-    // 2. Thiết lập ngôn ngữ
-    const langKey = submission.language || 'cpp';
-    codeContent.className = 'language-' + langKey;
-    
-    // Đảm bảo thẻ pre có class line-numbers
-    preElement.classList.add('line-numbers');
-    
-    // Cập nhật giao diện Icon
-    if (langKey === 'python') {
-        fileNameDisplay.textContent = 'main.py';
-        fileIcon.src = 'https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_python.svg';
-    } else {
-        fileNameDisplay.textContent = 'main.cpp';
-        fileIcon.src = 'https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_cpp.svg';
-    }
-    
-    // 3. Hiển thị modal
-    modal.style.display = 'flex';
-    
-    // 4. Kích hoạt highlight sau khi modal đã hiển thị (để Prism tính đúng tọa độ)
-    setTimeout(() => {
-        Prism.highlightElement(codeContent);
-    }, 10);
-}
-
-function copyCode() {
-    const codeText = document.getElementById('codeContent').textContent;
-    navigator.clipboard.writeText(codeText).then(() => {
-        const copyText = document.getElementById('copyText');
-        copyText.textContent = "Copied!";
-        setTimeout(() => copyText.textContent = "Copy", 2000);
-    });
-}
-
-function closeModal() {
-    document.getElementById('codeModal').style.display = 'none';
-}
-
-// Bổ sung: Đóng khi click ra ngoài vùng modal (nếu chưa có)
-window.onclick = function(event) {
-    const modal = document.getElementById('codeModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Copy Code
-function copyCode() {
-    const codeText = document.getElementById('codeContent').textContent;
-    navigator.clipboard.writeText(codeText).then(() => {
-        const copyText = document.getElementById('copyText');
-        copyText.textContent = "Copied!";
-        setTimeout(() => {
-            copyText.textContent = "Copy Code";
-        }, 2000);
-    }).catch(err => {
-        console.error('Failed to copy: ', err);
-    });
-}
-
-// Export to CSV
-function exportToCSV() {
-    const headers = ['Timestamp', 'User ID', 'Problem', 'Language', 'Status', 'Runtime', 'Memory'];
-    const rows = filteredSubmissions.map(item => {
-        const date = new Date(item.timestamp).toLocaleString();
-        let runtime = parseFloat(item.runtime || 0);
-        let memory = parseFloat(item.memory || 0);
-        if (runtime < 0.001) runtime = 0.001 + (Math.random() * 0.004);
-        if (memory < 0.5) memory = 3.1 + (Math.random() * 1.5);
+        let csvContent = headers.join(',') + '\n';
+        rows.forEach(row => csvContent += row.map(cell => `"${cell}"`).join(',') + '\n');
         
-        const lang = item.languageDisplay || (item.language === 'javascript' ? 'JavaScript' : 
-                        item.language === 'python' ? 'Python' : 
-                        item.language === 'java' ? 'Java' : 'C++');
-        
-        return [
-            date,
-            item.userName || 'Anonymous',
-            item.problemTitle,
-            lang,
-            item.status,
-            runtime.toFixed(3) + 's',
-            memory.toFixed(2) + ' MB'
-        ];
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `submissions_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // --- 7. EVENT LISTENERS ---
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('codeModal')) closeModal();
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
     });
-    
-    let csvContent = headers.join(',') + '\n';
-    rows.forEach(row => {
-        csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+
+    // Auto-apply filters
+    ['searchInput', 'statusFilter', 'languageFilter', 'problemFilter'].forEach(id => {
+        document.getElementById(id).addEventListener(id === 'searchInput' ? 'input' : 'change', applyFilters);
     });
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `submissions_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-}
 
-// Close modal on ESC key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-});
-
-// Auto-apply filters on input
-document.getElementById('searchInput').addEventListener('input', applyFilters);
-document.getElementById('statusFilter').addEventListener('change', applyFilters);
-document.getElementById('languageFilter').addEventListener('change', applyFilters);
-document.getElementById('problemFilter').addEventListener('change', applyFilters);
-
-// Initialize
-loadData();
+    // Start
+    loadData();
 </script>
 </body>
 </html>

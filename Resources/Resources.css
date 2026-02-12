@@ -1,3 +1,8 @@
+/* ==========================================================================
+   1. GLOBAL & FONTS OVERRIDES
+   ========================================================================== */
+
+/* Override font cho Header/Nav từ file global khác */
 header, 
 .navbar, 
 .nav-menu, 
@@ -7,18 +12,42 @@ header,
     font-family: 'Arial', sans-serif !important;
 }
 
-/* 2. Chỉ áp dụng font Inter cho phần nội dung riêng của trang Resources */
+/* Font chuẩn cho trang Resources (Inter) */
+body,
 .res-hero, 
 .res-main, 
 .res-footer, 
 .res-submit-section,
 .modal,
 .res-detail-header,
-.res-detail-section {
+.res-detail-section,
+.res-btn-run,
+.res-btn-submit {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
 }
 
+h1, h2, h3, 
+.res-hero-badge, 
+.res-detail-title {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.02em; 
+}
+
+/* Font Monospace cho Code & Numbers (JetBrains Mono) */
+.res-code-block pre, 
+code, 
+.res-pc-number, 
+.res-detail-number,
+.res-complexity-val,
+.res-code-editor {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-variant-ligatures: none; 
+}
+
+/* ==========================================================================
+   2. HERO SECTION
+   ========================================================================== */
 .res-hero {
     background: linear-gradient(135deg, #1a472a 0%, #2d7a4e 60%, #3d9b6a 100%);
     padding: 72px 0 56px;
@@ -26,6 +55,7 @@ header,
     overflow: hidden;
 }
 
+/* Decorative circles */
 .res-hero::before,
 .res-hero::after {
     content: '';
@@ -64,6 +94,14 @@ header,
     margin-bottom: 14px;
 }
 
+.res-hero-content p {
+    color: rgba(255,255,255,0.82);
+    font-size: 17px;
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
 .res-highlight {
     position: relative;
     display: inline-block;
@@ -80,15 +118,9 @@ header,
     z-index: -1;
 }
 
-.res-hero-content p {
-    color: rgba(255,255,255,0.82);
-    font-size: 17px;
-    max-width: 580px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* ---------- MAIN LAYOUT (sidebar + content) ---------- */
+/* ==========================================================================
+   3. MAIN LAYOUT
+   ========================================================================== */
 .res-main {
     padding: 48px 0 80px;
     background: #f4f7f5;
@@ -101,7 +133,14 @@ header,
     align-items: flex-start;
 }
 
-/* ---------- SIDEBAR ---------- */
+.res-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ==========================================================================
+   4. SIDEBAR & NAVIGATION
+   ========================================================================== */
 .res-sidebar {
     width: 290px;
     flex-shrink: 0;
@@ -116,6 +155,31 @@ header,
     flex-direction: column;
 }
 
+/* Sidebar History Button */
+.res-sidebar-history-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: #fff7ed; /* Màu nền cam nhạt */
+    color: #d97706;      /* Chữ màu cam đậm */
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid #fed7aa;
+    transition: all 0.2s ease;
+}
+
+.res-sidebar-history-btn:hover {
+    background: #ffedd5;
+    color: #c2410c;
+    padding-left: 26px; /* Hiệu ứng slide nhẹ */
+}
+
+.res-sidebar-history-btn svg {
+    flex-shrink: 0;
+}
+
 .res-sidebar-header {
     display: flex;
     align-items: center;
@@ -128,13 +192,12 @@ header,
     background: #f0faf4;
 }
 
+/* Chapter List & Scrollbar */
 .res-chapter-list {
     overflow-y: auto;
     padding: 8px 0;
     flex: 1;
 }
-
-/* custom scrollbar cho sidebar */
 .res-chapter-list::-webkit-scrollbar { width: 6px; }
 .res-chapter-list::-webkit-scrollbar-track { background: transparent; }
 .res-chapter-list::-webkit-scrollbar-thumb { background: #cde8d6; border-radius: 3px; }
@@ -182,13 +245,9 @@ header,
     flex-shrink: 0;
 }
 
-/* ---------- CONTENT AREA ---------- */
-.res-content {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ---- Breadcrumb ---- */
+/* ==========================================================================
+   5. BREADCRUMB
+   ========================================================================== */
 .res-breadcrumb {
     display: flex;
     align-items: center;
@@ -198,6 +257,7 @@ header,
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
+
 .res-bc-home {
     display: flex;
     align-items: center;
@@ -208,36 +268,62 @@ header,
     transition: opacity 0.2s;
 }
 .res-bc-home:hover { opacity: 0.7; }
+
 .res-bc-sep { color: #bbb; font-size: 16px; }
 .res-bc-chapter { color: #2d7a4e; font-weight: 600; cursor: pointer; }
 .res-bc-chapter:hover { text-decoration: underline; }
+
 .res-bc-problem { color: #555; font-weight: 600; }
 .res-bc-sep-problem, .res-bc-problem { display: none; }
 .res-bc-sep-problem.visible, .res-bc-problem.visible { display: inline; }
 
-/* ---- Chapter title row ---- */
+/* ==========================================================================
+   6. PROBLEM LIST VIEW
+   ========================================================================== */
+/* Header Row */
 .res-chapter-title-row {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Đẩy tiêu đề sang trái, search sang phải */
+    justify-content: space-between;
     gap: 14px;
     margin-bottom: 22px;
     flex-wrap: wrap;
 }
 
-/* Style cho khung tìm kiếm */
+.res-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.res-chapter-title-row h2 {
+    font-size: 24px;
+    color: #1a472a;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.res-problem-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #2d7a4e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: capitalize;
+}
+
+/* Search Box */
 .res-search-box {
     position: relative;
     width: 280px;
     max-width: 100%;
-    /* Sử dụng transition mượt mà */
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform-origin: center center; /* Phóng to từ tâm */
+    transform-origin: center center;
 }
-
 .res-search-box:hover {
-    transform: scale(1.05); /* Thay đổi kích thước thay vì vị trí */
-    z-index: 10; /* Đảm bảo nó nổi lên trên các phần tử khác */
+    transform: scale(1.05);
+    z-index: 10;
 }
 
 .res-search-box svg {
@@ -264,55 +350,16 @@ header,
 
 .res-search-box:hover input {
     border-color: #2d7a4e;
-    box-shadow: 0 8px 20px rgba(45, 122, 78, 0.15); /* Bóng đổ mềm mại hơn */
+    box-shadow: 0 8px 20px rgba(45, 122, 78, 0.15);
 }
 
 .res-search-box input:focus {
     border-color: #2d7a4e;
-    box-shadow: 0 0 0 4px rgba(45, 122, 78, 0.1); /* Viền sáng bao quanh */
+    box-shadow: 0 0 0 4px rgba(45, 122, 78, 0.1);
 }
+.res-search-box input::placeholder { color: #aaa; }
 
-.res-search-box input::placeholder {
-    color: #aaa;
-}
-
-/* Responsive cho mobile */
-@media (max-width: 600px) {
-    .res-chapter-title-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
-    
-    .res-search-box {
-        width: 100%;
-    }
-}
-
-/* Thêm class này để xếp tiêu đề và số lượng nằm ngang */
-.res-title-group {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Khoảng cách giữa tên chương và số lượng */
-}
-
-.res-chapter-title-row h2 {
-    font-size: 24px;
-    color: #1a472a;
-    font-weight: 700;
-    margin-bottom: 0; /* Quan trọng: Xóa margin dưới để nó thẳng hàng với số lượng */
-}
-
-.res-problem-count {
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    background: #2d7a4e;
-    padding: 4px 12px;
-    border-radius: 20px;
-    text-transform: capitalize;
-}
-
+/* Grid & Cards */
 .res-problem-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -344,7 +391,6 @@ header,
     transition: transform 0.3s;
 }
 .res-problem-card:hover::before { transform: scaleX(1); }
-
 .res-problem-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(45,122,78,0.18);
@@ -427,6 +473,9 @@ header,
 .res-empty svg { margin: 0 auto 16px; display: block; }
 .res-empty p { font-size: 15px; }
 
+/* ==========================================================================
+   7. PROBLEM DETAIL VIEW
+   ========================================================================== */
 .res-back-btn {
     display: inline-flex;
     align-items: center;
@@ -443,6 +492,7 @@ header,
 }
 .res-back-btn:hover { gap: 10px; }
 
+/* Detail Header */
 .res-detail-header {
     background: #fff;
     border-radius: 18px;
@@ -502,6 +552,7 @@ header,
     font-weight: 600;
 }
 
+/* Detail Sections (Desc, Examples) */
 .res-detail-section {
     background: #fff;
     border-radius: 18px;
@@ -563,100 +614,7 @@ header,
     font-style: italic;
 }
 
-.res-copy-btn {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #e8f5e9;
-    border: none;
-    color: #2d7a4e;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-.res-copy-btn:hover { background: #2d7a4e; color: #fff; }
-.res-copy-btn.copied { background: #dcfce7; color: #16a34a; }
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased; 
-}
-
-
-h1, h2, h3, .res-hero-badge, .res-detail-title {
-    font-family: 'Inter', sans-serif;
-    letter-spacing: -0.02em; 
-}
-
-
-.res-code-block pre, 
-code, 
-.res-pc-number, 
-.res-detail-number,
-.res-complexity-val {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-    font-variant-ligatures: none; 
-}
-
-.res-code-block {
-    position: relative;
-    background: #011627;
-    border-radius: 10px; 
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); 
-    overflow: hidden;
-    border: 1px solid #1d3b53;
-    margin-top: 10px;
-    max-width: 100%;
-}
-
-
-.res-code-block::before {
-    content: '';
-    position: absolute;
-    top: 14px; 
-    left: 15px;
-    width: 10px; 
-    height: 10px;
-    border-radius: 50%;
-    background: #ff5f56;
-    box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f; 
-    z-index: 10;
-}
-
-
-.res-code-block pre {
-    margin: 0;
-    padding: 42px 18px 18px 18px !important; 
-    overflow-x: auto;
-    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-    font-size: 13px; 
-    line-height: 1.5; 
-    background: #011627 !important;
-    color: #d6deeb;
-    max-height: 450px; 
-}
-
-.res-code-block pre::-webkit-scrollbar {
-    height: 8px; 
-}
-
-.res-code-block pre::-webkit-scrollbar-track {
-    background: #011627;
-}
-
-.res-code-block pre::-webkit-scrollbar-thumb {
-    background: #5f7e97;
-    border-radius: 4px;
-}
-
-.res-code-block pre::-webkit-scrollbar-thumb:hover {
-    background: #7e9eb9;
-}
-
+/* Complexity Box */
 .res-complexity-box {
     display: flex;
     gap: 16px;
@@ -679,56 +637,18 @@ code,
     text-transform: uppercase;
     letter-spacing: 0.6px;
 }
-
 .res-complexity-val {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-    
     font-size: 19px; 
     font-weight: 800; 
     color: #444;      
-    
-   
     letter-spacing: normal;
     text-transform: none;
 }
 
-@media (max-width: 900px) {
-    .res-layout { flex-direction: column; }
-    .res-sidebar {
-        width: 100%;
-        position: static;
-        max-height: 260px;
-    }
-    .res-chapter-list { flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px; display: flex; }
-    .res-chapter-item { min-width: 180px; flex-shrink: 0; }
-    .res-hero-content h1 { font-size: 30px; }
-}
-
-@media (max-width: 600px) {
-    .res-hero { padding: 52px 0 40px; }
-    .res-hero-content h1 { font-size: 26px; }
-    .res-hero-content p  { font-size: 15px; }
-
-    .res-problem-grid { grid-template-columns: 1fr; }
-
-    .res-detail-header,
-    .res-detail-section { padding: 20px; border-radius: 14px; }
-
-    .res-detail-title { font-size: 21px; }
-
-    .res-complexity-box {
-        flex-direction: column;
-        gap: 12px;
-        padding: 18px;
-    }
-
-    .res-sidebar { max-height: 220px; }
-    .res-chapter-item { min-width: 150px; padding: 10px 14px; }
-    .res-ch-icon { width: 28px; height: 28px; font-size: 14px; }
-}
-
-
-
+/* ==========================================================================
+   8. CODE EDITOR & STATIC CODE BLOCKS
+   ========================================================================== */
 .res-submit-section {
     background: #fff;
     border-radius: 16px;
@@ -737,7 +657,45 @@ code,
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
+/* Static Code Block (Description) */
+.res-code-block {
+    position: relative;
+    background: #011627;
+    border-radius: 10px; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); 
+    overflow: hidden;
+    border: 1px solid #1d3b53;
+    margin-top: 10px;
+    max-width: 100%;
+}
+.res-code-block::before {
+    content: '';
+    position: absolute;
+    top: 14px; 
+    left: 15px;
+    width: 10px; 
+    height: 10px;
+    border-radius: 50%;
+    background: #ff5f56;
+    box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f; 
+    z-index: 10;
+}
+.res-code-block pre {
+    margin: 0;
+    padding: 42px 18px 18px 18px !important; 
+    overflow-x: auto;
+    font-size: 13px; 
+    line-height: 1.5; 
+    background: #011627 !important;
+    color: #d6deeb;
+    max-height: 450px; 
+}
+.res-code-block pre::-webkit-scrollbar { height: 8px; }
+.res-code-block pre::-webkit-scrollbar-track { background: #011627; }
+.res-code-block pre::-webkit-scrollbar-thumb { background: #5f7e97; border-radius: 4px; }
+.res-code-block pre::-webkit-scrollbar-thumb:hover { background: #7e9eb9; }
 
+/* Interactive Editor Wrapper */
 .res-code-editor-wrapper {
     background: #011627; 
     border-radius: 12px; 
@@ -758,7 +716,6 @@ code,
     border-bottom: none; 
     position: relative;
 }
-
 .res-editor-header::before {
     content: '';
     position: absolute;
@@ -769,9 +726,7 @@ code,
     height: 12px;
     border-radius: 50%;
     background: #ff5f56; 
-    box-shadow: 
-        20px 0 0 #ffbd2e, 
-        40px 0 0 #27c93f; 
+    box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f; 
 }
 
 .res-lang-select {
@@ -787,7 +742,6 @@ code,
     margin-right: 10px; 
     transition: all 0.2s;
 }
-
 .res-lang-select:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: #ffffff;
@@ -807,7 +761,6 @@ code,
     cursor: pointer;
     transition: all 0.2s;
 }
-
 .res-reset-code-btn:hover {
     background: rgba(255, 59, 48, 0.1); 
     color: #ff5f56;
@@ -820,7 +773,6 @@ code,
     color: #d6deeb; 
     border: none;
     padding: 10px 25px 30px 25px; 
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 14px;
     line-height: 1.6;
     resize: vertical;
@@ -828,42 +780,31 @@ code,
     tab-size: 4;
     caret-color: #82aaff; 
 }
-
-.res-code-editor::placeholder {
-    color: #5f7e97;
-}
-
-.res-code-editor::-webkit-scrollbar {
-    width: 10px;
-}
-.res-code-editor::-webkit-scrollbar-track {
-    background: #011627;
-}
+.res-code-editor::placeholder { color: #5f7e97; }
+.res-code-editor::-webkit-scrollbar { width: 10px; }
+.res-code-editor::-webkit-scrollbar-track { background: #011627; }
 .res-code-editor::-webkit-scrollbar-thumb {
     background: #234d70;
     border-radius: 5px;
     border: 2px solid #011627;
 }
 
-/* Test Cases */
-.res-test-cases {
-    margin-top: 24px;
-}
-
+/* ==========================================================================
+   9. TEST CASES & RESULTS
+   ========================================================================== */
+.res-test-cases { margin-top: 24px; }
 .res-test-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 16px;
 }
-
 .res-test-header h4 {
     font-size: 16px;
     font-weight: 600;
     color: #1f2937;
     margin: 0;
 }
-
 .res-test-count {
     font-size: 13px;
     color: #6b7280;
@@ -883,16 +824,8 @@ code,
     padding: 16px;
     transition: all 0.2s;
 }
-
-.res-test-case-item.passed {
-    background: #f0fdf4;
-    border-color: #86efac;
-}
-
-.res-test-case-item.failed {
-    background: #fef2f2;
-    border-color: #fca5a5;
-}
+.res-test-case-item.passed { background: #f0fdf4; border-color: #86efac; }
+.res-test-case-item.failed { background: #fef2f2; border-color: #fca5a5; }
 
 .res-test-case-header {
     display: flex;
@@ -900,7 +833,6 @@ code,
     justify-content: space-between;
     margin-bottom: 12px;
 }
-
 .res-test-case-label {
     font-size: 14px;
     font-weight: 600;
@@ -914,14 +846,8 @@ code,
     font-size: 13px;
     font-weight: 600;
 }
-
-.res-test-status.passed {
-    color: #16a34a;
-}
-
-.res-test-status.failed {
-    color: #dc2626;
-}
+.res-test-status.passed { color: #16a34a; }
+.res-test-status.failed { color: #dc2626; }
 
 .res-test-case-io {
     display: flex;
@@ -929,18 +855,12 @@ code,
     gap: 8px;
     font-size: 13px;
 }
-
-.res-test-io-row {
-    display: flex;
-    gap: 8px;
-}
-
+.res-test-io-row { display: flex; gap: 8px; }
 .res-test-io-row strong {
     min-width: 80px;
     color: #6b7280;
     font-weight: 600;
 }
-
 .res-test-io-row code {
     background: #fff;
     border: 1px solid #e5e7eb;
@@ -950,67 +870,6 @@ code,
     font-size: 12px;
     color: #1f2937;
     flex: 1;
-}
-
-/* Action Buttons */
-.res-submit-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-}
-
-.res-btn-run,
-.res-btn-submit {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 24px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s ease;
-    font-family: 'Inter', sans-serif;
-}
-
-.res-btn-run {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.res-btn-run:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-.res-btn-run:active {
-    transform: translateY(0);
-}
-
-.res-btn-submit {
-    background: linear-gradient(135deg, #2d7a4e 0%, #1a472a 100%);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(45, 122, 78, 0.3);
-}
-
-.res-btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(45, 122, 78, 0.4);
-}
-
-.res-btn-submit:active {
-    transform: translateY(0);
-}
-
-.res-btn-run:disabled,
-.res-btn-submit:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
 }
 
 /* Results Panel */
@@ -1024,14 +883,8 @@ code,
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .res-results-header {
@@ -1042,7 +895,6 @@ code,
     padding-bottom: 12px;
     border-bottom: 1px solid #e5e7eb;
 }
-
 .res-results-header h4 {
     font-size: 16px;
     font-weight: 600;
@@ -1065,11 +917,7 @@ code,
     border-radius: 6px;
     transition: all 0.2s;
 }
-
-.res-close-results:hover {
-    background: #e5e7eb;
-    color: #1f2937;
-}
+.res-close-results:hover { background: #e5e7eb; color: #1f2937; }
 
 #resultsContent {
     display: flex;
@@ -1084,36 +932,17 @@ code,
     padding: 16px;
     text-align: center;
 }
-
-.res-result-summary.success {
-    border-color: #86efac;
-    background: #f0fdf4;
-}
-
-.res-result-summary.error {
-    border-color: #fca5a5;
-    background: #fef2f2;
-}
+.res-result-summary.success { border-color: #86efac; background: #f0fdf4; }
+.res-result-summary.error { border-color: #fca5a5; background: #fef2f2; }
 
 .res-result-summary h3 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: 700;
 }
-
-.res-result-summary.success h3 {
-    color: #16a34a;
-}
-
-.res-result-summary.error h3 {
-    color: #dc2626;
-}
-
-.res-result-summary p {
-    margin: 0;
-    font-size: 14px;
-    color: #6b7280;
-}
+.res-result-summary.success h3 { color: #16a34a; }
+.res-result-summary.error h3 { color: #dc2626; }
+.res-result-summary p { margin: 0; font-size: 14px; color: #6b7280; }
 
 .res-compile-error {
     background: #fef2f2;
@@ -1122,14 +951,12 @@ code,
     padding: 16px;
     margin-top: 12px;
 }
-
 .res-compile-error h4 {
     color: #dc2626;
     font-size: 14px;
     font-weight: 600;
     margin: 0 0 8px 0;
 }
-
 .res-compile-error pre {
     background: #fff;
     border: 1px solid #e5e7eb;
@@ -1143,48 +970,138 @@ code,
     line-height: 1.5;
 }
 
-/* Responsive for Submit Section */
-@media (max-width: 768px) {
-    .res-submit-section {
-        padding: 20px;
-    }
-    
-    .res-submit-actions {
-        flex-direction: column;
-    }
-    
-    .res-btn-run, .res-btn-submit {
-        width: 100%;
-    }
-    
-    .res-code-editor {
-        min-height: 300px;
-        font-size: 13px;
-    }
+/* ==========================================================================
+   10. BUTTONS & ACTIONS
+   ========================================================================== */
+.res-submit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
 }
 
-/* Thêm vào cuối file Resources.css */
-
-.res-sidebar-history-btn {
+.res-btn-run,
+.res-btn-submit {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 22px;
-    background: #fff7ed; /* Màu nền cam nhạt */
-    color: #d97706;      /* Chữ màu cam đậm */
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 10px;
     font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.res-btn-run {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.res-btn-run:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+.res-btn-run:active { transform: translateY(0); }
+
+.res-btn-submit {
+    background: linear-gradient(135deg, #2d7a4e 0%, #1a472a 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(45, 122, 78, 0.3);
+}
+.res-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 122, 78, 0.4);
+}
+.res-btn-submit:active { transform: translateY(0); }
+
+.res-btn-run:disabled,
+.res-btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.res-copy-btn {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #e8f5e9;
+    border: none;
+    color: #2d7a4e;
+    font-size: 12px;
     font-weight: 700;
-    text-decoration: none;
-    border-bottom: 1px solid #fed7aa;
-    transition: all 0.2s ease;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.res-copy-btn:hover { background: #2d7a4e; color: #fff; }
+.res-copy-btn.copied { background: #dcfce7; color: #16a34a; }
+
+/* ==========================================================================
+   11. RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================================================== */
+
+/* Tablet & Smaller Desktop */
+@media (max-width: 900px) {
+    .res-layout { flex-direction: column; }
+    
+    .res-sidebar {
+        width: 100%;
+        position: static;
+        max-height: 260px;
+    }
+    
+    .res-chapter-list { 
+        flex-direction: row; 
+        overflow-x: auto; 
+        overflow-y: hidden; 
+        padding: 8px; 
+        display: flex; 
+    }
+    
+    .res-chapter-item { min-width: 180px; flex-shrink: 0; }
+    .res-hero-content h1 { font-size: 30px; }
 }
 
-.res-sidebar-history-btn:hover {
-    background: #ffedd5;
-    color: #c2410c;
-    padding-left: 26px; /* Hiệu ứng đẩy sang phải nhẹ khi hover */
+/* Tablet Vertical & Mobile Large */
+@media (max-width: 768px) {
+    .res-submit-section { padding: 20px; }
+    .res-submit-actions { flex-direction: column; }
+    .res-btn-run, .res-btn-submit { width: 100%; }
+    .res-code-editor { min-height: 300px; font-size: 13px; }
 }
 
-.res-sidebar-history-btn svg {
-    flex-shrink: 0;
+/* Mobile */
+@media (max-width: 600px) {
+    .res-hero { padding: 52px 0 40px; }
+    .res-hero-content h1 { font-size: 26px; }
+    .res-hero-content p  { font-size: 15px; }
+
+    .res-chapter-title-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+    .res-search-box { width: 100%; }
+
+    .res-problem-grid { grid-template-columns: 1fr; }
+
+    .res-detail-header,
+    .res-detail-section { padding: 20px; border-radius: 14px; }
+
+    .res-detail-title { font-size: 21px; }
+
+    .res-complexity-box {
+        flex-direction: column;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .res-sidebar { max-height: 220px; }
+    .res-chapter-item { min-width: 150px; padding: 10px 14px; }
 }

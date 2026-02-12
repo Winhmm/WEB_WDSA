@@ -1,9 +1,24 @@
+/**
+ * =============================================================================
+ * UTILITY FUNCTIONS
+ * =============================================================================
+ */
+// Helper to generate a matrix string for test cases
 const gen = (n, m) => {
     const row = Array(m).fill(1).join(" ");
     const matrix = Array(n).fill(row).join("\n");
     return `${n} ${m}\n${matrix}`;
 };
+
+/**
+ * =============================================================================
+ * PROBLEM DATA STRUCTURE
+ * =============================================================================
+ */
 const CHAPTERS = [
+    // -------------------------------------------------------------------------
+    // CHAPTER 1: SORTING & SEARCHING
+    // -------------------------------------------------------------------------
     {
         id: 1,
         title: "Sorting & Searching",
@@ -15,7 +30,7 @@ const CHAPTERS = [
                 difficulty: "easy",
                 tags: ["Array", "Binary Search"],
                 lcUrl: "https://leetcode.com/problems/binary-search/",
-                 description: `
+                description: `
                     <p>Write a C++ program to search for a <strong>target</strong> value in an ascending sorted array.</p>
                     
                     <strong>Input Format:</strong>
@@ -38,66 +53,54 @@ const CHAPTERS = [
                 examples: [
                     { 
                         input: "6 9\n1 -1 0 3 5 9 12", 
-                        // 4\n1 1 0 1\n1 1 1 1\n1 0 1 1\n1 1 1 1
-                        // 6 9\n -1 0 3 5 9 12
                         output: "5", 
                         explain: "Explanation: The number 9 exists at index 5 in the array." 
                     },
                     { 
                         input: "6 2\n1 -1 0 3 5 9 12", 
-                        // 
                         output: "-1", 
                         explain: "Explanation: The number 2 does not exist in the array, so return -1." 
                     }
                 ],
-
                 testCases: [
                     { input: "6\n9\n-1 0 3 5 9 12", expectedOutput: "4" },
                     { input: "6\n2\n-1 0 3 5 9 12", expectedOutput: "-1" },
                     { input: "1\n5\n5", expectedOutput: "0" },
                     { input: "10\n10\n1 2 3 4 5 6 7 8 9 10", expectedOutput: "9" },
                     { input: "5\n1\n2 4 6 8 10", expectedOutput: "-1" },
-
                     { input: "3\n7\n5 7 9", expectedOutput: "1" },
                     { input: "3\n4\n5 7 9", expectedOutput: "-1" },
                     { input: "4\n-3\n-5 -3 -1 0", expectedOutput: "1" },
                     { input: "4\n-6\n-5 -3 -1 0", expectedOutput: "-1" },
                     { input: "5\n100\n10 20 30 40 50", expectedOutput: "-1" },
-
                     { input: "5\n10\n10 20 30 40 50", expectedOutput: "0" },
                     { input: "5\n50\n10 20 30 40 50", expectedOutput: "4" },
                     { input: "6\n4\n1 2 3 4 5 6", expectedOutput: "3" },
                     { input: "6\n5\n1 2 3 4 5 6", expectedOutput: "4" },
                     { input: "7\n1\n1 3 5 7 9 11 13", expectedOutput: "0" },
-
                     { input: "7\n13\n1 3 5 7 9 11 13", expectedOutput: "6" },
                     { input: "7\n8\n1 3 5 7 9 11 13", expectedOutput: "-1" },
                     { input: "8\n6\n1 2 3 4 5 6 7 8", expectedOutput: "5" },
                     { input: "8\n0\n1 2 3 4 5 6 7 8", expectedOutput: "-1" },
                     { input: "8\n9\n1 2 3 4 5 6 7 8", expectedOutput: "-1" },
-
                     { input: "10\n42\n1 5 10 20 30 40 42 50 60 70", expectedOutput: "6" },
                     { input: "10\n41\n1 5 10 20 30 40 42 50 60 70", expectedOutput: "-1" },
                     { input: "9\n15\n-20 -10 -5 0 5 10 15 20 25", expectedOutput: "6" },
                     { input: "9\n-15\n-20 -10 -5 0 5 10 15 20 25", expectedOutput: "-1" },
                     { input: "1\n0\n0", expectedOutput: "0" },
-
                     { input: "2\n1\n1 2", expectedOutput: "0" },
                     { input: "2\n2\n1 2", expectedOutput: "1" },
                     { input: "2\n3\n1 2", expectedOutput: "-1" },
                     { input: "9\n4\n1 2 3 4 5 6 7 8 9", expectedOutput: "3" },
                     { input: "8\n5\n1 2 3 4 5 6 7 8", expectedOutput: "4" },
-
                     { input: "0\n5\n", expectedOutput: "-1" },
                     { input: "7\n0\n0 0 0 0 0 0 0", expectedOutput: "3" },
                     { input: "5\n7\n1 3 5 7 9", expectedOutput: "3" },
-
                     { input: "4\n2\n2 4 6 8", expectedOutput: "0" },
                     { input: "4\n8\n2 4 6 8", expectedOutput: "3" },
                     { input: "4\n5\n2 4 6 8", expectedOutput: "-1" },
                     { input: "5\n3\n1 3 5 7 9", expectedOutput: "1" },
                     { input: "5\n7\n1 3 5 7 9", expectedOutput: "3" },
-
                     { input: "6\n-1\n-5 -3 -1 1 3 5", expectedOutput: "2" },
                     { input: "6\n0\n-5 -3 -1 1 3 5", expectedOutput: "-1" },
                     { input: "8\n15\n1 3 6 10 15 21 28 36", expectedOutput: "4" },
@@ -114,6 +117,10 @@ const CHAPTERS = [
             }
         ]
     },
+
+    // -------------------------------------------------------------------------
+    // CHAPTER 2: BACKTRACKING
+    // -------------------------------------------------------------------------
     {
         id: 2,
         title: "Backtracking",
@@ -127,7 +134,6 @@ const CHAPTERS = [
                 lcUrl: "https://leetcode.com/problems/n-queens-ii/",
                 description: `
                     <p>The <strong>n-queens</strong> puzzle is the problem of placing <strong>n</strong> queens on an <strong>n × n</strong> chessboard such that no two queens attack each other.</p>
-                    
                     <p>Given an integer <strong>n</strong>, return the <em>number of distinct solutions</em> to the n-queens puzzle.</p>
                     
                     <strong>Input Format:</strong>
@@ -146,21 +152,9 @@ const CHAPTERS = [
                     </ul>
                 `,
                 examples: [
-                    {
-                        input: "4", 
-                        output: "2", 
-                        explain: "Explanation: There are two distinct solutions for the 4-queens puzzle."
-                    },
-                    {
-                        input: "1", 
-                        output: "1", 
-                        explain: "Explanation: There is only one position possible on a 1x1 board."
-                    },
-                    {
-                        input: "8",
-                        output: "92",
-                        explain: "Explanation: For a standard 8x8 chessboard, there are 92 distinct ways to place the queens."
-                    }
+                    { input: "4", output: "2", explain: "Explanation: There are two distinct solutions for the 4-queens puzzle." },
+                    { input: "1", output: "1", explain: "Explanation: There is only one position possible on a 1x1 board." },
+                    { input: "8", output: "92", explain: "Explanation: For a standard 8x8 chessboard, there are 92 distinct ways to place the queens." }
                 ],
                 timeComplexity: "O(N!)",
                 spaceComplexity: "O(N)",
@@ -189,9 +183,7 @@ const CHAPTERS = [
                 lcUrl: "#",
                 description: `
                     <p>Consider all sets of <strong>distinct positive integers</strong> whose elements are not greater than a given number <strong>n</strong>.</p>
-                    
                     <p>Your task is to count how many such sets contain exactly <strong>k</strong> elements and have a total sum equal to <strong>s</strong>.</p>
-                    
                     <p><em>Note: Two sets that differ only in the order of elements are considered the same set.</em></p>
                     
                     <strong>Input Format:</strong>
@@ -211,52 +203,19 @@ const CHAPTERS = [
                     </ul>
                 `,
                 examples: [
-                    {
-                        input: "16 8 91", 
-                        output: "28", 
-                        explain: "There are 28 different sets consisting of 8 distinct numbers from 1 to 16 whose total sum is exactly 91."
-                    },
-                    {
-                        input: "9 3 23", 
-                        output: "1", 
-                        explain: "The only valid set is {6, 8, 9}."
-                    }
+                    { input: "16 8 91", output: "28", explain: "There are 28 different sets consisting of 8 distinct numbers from 1 to 16 whose total sum is exactly 91." },
+                    { input: "9 3 23", output: "1", explain: "The only valid set is {6, 8, 9}." }
                 ],
                 timeComplexity: "O(C(n, k))",
                 spaceComplexity: "O(k)",
                 testCases: [
-                    {
-                        input: "9 3 23",
-                        expectedOutput: "1",
-                        description: "Test case 1: Example (n=9, k=3, s=23)"
-                    },
-                    {
-                        input: "16 8 91",
-                        expectedOutput: "28",
-                        description: "Test case 2: Larger inputs (n=16, k=8, s=91)"
-                    },
-                    {
-                        input: "10 2 5",
-                        expectedOutput: "2",
-                        description: "Test case 3: Small inputs ({1,4}, {2,3})"
-                    },
-                    {
-                        input: "5 3 20",
-                        expectedOutput: "0",
-                        description: "Test case 4: Impossible sum"
-                    },
-                    {
-                        input: "20 10 155",
-                        expectedOutput: "1",
-                        description: "Test case 5: Max boundary ({11,12,...,20})"
-                    },
-                    { 
-                        input: "7 3 6", 
-                        expectedOutput: "1" 
-                    },
+                    { input: "9 3 23", expectedOutput: "1", description: "Test case 1: Example (n=9, k=3, s=23)" },
+                    { input: "16 8 91", expectedOutput: "28", description: "Test case 2: Larger inputs (n=16, k=8, s=91)" },
+                    { input: "10 2 5", expectedOutput: "2", description: "Test case 3: Small inputs ({1,4}, {2,3})" },
+                    { input: "5 3 20", expectedOutput: "0", description: "Test case 4: Impossible sum" },
+                    { input: "20 10 155", expectedOutput: "1", description: "Test case 5: Max boundary ({11,12,...,20})" },
                     { input: "7 3 6", expectedOutput: "1" },
                     { input: "7 3 9", expectedOutput: "3" },
-                    // { input: "7 3 12", expectedOutput: "4" },
                     { input: "8 3 6", expectedOutput: "1" },
                     { input: "8 3 7", expectedOutput: "1" },
                     { input: "8 3 15", expectedOutput: "6" },
@@ -285,11 +244,8 @@ const CHAPTERS = [
                 lcUrl: "#",
                 description: `
                     <p>A maze is represented as a binary matrix of size <strong>N × N</strong>.</p>
-                    
                     <p>A rat starts at cell <strong>(1, 1)</strong> and wants to reach cell <strong>(N, N)</strong>.</p>
-                    
                     <p>The rat can only move <strong>down (D)</strong> or <strong>right (R)</strong>, and can only move to a cell if that cell has a value of <strong>1</strong>.</p>
-                    
                     <p><strong>Note:</strong> On each path, the rat can visit each cell at most once.</p>
                     
                     <strong>Input Format:</strong>
@@ -331,151 +287,40 @@ const CHAPTERS = [
                 timeComplexity: "O(2^(N²))",
                 spaceComplexity: "O(N²)",
                 testCases: [
-                    {
-                        input: "4\n1 1 0 1\n1 1 1 1\n1 0 1 1\n1 1 1 1",
-                        expectedOutput: "DDDRRR\nDRRDDR\nDRRDRD\nDRRRDD\nRDRDDR\nRDRDRD\nRDRRDD",
-                    },
-                    {
-                        input: "2\n1 0\n0 1",
-                        expectedOutput: "-1",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 1 1\n1 1 1",
-                        expectedOutput: "DDRR\nDRDR\nDRRD\nRDDR\nRDRD\nRRDD",
-                    },
-                    {
-                        input: "1\n1",
-                        expectedOutput: "",
-                    },
-                    {
-                        input: "5\n1 1 1 1 1\n1 0 0 0 1\n1 1 1 0 1\n1 0 1 1 1\n1 1 1 1 1",
-                        expectedOutput: "DDDDRRRR\nDDRRDDRR\nDDRRDRDR\nDDRRDRRD\nRRRRDDDD",
-                    },
-                    {
-                        input: "3\n1 1 0\n1 1 0\n0 1 1",
-                        expectedOutput: "DRDR\nRDDR",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 0 1\n1 1 0",
-                        expectedOutput: "-1",
-                    },
-                    {
-                        input: "4\n1 0 0 0\n1 1 0 0\n0 1 1 0\n0 0 1 1",
-                        expectedOutput: "DRDRDR",
-                    },
-                    {
-                        input: "2\n1 1\n1 1",
-                        expectedOutput: "DR\nRD",
-                    },
-                    {
-                        input: "5\n1 1 1 0 0\n0 0 1 0 0\n0 0 1 1 0\n0 0 0 1 1\n0 0 0 0 1",
-                        expectedOutput: "RRDDRDRD",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 1 1\n1 1 1",
-                        expectedOutput: "DDRR\nDRDR\nDRRD\nRDDR\nRDRD\nRRDD",
-                    },
-                    {
-                        input: "2\n1 1\n1 0",
-                        expectedOutput: "-1",
-                    },
-                    {
-                        input: "2\n1 0\n1 1",
-                        expectedOutput: "DR",
-                    },
-                    {
-                        input: "2\n1 1\n0 1",
-                        expectedOutput: "RD",
-                    },
-                    {
-                        input: "3\n1 0 0\n1 1 0\n0 1 1",
-                        expectedOutput: "DRDR",
-                    },
-                    {
-                        input: "3\n1 1 1\n0 1 0\n0 1 1",
-                        expectedOutput: "RDDR",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 0 1\n1 1 1",
-                        expectedOutput: "DDRR\nRRDD",
-                    },
-                    {
-                        input: "4\n1 1 1 1\n1 0 0 1\n1 0 0 1\n1 1 1 1",
-                        expectedOutput: "DDDRRR\nRRRDDD",
-                    },
-                    {
-                        input: "4\n1 0 0 0\n1 1 0 0\n0 1 0 0\n0 1 1 1",
-                        expectedOutput: "DRDDRR",
-                    },
-                    {
-                        input: "4\n1 1 0 0\n0 1 1 0\n0 0 1 1\n0 0 0 1",
-                        expectedOutput: "RDRDRD",
-                    },
-                    {
-                        input: "5\n1 0 0 0 0\n1 1 0 0 0\n0 1 1 0 0\n0 0 1 1 0\n0 0 0 1 1",
-                        expectedOutput: "DRDRDRDR",
-                    },
-                    {
-                        input: "5\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 1 1 1 1",
-                        expectedOutput: "DDDDRRRR",
-                    },
-                    {
-                        input: "4\n1 1 1 1\n1 1 1 1\n1 1 1 1\n1 1 1 1",
-                        expectedOutput: "DDDRRR\nDDRDRR\nDDRRDR\nDDRRRD\nDRDDRR\nDRDRDR\nDRDRRD\nDRRDDR\nDRRDRD\nDRRRDD\nRDDDRR\nRDDRDR\nRDDRRD\nRDRDDR\nRDRDRD\nRDRRDD\nRRDDDR\nRRDDRD\nRRDRDD\nRRRDDD",
-                    },
-                    {
-                        input: "3\n1 0 1\n1 0 1\n1 1 1",
-                        expectedOutput: "DDRR",
-                    },
-                    {
-                        input: "3\n1 1 1\n0 0 1\n0 0 1",
-                        expectedOutput: "RRDD",
-                    },
-                    {
-                        input: "4\n1 1 0 0\n1 0 0 0\n1 1 1 0\n0 0 1 1",
-                        expectedOutput: "DDRRDR",
-                    },
-                    {
-                        input: "6\n1 1 0 0 0 0\n0 1 1 0 0 0\n0 0 1 1 0 0\n0 0 0 1 1 0\n0 0 0 0 1 1\n0 0 0 0 0 1",
-                        expectedOutput: "RDRDRDRDRD",
-                    }, 
-                    {
-                        input: "4\n1 1 1 1\n1 0 0 1\n1 0 0 1\n1 1 1 1",
-                        expectedOutput: "DDDRRR\nRRRDDD",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 1 0\n1 0 1",
-                        expectedOutput: "-1",
-                    },
-                    {
-                        input: "3\n1 0 1\n0 1 0\n1 0 1",
-                        expectedOutput: "-1",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 0 1\n1 1 1",
-                        expectedOutput: "DDRR\nRRDD",
-                    },
-                    {
-                        input: "3\n1 1 1\n0 1 0\n1 1 1",
-                        expectedOutput: "RDDR",
-                    },
-                    {
-                        input: "4\n1 0 0 0\n1 1 0 1\n1 1 0 0\n0 1 1 1",
-                        expectedOutput: "DDRDRR\nDRDDRR",
-                    },
-                    {
-                        input: "3\n1 1 1\n1 0 1\n1 1 1",
-                        expectedOutput: "DDRR\nRRDD",
-                    },
-                   
-                    {
-                        input: "4\n1 0 0 0\n1 0 0 0\n1 0 0 0\n1 1 1 1",
-                        expectedOutput: "DDDRRR",
-                    }
+                    { input: "4\n1 1 0 1\n1 1 1 1\n1 0 1 1\n1 1 1 1", expectedOutput: "DDDRRR\nDRRDDR\nDRRDRD\nDRRRDD\nRDRDDR\nRDRDRD\nRDRRDD" },
+                    { input: "2\n1 0\n0 1", expectedOutput: "-1" },
+                    { input: "3\n1 1 1\n1 1 1\n1 1 1", expectedOutput: "DDRR\nDRDR\nDRRD\nRDDR\nRDRD\nRRDD" },
+                    { input: "1\n1", expectedOutput: "" },
+                    { input: "5\n1 1 1 1 1\n1 0 0 0 1\n1 1 1 0 1\n1 0 1 1 1\n1 1 1 1 1", expectedOutput: "DDDDRRRR\nDDRRDDRR\nDDRRDRDR\nDDRRDRRD\nRRRRDDDD" },
+                    { input: "3\n1 1 0\n1 1 0\n0 1 1", expectedOutput: "DRDR\nRDDR" },
+                    { input: "3\n1 1 1\n1 0 1\n1 1 0", expectedOutput: "-1" },
+                    { input: "4\n1 0 0 0\n1 1 0 0\n0 1 1 0\n0 0 1 1", expectedOutput: "DRDRDR" },
+                    { input: "2\n1 1\n1 1", expectedOutput: "DR\nRD" },
+                    { input: "5\n1 1 1 0 0\n0 0 1 0 0\n0 0 1 1 0\n0 0 0 1 1\n0 0 0 0 1", expectedOutput: "RRDDRDRD" },
+                    { input: "2\n1 1\n1 0", expectedOutput: "-1" },
+                    { input: "2\n1 0\n1 1", expectedOutput: "DR" },
+                    { input: "2\n1 1\n0 1", expectedOutput: "RD" },
+                    { input: "3\n1 0 0\n1 1 0\n0 1 1", expectedOutput: "DRDR" },
+                    { input: "3\n1 1 1\n0 1 0\n0 1 1", expectedOutput: "RDDR" },
+                    { input: "3\n1 1 1\n1 0 1\n1 1 1", expectedOutput: "DDRR\nRRDD" },
+                    { input: "4\n1 1 1 1\n1 0 0 1\n1 0 0 1\n1 1 1 1", expectedOutput: "DDDRRR\nRRRDDD" },
+                    { input: "4\n1 0 0 0\n1 1 0 0\n0 1 0 0\n0 1 1 1", expectedOutput: "DRDDRR" },
+                    { input: "4\n1 1 0 0\n0 1 1 0\n0 0 1 1\n0 0 0 1", expectedOutput: "RDRDRD" },
+                    { input: "5\n1 0 0 0 0\n1 1 0 0 0\n0 1 1 0 0\n0 0 1 1 0\n0 0 0 1 1", expectedOutput: "DRDRDRDR" },
+                    { input: "5\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 1 1 1 1", expectedOutput: "DDDDRRRR" },
+                    { input: "4\n1 1 1 1\n1 1 1 1\n1 1 1 1\n1 1 1 1", expectedOutput: "DDDRRR\nDDRDRR\nDDRRDR\nDDRRRD\nDRDDRR\nDRDRDR\nDRDRRD\nDRRDDR\nDRRDRD\nDRRRDD\nRDDDRR\nRDDRDR\nRDDRRD\nRDRDDR\nRDRDRD\nRDRRDD\nRRDDDR\nRRDDRD\nRRDRDD\nRRRDDD" },
+                    { input: "3\n1 0 1\n1 0 1\n1 1 1", expectedOutput: "DDRR" },
+                    { input: "3\n1 1 1\n0 0 1\n0 0 1", expectedOutput: "RRDD" },
+                    { input: "4\n1 1 0 0\n1 0 0 0\n1 1 1 0\n0 0 1 1", expectedOutput: "DDRRDR" },
+                    { input: "6\n1 1 0 0 0 0\n0 1 1 0 0 0\n0 0 1 1 0 0\n0 0 0 1 1 0\n0 0 0 0 1 1\n0 0 0 0 0 1", expectedOutput: "RDRDRDRDRD" }, 
+                    { input: "3\n1 1 1\n1 1 0\n1 0 1", expectedOutput: "-1" },
+                    { input: "3\n1 0 1\n0 1 0\n1 0 1", expectedOutput: "-1" },
+                    { input: "3\n1 1 1\n0 1 0\n1 1 1", expectedOutput: "RDDR" },
+                    { input: "4\n1 0 0 0\n1 1 0 1\n1 1 0 0\n0 1 1 1", expectedOutput: "DDRDRR\nDRDDRR" },
+                    { input: "4\n1 0 0 0\n1 0 0 0\n1 0 0 0\n1 1 1 1", expectedOutput: "DDDRRR" }
                 ]
             },
             {   
-                
                 lcNumber: 62,
                 customId: 4,
                 title: "Count All Paths",
@@ -484,7 +329,6 @@ const CHAPTERS = [
                 lcUrl: "https://leetcode.com/problems/unique-paths/",
                 description: `
                     <p>Given a matrix <strong>A</strong> with <strong>N</strong> rows and <strong>M</strong> columns. Your task is to count all possible paths from the top-left cell <strong>A[0][0]</strong> to the bottom-right cell <strong>A[N-1][M-1]</strong>.</p>
-                    
                     <p>You are only allowed to move <strong>down</strong> or to the <strong>right</strong> to an adjacent cell.</p>
                     
                     <strong>Input Format:</strong>
@@ -514,38 +358,14 @@ const CHAPTERS = [
                 timeComplexity: "O(2^(N+M))",
                 spaceComplexity: "O(N*M)",
                 testCases: [
-                    {
-                        input: "3 5\n4 6 8 3 1\n9 8 8 9 1\n10 6 3 4 5",
-                        expectedOutput: "15",
-                    },
-                    {
-                        input: "2 2\n1 2\n3 4",
-                        expectedOutput: "2",
-                    },
-                    {
-                        input: "1 5\n1 2 3 4 5",
-                        expectedOutput: "1",
-                    },
-                    {
-                        input: "5 1\n1\n2\n3\n4\n5",
-                        expectedOutput: "1",
-                    },
-                    {
-                        input: "3 3\n1 1 1\n1 1 1\n1 1 1",
-                        expectedOutput: "6",
-                    },
-                    {
-                        input: "3 7\n1 2 3 4 5 6 7\n8 9 10 11 12 13 14\n15 16 17 18 19 20 21",
-                        expectedOutput: "28",
-                    },
-                    {
-                        input: "7 3\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1",
-                        expectedOutput: "28",
-                    },
-                    {
-                        input: "10 10\n" + Array(10).fill(Array(10).fill(1).join(" ")).join("\n"),
-                        expectedOutput: "48620",
-                    },
+                    { input: "3 5\n4 6 8 3 1\n9 8 8 9 1\n10 6 3 4 5", expectedOutput: "15" },
+                    { input: "2 2\n1 2\n3 4", expectedOutput: "2" },
+                    { input: "1 5\n1 2 3 4 5", expectedOutput: "1" },
+                    { input: "5 1\n1\n2\n3\n4\n5", expectedOutput: "1" },
+                    { input: "3 3\n1 1 1\n1 1 1\n1 1 1", expectedOutput: "6" },
+                    { input: "3 7\n1 2 3 4 5 6 7\n8 9 10 11 12 13 14\n15 16 17 18 19 20 21", expectedOutput: "28" },
+                    { input: "7 3\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1", expectedOutput: "28" },
+                    { input: "10 10\n" + Array(10).fill(Array(10).fill(1).join(" ")).join("\n"), expectedOutput: "48620" },
                     { input: gen(1, 1), expectedOutput: "1" },
                     { input: gen(1, 2), expectedOutput: "1" },
                     { input: gen(1, 5), expectedOutput: "1" },
@@ -578,7 +398,6 @@ const CHAPTERS = [
                     { input: gen(6, 6), expectedOutput: "252" },
                     { input: gen(8, 8), expectedOutput: "3432" },
                     { input: gen(10, 10), expectedOutput: "48620" },
-                    
                 ]
             },
             {
@@ -590,7 +409,6 @@ const CHAPTERS = [
                 lcUrl: "#",
                 description: `
                     <p>Write a program to generate all binary strings of length <strong>n</strong>.</p>
-                    
                     <p>A binary string is a sequence consisting only of <strong>0</strong>s and <strong>1</strong>s.</p>
                     
                     <strong>Input Format:</strong>
@@ -610,43 +428,15 @@ const CHAPTERS = [
                     </ul>
                 `,
                 examples: [
-                    {
-                        input: "3", 
-                        output: "000\n001\n010\n011\n100\n101\n110\n111", 
-                        explain: "All 8 possible binary strings of length 3, sorted."
-                    },
-                    {
-                        input: "2", 
-                        output: "00\n01\n10\n11", 
-                        explain: "All 4 possible binary strings of length 2."
-                    }
+                    { input: "3", output: "000\n001\n010\n011\n100\n101\n110\n111", explain: "All 8 possible binary strings of length 3, sorted." },
+                    { input: "2", output: "00\n01\n10\n11", explain: "All 4 possible binary strings of length 2." }
                 ],
                 testCases: [
-                    {
-                        input: "3",
-                        expectedOutput: "000\n001\n010\n011\n100\n101\n110\n111",
-                        description: "Test case 1: n = 3"
-                    },
-                    {
-                        input: "2",
-                        expectedOutput: "00\n01\n10\n11",
-                        description: "Test case 2: n = 2"
-                    },
-                    {
-                        input: "1",
-                        expectedOutput: "0\n1",
-                        description: "Test case 3: n = 1"
-                    },
-                    {
-                        input: "4",
-                        expectedOutput: "0000\n0001\n0010\n0011\n0100\n0101\n0110\n0111\n1000\n1001\n1010\n1011\n1100\n1101\n1110\n1111",
-                        description: "Test case 4: n = 4"
-                    },
-                    {
-                        input: "5",
-                        expectedOutput: "00000\n00001\n00010\n00011\n00100\n00101\n00110\n00111\n01000\n01001\n01010\n01011\n01100\n01101\n01110\n01111\n10000\n10001\n10010\n10011\n10100\n10101\n10110\n10111\n11000\n11001\n11010\n11011\n11100\n11101\n11110\n11111",
-                        description: "Test case 5: n = 5"
-                    }
+                    { input: "3", expectedOutput: "000\n001\n010\n011\n100\n101\n110\n111" },
+                    { input: "2", expectedOutput: "00\n01\n10\n11" },
+                    { input: "1", expectedOutput: "0\n1" },
+                    { input: "4", expectedOutput: "0000\n0001\n0010\n0011\n0100\n0101\n0110\n0111\n1000\n1001\n1010\n1011\n1100\n1101\n1110\n1111" },
+                    { input: "5", expectedOutput: "00000\n00001\n00010\n00011\n00100\n00101\n00110\n00111\n01000\n01001\n01010\n01011\n01100\n01101\n01110\n01111\n10000\n10001\n10010\n10011\n10100\n10101\n10110\n10111\n11000\n11001\n11010\n11011\n11100\n11101\n11110\n11111" }
                 ]
             },
             {
@@ -658,7 +448,6 @@ const CHAPTERS = [
                 lcUrl: "#",
                 description: `
                     <p>Write a program to calculate the binomial coefficient <strong>C(n, k)</strong> using recursion.</p>
-                    
                     <p>The formula is defined as:</p>
                     <p style="text-align:center; font-weight:bold;">C(n, k) = C(n-1, k) + C(n-1, k-1)</p>
                     
@@ -684,86 +473,24 @@ const CHAPTERS = [
                     </ul>
                 `,
                 examples: [
-                    {
-                        input: "5 3", 
-                        output: "10", 
-                        explain: "Explanation: C(5, 3) = 10"
-                    },
-                    {
-                        input: "4 4", 
-                        output: "1", 
-                        explain: "Explanation: C(4, 4) = 1 (Base case)"
-                    },
-                    {
-                        input: "6 2",
-                        output: "15",
-                        explain: "Explanation: C(6, 2) = 15"
-                    }
+                    { input: "5 3", output: "10", explain: "Explanation: C(5, 3) = 10" },
+                    { input: "4 4", output: "1", explain: "Explanation: C(4, 4) = 1 (Base case)" },
+                    { input: "6 2", output: "15", explain: "Explanation: C(6, 2) = 15" }
                 ],
                 timeComplexity: "O(2^n)",
                 spaceComplexity: "O(n)",
                 testCases: [
-                    {
-                        input: "5 3",
-                        expectedOutput: "10"
-                    },
-                    {
-                        input: "4 4",
-                        expectedOutput: "1",
-                    },
-                    {
-                        input: "6 1",
-                        expectedOutput: "6"
-                    },
-                    {
-                        input: "6 2",
-                        expectedOutput: "15"
-                    },
-                    {
-                        input: "7 3",
-                        expectedOutput: "35"
-                    },
-                    {
-                        input: "10 5",
-                        expectedOutput: "252"
-                    },
-                    {
-                        input: "1 1",
-                        expectedOutput: "1"
-                    },
-                    {
-                        input: "20 10",
-                        expectedOutput: "184756"
-                    },
-                    {
-                        
-                        input: "5 3", 
-                        expectedOutput: "10"
-                    },
-                    {
-                        input: "4 4", 
-                        expectedOutput: "1" 
-                    },
-                    {
-                        input: "6 2",
-                        expectedOutput: "15"
-                    },
-                    {
-                        input: "7 1",
-                        expectedOutput: "7"
-                    },
-                    {
-                        input: "8 3",
-                        expectedOutput: "56"
-                    },
-                    {
-                        input: "10 5",
-                        expectedOutput: "252"
-                    },
-                    {
-                        input: "25 12",
-                        expectedOutput: "5200300"
-                    }
+                    { input: "5 3", expectedOutput: "10" },
+                    { input: "4 4", expectedOutput: "1" },
+                    { input: "6 1", expectedOutput: "6" },
+                    { input: "6 2", expectedOutput: "15" },
+                    { input: "7 3", expectedOutput: "35" },
+                    { input: "10 5", expectedOutput: "252" },
+                    { input: "1 1", expectedOutput: "1" },
+                    { input: "20 10", expectedOutput: "184756" },
+                    { input: "7 1", expectedOutput: "7" },
+                    { input: "8 3", expectedOutput: "56" },
+                    { input: "25 12", expectedOutput: "5200300" }
                 ]
             },
             {
@@ -775,7 +502,6 @@ const CHAPTERS = [
                 lcUrl: "#",
                 description: `
                     <p>Given an array of integers <strong>A</strong> containing <strong>N</strong> distinct positive integers and a target sum <strong>K</strong>.</p>
-                    
                     <p>Your task is to find all <strong>subsets</strong> of A such that the sum of elements in the subset equals <strong>K</strong>.</p>
                     
                     <strong>Input Format:</strong>
@@ -808,43 +534,42 @@ int a[1000];
 int x[1000];
 
 void result(int i) {
-	cout<<"[";
-	for(int j = 1; j <= i; j++) {
-		cout<<a[x[j]];
-		if(j < i) {
-			cout<<" ";
-		}
-	}
-	cout<<"]"<<endl;
+    cout<<"[";
+    for(int j = 1; j <= i; j++) {
+        cout<<a[x[j]];
+        if(j < i) {
+            cout<<" ";
+        }
+    }
+    cout<<"]"<<endl;
 }
 
 void Try(int i, int start, int sum) {
-	for(int j = start; j <= n; j++) {
-		if(sum + a[j] <= target) {
-			x[i] = j;
-			if(sum + a[j] == target) {
-				result(i);
-			} else {
-				Try(i + 1, j + 1, sum + a[j]);
-			}
-		}
-	}
+    for(int j = start; j <= n; j++) {
+        if(sum + a[j] <= target) {
+            x[i] = j;
+            if(sum + a[j] == target) {
+                result(i);
+            } else {
+                Try(i + 1, j + 1, sum + a[j]);
+            }
+        }
+    }
 }
 
 int main() {
-	ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
  
-	cin>>n>>target;
-	
-	for(int i = 1; i <= n; i++) {
-		cin>>a[i];
-	}
-	
-	sort(a + 1, a + n + 1);
-	Try(1, 1, 0);
-}
-`,
+    cin>>n>>target;
+    
+    for(int i = 1; i <= n; i++) {
+        cin>>a[i];
+    }
+    
+    sort(a + 1, a + n + 1);
+    Try(1, 1, 0);
+}`,
                 examples: [
                     {
                         input: "10 26\n12 11 9 10 6 8 14 7 5 13", 
@@ -858,106 +583,26 @@ int main() {
                     }
                 ],
                 testCases: [
-                    {
-                    input: "10 26\n12 11 9 10 6 8 14 7 5 13",
-                    expectedOutput: "[5 6 7 8]\n[5 7 14]\n[5 8 13]\n[5 9 12]\n[5 10 11]\n[6 7 13]\n[6 8 12]\n[6 9 11]\n[7 8 11]\n[7 9 10]\n[12 14]",
-                        description: "Test case 1: Complex example from description"
-                    },
-                    {
-                        input: "5 50\n5 10 15 20 25",
-                        expectedOutput: "[5 10 15 20]\n[5 20 25]\n[10 15 25]",
-                        description: "Test case 2: Simple example"
-                    },
-                    {
-                        input: "4 5\n1 2 3 4",
-                        expectedOutput: "[1 4]\n[2 3]",
-                        description: "Test case 3: Small inputs"
-                    },
-                    {
-                        input: "5 10\n10 1 2 3 4",
-                        expectedOutput: "[1 2 3 4]\n[10]",
-                        description: "Test case 5: Single element equals K"
-                    },
-                    {
-                        input: "8 94\n3 9 19 29 30 39 42 43",
-                        expectedOutput: "[3 9 39 43]\n[3 19 29 43]\n[3 19 30 42]\n[9 42 43]",
-                        description: "Test case 1: N=8, K=94 (Multiple solutions)"
-                    },
-                    {
-                        input: "11 74\n4 12 20 21 22 24 27 34 36 37 49",
-                        expectedOutput: "[4 12 21 37]\n[4 12 22 36]\n[4 12 24 34]\n[4 21 22 27]\n[4 21 49]\n[4 34 36]",
-                        description: "Test case 2: N=11, K=74 (Complex branching)"
-                    },
-                    {
-                        input: "14 43\n1 6 10 14 19 20 21 22 27 31 41 43 46 48",
-                        expectedOutput: "[1 6 14 22]\n[1 20 22]\n[6 10 27]\n[10 14 19]\n[21 22]\n[43]",
-                        description: "Test case 4: N=14, K=43 (Includes single element solution)"
-                    },
-                    {
-                        input: "6 2\n2 7 14 19 20 27",
-                        expectedOutput: "[2]",
-                        description: "Test case 5: N=6, K=2 (Smallest single element)"
-                    },
-                    {
-                        input: "6 99\n6 9 11 24 36 37",
-                        expectedOutput: "[6 9 11 36 37]",
-                        description: "Test case 6: N=6, K=99 (Large subset required)"
-                    },
-                    {
-                        input: "11 14\n3 4 5 9 13 17 19 31 36 45 47",
-                        expectedOutput: "[5 9]",
-                        description: "Test case 7: N=11, K=14 (Simple pair)"
-                    },
-                    {
-                        input: "5 64\n4 16 21 37 43",
-                        expectedOutput: "[21 43]",
-                        description: "Test case 8: N=5, K=64 (Specific pair)"
-                    },
-                    {
-                        input: "11 54\n2 6 7 9 10 12 19 36 38 44 45",
-                        expectedOutput: "[2 6 10 36]\n[2 7 9 36]\n[2 7 45]\n[6 7 10 12 19]\n[6 10 38]\n[6 12 36]\n[7 9 38]\n[9 45]\n[10 44]",
-                        description: "Test case 9: N=11, K=54 (Heavy branching)"
-                    },
-                    {
-                        input: "7 82\n2 3 14 29 32 49 50",
-                        expectedOutput: "[3 29 50]\n[32 50]",
-                        description: "Test case 10: N=7, K=82"
-                    },
-                    {
-                        input: "5 49\n12 16 17 20 29",
-                        expectedOutput: "[12 17 20]\n[20 29]",
-                        description: "Test case 11: N=5, K=49"
-                    },
-                    {
-                        input: "7 94\n5 24 28 30 36 39 42",
-                        expectedOutput: "[24 28 42]\n[28 30 36]",
-                        description: "Test case 12: N=7, K=94"
-                    },
-                    {
-                        input: "6 29\n7 8 17 21 25 36",
-                        expectedOutput: "[8 21]",
-                        description: "Test case 13: N=6, K=29"
-                    },
-                    {
-                        input: "7 86\n8 18 20 30 40 47 48",
-                        expectedOutput: "[8 18 20 40]\n[8 30 48]\n[18 20 48]",
-                        description: "Test case 14: N=7, K=86"
-                    },
-                    {
-                        input: "7 96\n19 23 24 30 37 44 49",
-                        expectedOutput: "[19 23 24 30]\n[23 24 49]",
-                        description: "Test case 15: N=7, K=96"
-                    },
-                    {
-                        input: "10 46\n7 10 25 28 41 46 49 55 61 73",
-                        expectedOutput: "[46]",
-                        description: "Test case 1: Single element solution"
-                    },
-                    {
-                        input: "10 77\n7 10 13 15 21 27 38 49 57 72",
-                        expectedOutput: "[7 13 57]\n[7 21 49]\n[13 15 49]",
-                        description: "Test case 2: Multiple valid subsets"
-                    }
+                    { input: "10 26\n12 11 9 10 6 8 14 7 5 13", expectedOutput: "[5 6 7 8]\n[5 7 14]\n[5 8 13]\n[5 9 12]\n[5 10 11]\n[6 7 13]\n[6 8 12]\n[6 9 11]\n[7 8 11]\n[7 9 10]\n[12 14]" },
+                    { input: "5 50\n5 10 15 20 25", expectedOutput: "[5 10 15 20]\n[5 20 25]\n[10 15 25]" },
+                    { input: "4 5\n1 2 3 4", expectedOutput: "[1 4]\n[2 3]" },
+                    { input: "5 10\n10 1 2 3 4", expectedOutput: "[1 2 3 4]\n[10]" },
+                    { input: "8 94\n3 9 19 29 30 39 42 43", expectedOutput: "[3 9 39 43]\n[3 19 29 43]\n[3 19 30 42]\n[9 42 43]" },
+                    { input: "11 74\n4 12 20 21 22 24 27 34 36 37 49", expectedOutput: "[4 12 21 37]\n[4 12 22 36]\n[4 12 24 34]\n[4 21 22 27]\n[4 21 49]\n[4 34 36]" },
+                    { input: "14 43\n1 6 10 14 19 20 21 22 27 31 41 43 46 48", expectedOutput: "[1 6 14 22]\n[1 20 22]\n[6 10 27]\n[10 14 19]\n[21 22]\n[43]" },
+                    { input: "6 2\n2 7 14 19 20 27", expectedOutput: "[2]" },
+                    { input: "6 99\n6 9 11 24 36 37", expectedOutput: "[6 9 11 36 37]" },
+                    { input: "11 14\n3 4 5 9 13 17 19 31 36 45 47", expectedOutput: "[5 9]" },
+                    { input: "5 64\n4 16 21 37 43", expectedOutput: "[21 43]" },
+                    { input: "11 54\n2 6 7 9 10 12 19 36 38 44 45", expectedOutput: "[2 6 10 36]\n[2 7 9 36]\n[2 7 45]\n[6 7 10 12 19]\n[6 10 38]\n[6 12 36]\n[7 9 38]\n[9 45]\n[10 44]" },
+                    { input: "7 82\n2 3 14 29 32 49 50", expectedOutput: "[3 29 50]\n[32 50]" },
+                    { input: "5 49\n12 16 17 20 29", expectedOutput: "[12 17 20]\n[20 29]" },
+                    { input: "7 94\n5 24 28 30 36 39 42", expectedOutput: "[24 28 42]\n[28 30 36]" },
+                    { input: "6 29\n7 8 17 21 25 36", expectedOutput: "[8 21]" },
+                    { input: "7 86\n8 18 20 30 40 47 48", expectedOutput: "[8 18 20 40]\n[8 30 48]\n[18 20 48]" },
+                    { input: "7 96\n19 23 24 30 37 44 49", expectedOutput: "[19 23 24 30]\n[23 24 49]" },
+                    { input: "10 46\n7 10 25 28 41 46 49 55 61 73", expectedOutput: "[46]" },
+                    { input: "10 77\n7 10 13 15 21 27 38 49 57 72", expectedOutput: "[7 13 57]\n[7 21 49]\n[13 15 49]" }
                 ]
             }, 
             {
@@ -969,9 +614,7 @@ int main() {
                 lcUrl: "#",
                 description: `
                     <p>An ATM machine currently holds <strong>n</strong> banknotes with values a[1], a[2], ..., a[n].</p>
-                    
                     <p>Your task is to find the <strong>minimum number of banknotes</strong> needed to pay an exact amount <strong>S</strong>.</p>
-                    
                     <p><em>Note: Each banknote can be used only once. The values of the banknotes can be arbitrary and may be equal.</em></p>
                     
                     <strong>Input Format:</strong>
@@ -1004,215 +647,86 @@ int x[1000];
 int min_cnt = INT_MAX;
 
 void Try(int i, int start, int sum) {
-	if(i >= min_cnt) {
-		return;	
-	}
-	
-	for(int j = start; j <= n; j++) {
-		if(sum + a[j] <= target) {
-			x[i] = j;
-			if(sum + a[j] == target) {
-				min_cnt = min(min_cnt, i);
-			} else {
-				Try(i + 1, j + 1, sum + a[j]);
-			}
-		}
-	}	
+    if(i >= min_cnt) {
+        return; 
+    }
+    
+    for(int j = start; j <= n; j++) {
+        if(sum + a[j] <= target) {
+            x[i] = j;
+            if(sum + a[j] == target) {
+                min_cnt = min(min_cnt, i);
+            } else {
+                Try(i + 1, j + 1, sum + a[j]);
+            }
+        }
+    }   
 }
 
 int main() {
-	ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-	
-	cin>>n>>target;
-	for(int i = 1; i <= n; i++) {
-		cin>>a[i];
-	}
-	
-	sort(a + 1, a + n + 1);
-	Try(1, 1, 0);
-	if(min_cnt == INT_MAX) {
-		cout<<-1;
-	} else {
-		cout<<min_cnt;
-	}
-}
-`,
+    
+    cin>>n>>target;
+    for(int i = 1; i <= n; i++) {
+        cin>>a[i];
+    }
+    
+    sort(a + 1, a + n + 1);
+    Try(1, 1, 0);
+    if(min_cnt == INT_MAX) {
+        cout<<-1;
+    } else {
+        cout<<min_cnt;
+    }
+}`,
                 examples: [
                     {
                         input: "6 30\n10 4 10 5 8 8", 
                         output: "4", 
-                        explain: "Explanation: We can use 4 banknotes: 10 + 8 + 8 + 4 = 30. Other combinations like 10+10+5+... do not sum to 30 or use more notes."
+                        explain: "Explanation: We can use 4 banknotes: 10 + 8 + 8 + 4 = 30."
                     },
                     {
                         input: "5 12\n1 1 6 6 10", 
                         output: "2", 
-                        explain: "Explanation: The best way is to choose two notes of value 6 (6 + 6 = 12). A greedy approach might incorrectly choose 10 + 1 + 1 (3 notes)."
+                        explain: "Explanation: The best way is to choose two notes of value 6 (6 + 6 = 12)."
                     }
                 ],
                 timeComplexity: "O(2^(n/2))",
                 spaceComplexity: "O(2^(n/2))",
                 testCases: [
-                    {
-                        input: "6\n30\n10 4 10 5 8 8",
-                        expectedOutput: "4",
-                        description: "Test case 1: Example from problem statement"
-                    },
-                    {
-                        input: "5\n100\n1 2 3 4 5",
-                        expectedOutput: "-1",
-                        description: "Test case 2: Impossible (Sum of all items < S)"
-                    },
-                    {
-                        input: "5\n12\n1 1 6 6 10",
-                        expectedOutput: "2",
-                        description: "Test case 3: Greedy fails (10+1+1 vs 6+6)"
-                    },
-                    {
-                        input: "3\n10\n2 4 6",
-                        expectedOutput: "2",
-                        description: "Test case 4: Simple combination (4+6)"
-                    },
-                    {
-                        input: "1\n5\n5",
-                        expectedOutput: "1",
-                        description: "Test case 5: Single element match"
-                    },
-                    {
-                        input: "1\n5\n4",
-                        expectedOutput: "-1",
-                        description: "Test case 6: Single element mismatch"
-                    },
-                    {
-                        input: "5\n15\n1 2 3 4 5",
-                        expectedOutput: "5",
-                        description: "Test case 8: All items needed"
-                    },
-                    {
-                        input: "4\n1000000000\n250000000 250000000 250000000 250000000",
-                        expectedOutput: "4",
-                        description: "Test case 9: Large numbers sum to S"
-                    },
-                    {
-                        input: "10\n50\n1 2 4 8 16 32 64 128 256 512",
-                        expectedOutput: "3",
-                        description: "Test case 10: Powers of 2 (32 + 16 + 2 = 50)"
-                    },
-                    {
-                        input: "7\n20\n1 3 5 7 9 11 13",
-                        expectedOutput: "2",
-                        description: "Test case 11: Two odd numbers sum to even (7 + 13 or 9 + 11)"
-                    },
-                    {
-                        input: "8\n19\n2 2 2 2 2 5 5 5",
-                        expectedOutput: "5",
-                        description: "Test case 12: Combination of 5s and 2s (5+5+5+2+2)"
-                    },
-                    {
-                        input: "4\n30\n25 10 10 10",
-                        expectedOutput: "3",
-                        description: "Test case 13: Greedy fails (Picking 25 leaves 5, impossible. Optimal: 10+10+10)"
-                    },
-                    {
-                        input: "10\n55\n1 2 3 4 5 6 7 8 9 10",
-                        expectedOutput: "10",
-                        description: "Test case 14: Triangular number (Must use all 10 banknotes)"
-                    },
-                    {
-                        input: "20\n999\n2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40",
-                        expectedOutput: "-1",
-                        description: "Test case 15: Parity check (Even numbers cannot sum to Odd target 999)"
-                    },
-                    {
-                        input: "5\n21\n1 2 5 10 20",
-                        expectedOutput: "2",
-                        description: "Test case 16: Sparse values (20 + 1)"
-                    },
-                    {
-                        input: "4\n6\n1 3 4 5",
-                        expectedOutput: "2",
-                        description: "Test case 18: Anti-Greedy Classic (Target 6: Greedy takes 5+1 (2), but 3+3 (2) is also valid - verify stability)"
-                    },
-                    {
-                        input: "4\n6\n1 3 3 4",
-                        expectedOutput: "2",
-                        description: "Test case 19: Anti-Greedy Variation (Target 6: Greedy takes 4+1+1 (3 notes). Optimal is 3+3 (2 notes))"
-                    },
-                    {
-                        input: "4\n10\n1 5 6 9",
-                        expectedOutput: "2",
-                        description: "Test case 20: Anti-Greedy Gap (Target 11: Greedy takes 9+1+1 (3). Optimal is 5+6 (2)) - Adjusted S to 11 in logic check"
-                    },
-                    {
-                        input: "4\n11\n1 5 6 9",
-                        expectedOutput: "2",
-                        description: "Test case 21: Specific Anti-Greedy (Target 11: 5+6 is better than 9+1+1)"
-                    },
-                    {
-                        input: "3\n30\n1 15 25",
-                        expectedOutput: "-1",
-                        description: "Test case 22: Large Gap Anti-Greedy (Target 30: Greedy 25+1+1+1+1+1 (6). Optimal 15+15 (2))"
-                    },
-                    {
-                        input: "5\n41\n2 10 10 20 20",
-                        expectedOutput: "-1",
-                        description: "Test case 23: Impossible Odd Target with Even Coins"
-                    },
-                    {
-                        input: "5\n100\n20 20 20 20 19",
-                        expectedOutput: "-1",
-                        description: "Test case 24: Must use all coins (Sum is exactly S)"
-                    },
-                    {
-                        input: "5\n100\n20 20 20 20 18",
-                        expectedOutput: "-1",
-                        description: "Test case 25: Sum is less than S (98 < 100)"
-                    },
-                    {
-                        input: "5\n1000000000\n1 1 1 1 1",
-                        expectedOutput: "-1",
-                        description: "Test case 26: Target S is too large for small coins"
-                    },
-                    {
-                        input: "6\n1000000000\n500000000 500000000 1 1 1 1",
-                        expectedOutput: "2",
-                        description: "Test case 27: Large numbers exact match"
-                    },
-                    {
-                        input: "7\n12\n3 3 3 3 3 3 3",
-                        expectedOutput: "4",
-                        description: "Test case 28: Multiple same values (3+3+3+3 = 12)"
-                    },
-                    {
-                        input: "6\n14\n1 2 4 8 16 32",
-                        expectedOutput: "3",
-                        description: "Test case 29: Binary representation (14 = 8 + 4 + 2)"
-                    },
-                    {
-                        input: "5\n31\n1 2 4 8 16",
-                        expectedOutput: "5",
-                        description: "Test case 30: Binary All Set (31 = 16+8+4+2+1)"
-                    },
-                    {
-                        input: "10\n100\n11 11 11 11 11 11 11 11 11 1",
-                        expectedOutput: "10",
-                        description: "Test case 31: Modulo test (9*11 = 99, need +1. Requires all 10 notes)"
-                    },
-                    {
-                        input: "10\n100\n11 11 11 11 11 11 11 11 11 2",
-                        expectedOutput: "-1",
-                        description: "Test case 32: Impossible Modulo (Sum is 101, removing any 11 makes it < 100, removing 2 makes it 99)"
-                    },
-                    {
-                        input: "20\n200\n10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10",
-                        expectedOutput: "20",
-                        description: "Test case 33: Stress test N=20 uniform values"
-                    },
-                    {
-                        input: "20\n150\n10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10",
-                        expectedOutput: "15",
-                        description: "Test case 34: Stress test N=20 uniform values (Subset)"
-                    }
+                    { input: "6\n30\n10 4 10 5 8 8", expectedOutput: "4" },
+                    { input: "5\n100\n1 2 3 4 5", expectedOutput: "-1" },
+                    { input: "5\n12\n1 1 6 6 10", expectedOutput: "2" },
+                    { input: "3\n10\n2 4 6", expectedOutput: "2" },
+                    { input: "1\n5\n5", expectedOutput: "1" },
+                    { input: "1\n5\n4", expectedOutput: "-1" },
+                    { input: "5\n15\n1 2 3 4 5", expectedOutput: "5" },
+                    { input: "4\n1000000000\n250000000 250000000 250000000 250000000", expectedOutput: "4" },
+                    { input: "10\n50\n1 2 4 8 16 32 64 128 256 512", expectedOutput: "3" },
+                    { input: "7\n20\n1 3 5 7 9 11 13", expectedOutput: "2" },
+                    { input: "8\n19\n2 2 2 2 2 5 5 5", expectedOutput: "5" },
+                    { input: "4\n30\n25 10 10 10", expectedOutput: "3" },
+                    { input: "10\n55\n1 2 3 4 5 6 7 8 9 10", expectedOutput: "10" },
+                    { input: "20\n999\n2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40", expectedOutput: "-1" },
+                    { input: "5\n21\n1 2 5 10 20", expectedOutput: "2" },
+                    { input: "4\n6\n1 3 4 5", expectedOutput: "2" },
+                    { input: "4\n6\n1 3 3 4", expectedOutput: "2" },
+                    { input: "4\n10\n1 5 6 9", expectedOutput: "2" },
+                    { input: "4\n11\n1 5 6 9", expectedOutput: "2" },
+                    { input: "3\n30\n1 15 25", expectedOutput: "-1" },
+                    { input: "5\n41\n2 10 10 20 20", expectedOutput: "-1" },
+                    { input: "5\n100\n20 20 20 20 19", expectedOutput: "-1" },
+                    { input: "5\n100\n20 20 20 20 18", expectedOutput: "-1" },
+                    { input: "5\n1000000000\n1 1 1 1 1", expectedOutput: "-1" },
+                    { input: "6\n1000000000\n500000000 500000000 1 1 1 1", expectedOutput: "2" },
+                    { input: "7\n12\n3 3 3 3 3 3 3", expectedOutput: "4" },
+                    { input: "6\n14\n1 2 4 8 16 32", expectedOutput: "3" },
+                    { input: "5\n31\n1 2 4 8 16", expectedOutput: "5" },
+                    { input: "10\n100\n11 11 11 11 11 11 11 11 11 1", expectedOutput: "10" },
+                    { input: "10\n100\n11 11 11 11 11 11 11 11 11 2", expectedOutput: "-1" },
+                    { input: "20\n200\n10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10", expectedOutput: "20" },
+                    { input: "20\n150\n10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10", expectedOutput: "15" }
                 ]
             },
             {
@@ -1253,24 +767,14 @@ int totalSum = 0;
 
 // Backtracking function to check if a subset with sum = target exists
 bool tryPartition(int index, int currentSum, int target) {
-    // Base case: If current sum equals target, we found a partition
-    if (currentSum == target) {
-        return true;
-    }
-    // Base case: If sum exceeds target or we run out of elements
-    if (currentSum > target || index > n) {
-        return false;
-    }
+    if (currentSum == target) return true;
+    if (currentSum > target || index > n) return false;
 
-    // Option 1: Include a[index] in the subset
-    if (tryPartition(index + 1, currentSum + a[index], target)) {
-        return true;
-    }
+    // Option 1: Include a[index]
+    if (tryPartition(index + 1, currentSum + a[index], target)) return true;
 
-    // Option 2: Exclude a[index] from the subset
-    if (tryPartition(index + 1, currentSum, target)) {
-        return true;
-    }
+    // Option 2: Exclude a[index]
+    if (tryPartition(index + 1, currentSum, target)) return true;
 
     return false;
 }
@@ -1285,31 +789,17 @@ int main() {
         totalSum += a[i];
     }
 
-    // If total sum is odd, it's impossible to split into two equal integer halves
     if (totalSum % 2 != 0) {
         cout << 0;
     } else {
-        // We need to find a subset with sum = totalSum / 2
-        if (tryPartition(1, 0, totalSum / 2)) {
-            cout << 1;
-        } else {
-            cout << 0;
-        }
+        if (tryPartition(1, 0, totalSum / 2)) cout << 1;
+        else cout << 0;
     }
     return 0;
-}
-`,
+}`,
                 examples: [
-                    {
-                        input: "5\n9 9 4 4 5", 
-                        output: "0", 
-                        explain: "Total sum is 31 (Odd), so it cannot be divided into two equal integer parts."
-                    },
-                    {
-                        input: "4\n1 5 11 5", 
-                        output: "1", 
-                        explain: "The array can be partitioned as [1, 5, 5] and [11]. Both sum to 11."
-                    }
+                    { input: "5\n9 9 4 4 5", output: "0", explain: "Total sum is 31 (Odd), impossible." },
+                    { input: "4\n1 5 11 5", output: "1", explain: "Partition: [1, 5, 5] and [11]." }
                 ],
                 timeComplexity: "O(2^n)",
                 spaceComplexity: "O(n)",
@@ -1375,7 +865,6 @@ int main() {
                 lcUrl: "#",
                 description: `
                     <p>Given a positive integer <strong>N</strong>. An integer <strong>K</strong> with <strong>N</strong> digits is called a "Distant Number" if it satisfies the following conditions:</p>
-                    
                     <ul>
                         <li><strong>K</strong> does not contain the digit 0.</li>
                         <li>All digits from <strong>1</strong> to <strong>N</strong> appear in <strong>K</strong> exactly once.</li>
@@ -1408,78 +897,54 @@ int x[1000];
 bool used[1000];
 
 void result() {
-	for(int i = 1; i <= n; i++) {
-		cout<<x[i];
-	}
-	cout<<endl;
+    for(int i = 1; i <= n; i++) {
+        cout<<x[i];
+    }
+    cout<<endl;
 }
 
 void Try(int i) {
-	for(int j = 1; j <= n; j++) {
-		if(used[j] == false && abs(j - x[i - 1]) != 1) {
-			x[i] = j;
-			used[j] = true;
-			if(i == n) {
-				result();
-			} else {
-				Try(i + 1);
-			}
-			used[j] = false;
-		}
-	}
+    for(int j = 1; j <= n; j++) {
+        if(used[j] == false && abs(j - x[i - 1]) != 1) {
+            x[i] = j;
+            used[j] = true;
+            if(i == n) {
+                result();
+            } else {
+                Try(i + 1);
+            }
+            used[j] = false;
+        }
+    }
 }
 
 int main() {
-	ios_base::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-	
-	cin>>n;
-	x[0] = -1;
-	Try(1);
-}
-
-            `,
+    
+    cin>>n;
+    x[0] = -1;
+    Try(1);
+}`,
                 examples: [
-                    {
-                        input: "4", 
-                        output: "2413\n3142", 
-                        explain: "For N=4, strictly increasing permutations where no adjacent digits have difference of 1."
-                    },
-                    {
-                        input: "3", 
-                        output: "", 
-                        explain: "For N=3, there are no permutations satisfying the condition (e.g., 132 fails at 3-2, 213 fails at 2-1)."
-                    }
+                    { input: "4", output: "2413\n3142", explain: "For N=4, strictly increasing permutations where no adjacent digits have difference of 1." },
+                    { input: "3", output: "", explain: "For N=3, there are no permutations satisfying the condition." }
                 ],
                 testCases: [
-                    {
-                        input: "0",
-                        expectedOutput: ""
-                    },
-                    {
-                        input: "1",
-                        expectedOutput: "1"
-                    },
-                    {
-                        input: "2",
-                        expectedOutput: ""
-                    },
-                    {
-                        input: "3",
-                        expectedOutput: ""
-                    },
-                    {
-                        input: "4",
-                        expectedOutput: "2413\n3142"
-                    },
-                    {
-                        input: "5",
-                        expectedOutput: "13524\n14253\n24135\n24153\n25314\n31425\n31524\n35142\n35241\n41352\n42513\n42531\n52413\n53142"
-                    }
+                    { input: "0", expectedOutput: "" },
+                    { input: "1", expectedOutput: "1" },
+                    { input: "2", expectedOutput: "" },
+                    { input: "3", expectedOutput: "" },
+                    { input: "4", expectedOutput: "2413\n3142" },
+                    { input: "5", expectedOutput: "13524\n14253\n24135\n24153\n25314\n31425\n31524\n35142\n35241\n41352\n42513\n42531\n52413\n53142" }
                 ]
             }
         ]
     },
+
+    // -------------------------------------------------------------------------
+    // CHAPTER 3: DYNAMIC PROGRAMMING
+    // -------------------------------------------------------------------------
     {
         id: 3,
         title: "Dynamic Programming",
@@ -1493,7 +958,6 @@ int main() {
                 lcUrl: "https://leetcode.com/problems/fibonacci-number/",
                 description: `
                     <p>The <strong>Fibonacci numbers</strong>, commonly denoted F(n) form a sequence, called the <strong>Fibonacci sequence</strong>, such that each number is the sum of the two preceding ones, starting from 0 and 1.</p>
-                    
                     <p>That is:</p>
                     <ul>
                         <li>F(0) = 0</li>
@@ -1554,51 +1018,36 @@ int main() {
 
     cout << current;
     return 0;
-}
-`,
+}`,
                 examples: [
-                    {
-                        input: "2", 
-                        output: "1", 
-                        explain: "F(2) = F(1) + F(0) = 1 + 0 = 1."
-                    },
-                    {
-                        input: "3", 
-                        output: "2", 
-                        explain: "F(3) = F(2) + F(1) = 1 + 1 = 2."
-                    },
-                    {
-                        input: "4", 
-                        output: "3", 
-                        explain: "F(4) = F(3) + F(2) = 2 + 1 = 3."
-                    }
+                    { input: "2", output: "1", explain: "F(2) = F(1) + F(0) = 1 + 0 = 1." },
+                    { input: "3", output: "2", explain: "F(3) = F(2) + F(1) = 1 + 1 = 2." },
+                    { input: "4", output: "3", explain: "F(4) = F(3) + F(2) = 2 + 1 = 3." }
                 ],
                 timeComplexity: "O(n)",
                 spaceComplexity: "O(1)",
                 testCases: [
-                    { input: "0", expectedOutput: "0", description: "Base Case: n = 0" },
-                    { input: "1", expectedOutput: "1", description: "Base Case: n = 1" },
-                    { input: "2", expectedOutput: "1", description: "Base Case: n = 2" },
-                    { input: "3", expectedOutput: "2", description: "Small Input" },
-                    { input: "4", expectedOutput: "3", description: "Small Input" },
-                    { input: "5", expectedOutput: "5", description: "Small Input" },
-                    { input: "6", expectedOutput: "8", description: "Small Input" },
-                    { input: "7", expectedOutput: "13", description: "Small Input" },
-                    { input: "8", expectedOutput: "21", description: "Small Input" },
-                    { input: "9", expectedOutput: "34", description: "Small Input" },
-
-                    { input: "10", expectedOutput: "55", description: "Medium Input" },
-                    { input: "11", expectedOutput: "89", description: "Medium Input" },
-                    { input: "12", expectedOutput: "144", description: "Medium Input" },
-                    { input: "13", expectedOutput: "233", description: "Medium Input" },
-                    { input: "14", expectedOutput: "377", description: "Medium Input" },
-                    { input: "15", expectedOutput: "610", description: "Medium Input" },
-                    { input: "16", expectedOutput: "987", description: "Medium Input" },
-                    { input: "17", expectedOutput: "1597", description: "Medium Input" },
-                    { input: "18", expectedOutput: "2584", description: "Medium Input" },
-                    { input: "19", expectedOutput: "4181", description: "Medium Input" },
-                    { input: "20", expectedOutput: "6765", description: "Medium Input" },
-
+                    { input: "0", expectedOutput: "0" },
+                    { input: "1", expectedOutput: "1" },
+                    { input: "2", expectedOutput: "1" },
+                    { input: "3", expectedOutput: "2" },
+                    { input: "4", expectedOutput: "3" },
+                    { input: "5", expectedOutput: "5" },
+                    { input: "6", expectedOutput: "8" },
+                    { input: "7", expectedOutput: "13" },
+                    { input: "8", expectedOutput: "21" },
+                    { input: "9", expectedOutput: "34" },
+                    { input: "10", expectedOutput: "55" },
+                    { input: "11", expectedOutput: "89" },
+                    { input: "12", expectedOutput: "144" },
+                    { input: "13", expectedOutput: "233" },
+                    { input: "14", expectedOutput: "377" },
+                    { input: "15", expectedOutput: "610" },
+                    { input: "16", expectedOutput: "987" },
+                    { input: "17", expectedOutput: "1597" },
+                    { input: "18", expectedOutput: "2584" },
+                    { input: "19", expectedOutput: "4181" },
+                    { input: "20", expectedOutput: "6765" },
                     { input: "21", expectedOutput: "10946" },
                     { input: "22", expectedOutput: "17711" },
                     { input: "23", expectedOutput: "28657" },
@@ -1608,8 +1057,7 @@ int main() {
                     { input: "27", expectedOutput: "196418" },
                     { input: "28", expectedOutput: "317811" },
                     { input: "29", expectedOutput: "514229" },
-
-                    { input: "30", expectedOutput: "832040", description: "Large Input" },
+                    { input: "30", expectedOutput: "832040" },
                     { input: "31", expectedOutput: "1346269" },
                     { input: "32", expectedOutput: "2178309" },
                     { input: "33", expectedOutput: "3524578" },
@@ -1619,28 +1067,30 @@ int main() {
                     { input: "37", expectedOutput: "24157817" },
                     { input: "38", expectedOutput: "39088169" },
                     { input: "39", expectedOutput: "63245986" },
-
-                    { input: "40", expectedOutput: "102334155", description: "Large Input" },
+                    { input: "40", expectedOutput: "102334155" },
                     { input: "41", expectedOutput: "165580141" },
                     { input: "42", expectedOutput: "267914296" },
                     { input: "43", expectedOutput: "433494437" },
                     { input: "44", expectedOutput: "701408733" },
-                    { input: "45", expectedOutput: "1134903170", description: "Approaching 32-bit limit" },
-                    { input: "46", expectedOutput: "1836311903", description: "Approaching 32-bit limit" },
-                    { input: "80", expectedOutput: "23416728348467685", description: "Requires long long" },
+                    { input: "45", expectedOutput: "1134903170" },
+                    { input: "46", expectedOutput: "1836311903" },
+                    { input: "80", expectedOutput: "23416728348467685" },
                     { input: "85", expectedOutput: "259695496911122585" },
-                    { input: "92", expectedOutput: "7540113804746346429", description: "Max safe value for signed 64-bit integer" }
+                    { input: "92", expectedOutput: "7540113804746346429" }
                 ]
             }
         ]
     }
 ];
 
-
+/**
+ * =============================================================================
+ * EXPORT
+ * =============================================================================
+ */
 if (typeof CHAPTERS === 'undefined' || !Array.isArray(CHAPTERS)) {
     console.error('CHAPTERS data is invalid!');
 }
-
 
 if (typeof window !== 'undefined') {
     window.CHAPTERS = CHAPTERS;

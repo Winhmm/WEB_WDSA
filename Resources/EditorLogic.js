@@ -1,9 +1,21 @@
+/**
+ * =============================================================================
+ * GLOBAL VARIABLES & CONSTANTS
+ * =============================================================================
+ */
 let editorInstance = null;
+let solutionEditor = null; // Instance cho modal solution
 let currentProblem = null;
 let isSubmitting = false;
 let currentLanguage = 'cpp';
+// --- AUTH VARIABLES ---
+let currentUser = null;
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
 
-// Thêm template cho Python
+const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
+const SEPARATOR = "|||WDSA_SEP|||"; // Mốc phân cách output cho Piston
+
 const TEMPLATES = {
     cpp: `#include <bits/stdc++.h>
 using namespace std;
@@ -14,7 +26,7 @@ int main() {
     
     // Code here
     
-return 0;
+    return 0;
 }`,
     python: `import sys
 
@@ -29,12 +41,20 @@ if __name__ == "__main__":
     solve()`
 };
 
+/**
+ * =============================================================================
+ * INITIALIZATION (Entry Point)
+ * =============================================================================
+ */
 document.addEventListener('DOMContentLoaded', () => {
+    // --- PHẦN 1: KHỞI TẠO EDITOR & DATA ---
     try {
+        // 1. Kiểm tra Data
         if (typeof CHAPTERS === 'undefined' || !Array.isArray(CHAPTERS)) {
             throw new Error('CHAPTERS data not loaded properly');
         }
 
+        // 2. Lấy Problem ID từ URL
         const params = new URLSearchParams(window.location.search);
         const lcNumber = params.get('id');
 
@@ -42,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('No problem ID specified');
         }
 
+        // 3. Tìm bài tập trong Data
         CHAPTERS.forEach(chap => {
             const found = chap.problems.find(p => p.lcNumber == lcNumber);
             if (found) currentProblem = found;
@@ -53,52 +74,98 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // 4. Khởi tạo giao diện và Editor
         renderProblemUI();
         initMonaco();
         initResizablePanes();
-        
         loadSavedCode();
-        
+
+        // 5. Auto-save mỗi 5 giây
         setInterval(saveCodeToStorage, 5000);
+
+        // 6. Inject CSS cho animation loading
+        injectStyles();
+
     } catch (error) {
         console.error('Initialization error:', error);
         showNotification(`Error loading page: ${error.message}`, "error");
     }
+
+    // --- PHẦN 2: XỬ LÝ ĐĂNG NHẬP (AUTH) ---
+    // Đặt ở đây để đảm bảo giao diện đã load xong thì mới tìm element
+    auth.onAuthStateChanged((user) => {
+        const loginBtn = document.getElementById('btnLogin');
+        const profileDiv = document.getElementById('userProfile');
+        const submitBtn = document.getElementById('btnSubmitSolution');
+        const userAvatar = document.getElementById('userAvatar');
+        const userDisplayName = document.getElementById('userDisplayName');
+        
+        if (user) {
+            // Đã đăng nhập
+            currentUser = user;
+            
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (profileDiv) profileDiv.style.display = 'flex';
+            if (userAvatar) userAvatar.src = user.photoURL;
+            if (userDisplayName) userDisplayName.textContent = user.displayName;
+            
+            // Mở khóa nút nộp bài
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            }
+            
+            showNotification(`Welcome back, ${user.displayName}!`, "success", false);
+        } else {
+            // Chưa đăng nhập / Đã logout
+            currentUser = null;
+            
+            if (loginBtn) loginBtn.style.display = 'flex';
+            if (profileDiv) profileDiv.style.display = 'none';
+            
+            // Khóa nút nộp bài
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
+    });
 });
 
+// --- PHẦN 3: DỌN DẸP KHI TẮT TAB (Nằm ngoài DOMContentLoaded) ---
+window.addEventListener('beforeunload', () => {
+    saveCodeToStorage();
+    if (editorInstance) {
+        editorInstance.dispose();
+    }
+});
 
+/**
+ * =============================================================================
+ * UI RENDERING LOGIC
+ * =============================================================================
+ */
 function renderProblemUI() {
+    // 1. Render Problem Header (Left Pane)
     const displayNum = currentProblem.customId || currentProblem.lcNumber;
     document.getElementById('pTitle').textContent = `${displayNum}. ${currentProblem.title}`;
-    
+
     const diffEl = document.getElementById('pDiff');
     diffEl.textContent = currentProblem.difficulty;
     diffEl.className = `badge ${currentProblem.difficulty.toLowerCase()}`;
-    
 
+    // 2. Render Description
     document.getElementById('pDesc').innerHTML = currentProblem.description;
-    
 
-
-
+    // 3. Render Examples
     document.getElementById('pExamples').innerHTML = currentProblem.examples.map((ex, i) => `
         <div class="example-box">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
                 <strong style="font-size:14px; color:#1e293b;">Example ${i + 1}:</strong>
-                
                 <button onclick="copyInput(${i})" style="
-                    background:white; 
-                    color:#2d7a4e; 
-                    border:1px solid #2d7a4e; 
-                    padding:4px 10px; 
-                    border-radius:6px; 
-                    cursor:pointer; 
-                    font-size:12px; 
-                    font-weight:600; 
-                    display:flex; 
-                    align-items:center; 
-                    gap:4px;
-                    transition:all 0.2s;" 
+                    background:white; color:#2d7a4e; border:1px solid #2d7a4e; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:4px; transition:all 0.2s;" 
                     onmouseover="this.style.background='#f0fdf4'; this.style.borderColor='#1a472a'; this.style.color='#1a472a'" 
                     onmouseout="this.style.background='white'; this.style.borderColor='#2d7a4e'; this.style.color='#2d7a4e'"
                     title="Copy Input to Clipboard">
@@ -106,69 +173,79 @@ function renderProblemUI() {
                     Copy Input
                 </button>
             </div>
-
             <div style="margin-top:8px;">
                 <div style="margin-bottom:4px; font-size:13px; font-weight:600; color:#64748b;">Input:</div>
                 <pre id="input-${i}" style="margin:0; font-family:monospace; white-space:pre; background:#f1f5f9; padding:8px; border-radius:6px; border:1px solid #e2e8f0;">${escapeHtml(ex.input)}</pre>
             </div>
-            
             <div style="margin-top:12px">
                 <div style="margin-bottom:4px; font-size:13px; font-weight:600; color:#64748b;">Output:</div>
                 <pre style="margin:4px 0 0 0; font-family:monospace; white-space:pre; background:#f1f5f9; padding:8px; border-radius:6px; border:1px solid #e2e8f0;">${escapeHtml(ex.output)}</pre>
             </div>
-            
             ${ex.explain ? `<div style="margin-top:12px; color:#475569; font-size:14px; line-height:1.5; font-style:italic;">${escapeHtml(ex.explain)}</div>` : ''}
         </div>
     `).join('');
+
+    // 4. Render Editor Toolbar (Reset & Solution Buttons) -> Right Pane
+    renderEditorToolbar();
 }
 
-function copyInput(exampleIndex) {
-    const inputText = currentProblem.examples[exampleIndex].input;
-    navigator.clipboard.writeText(inputText).then(() => {
-        showNotification('Input copied to clipboard! 📋', 'success');
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-        showNotification('Failed to copy input', 'error');
-    });
-}
+function renderEditorToolbar() {
+    const toolsContainer = document.querySelector('.editor-tools');
+    if (!toolsContainer) return;
 
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+    toolsContainer.innerHTML = ''; // Clear cũ
 
+    // --- Button 1: Reset Code ---
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'btn-tool';
+    resetBtn.title = 'Reset to Template';
+    resetBtn.onclick = resetToTemplate;
+    resetBtn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+        </svg>
+        Reset
+    `;
+    toolsContainer.appendChild(resetBtn);
+
+    // --- Button 2: View Solution (Chỉ hiện nếu bài có lời giải) ---
+    if (currentProblem.sampleSolution) {
+        const solBtn = document.createElement('button');
+        solBtn.className = 'btn-tool solution';
+        solBtn.title = 'View Reference Solution';
+        solBtn.onclick = openSolution;
+        solBtn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Solution
+        `;
+        toolsContainer.appendChild(solBtn);
+    }
+}
 
 function initResizablePanes() {
     const divider = document.getElementById('divider');
     const leftPane = document.querySelector('.problem-pane');
     const rightPane = document.querySelector('.editor-pane');
     const workspace = document.querySelector('.main-workspace');
-    
-    if (!divider || !leftPane || !rightPane || !workspace) {
-        console.error('Required DOM elements not found');
-        return;
-    }
-    
-    let isResizing = false;
-    
-    divider.addEventListener('mousedown', startResize);
-    
 
-    divider.addEventListener('touchstart', startResize);
-    
-    function startResize(e) {
+    if (!divider || !leftPane || !rightPane || !workspace) return;
+
+    let isResizing = false;
+
+    const startResize = (e) => {
         isResizing = true;
         divider.classList.add('active');
         document.body.style.cursor = 'col-resize';
         document.body.style.userSelect = 'none';
         e.preventDefault();
-    }
-    
-    function handleResize(e) {
+    };
+
+    const handleResize = (e) => {
         if (!isResizing) return;
-        
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const workspaceRect = workspace.getBoundingClientRect();
         const offsetX = clientX - workspaceRect.left;
@@ -177,64 +254,82 @@ function initResizablePanes() {
         if (percentage >= 25 && percentage <= 75) {
             leftPane.style.width = `${percentage}%`;
             rightPane.style.width = `${100 - percentage}%`;
-
-            if (editorInstance) {
-                editorInstance.layout();
-            }
+            if (editorInstance) editorInstance.layout();
         }
-    }
-    
-    function stopResize() {
+    };
+
+    const stopResize = () => {
         if (isResizing) {
             isResizing = false;
             divider.classList.remove('active');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
         }
-    }
-    
+    };
+
+    divider.addEventListener('mousedown', startResize);
+    divider.addEventListener('touchstart', startResize);
     document.addEventListener('mousemove', handleResize);
     document.addEventListener('touchmove', handleResize);
     document.addEventListener('mouseup', stopResize);
     document.addEventListener('touchend', stopResize);
 }
 
-
+/**
+ * =============================================================================
+ * EDITOR LOGIC (Monaco)
+ * =============================================================================
+ */
+// Tìm và thay thế toàn bộ hàm initMonaco bằng đoạn này:
 function initMonaco() {
-
     if (typeof require === 'undefined') {
-        showNotification("Editor failed to load. Please refresh the page.", "error");
-        console.error('Monaco loader not available');
+        showNotification("Editor failed to load. Please refresh.", "error");
         return;
     }
 
-    require.config({ 
-        paths: { 
-            'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' 
-        }
-    });
-    
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+
     require(['vs/editor/editor.main'], function() {
         try {
             const container = document.getElementById('monaco-container');
-            if (!container) {
-                throw new Error('Monaco container not found');
+            if (!container) throw new Error('Monaco container not found');
+
+            // 1. Lấy code cũ và ngôn ngữ cũ từ bộ nhớ
+            let savedCode = getSavedCode();
+            let savedLang = localStorage.getItem(`lang_${currentProblem.lcNumber}`);
+
+            // --- [FIX MỚI] AUTO DETECT PYTHON ---
+            // Nếu ngôn ngữ đang set là C++ (hoặc chưa có) MÀ trong code lại có từ khóa Python
+            if ((!savedLang || savedLang === 'cpp') && savedCode) {
+                if (savedCode.includes('def solve():') || savedCode.includes('import sys') || savedCode.includes('print(')) {
+                    console.log("Auto-detected Python code!");
+                    savedLang = 'python'; // Tự động sửa thành Python
+                }
+            }
+            // ------------------------------------
+
+            if (savedLang && (savedLang === 'cpp' || savedLang === 'python')) {
+                currentLanguage = savedLang;
             }
 
+            // Cập nhật cái Dropdown hiển thị cho đúng
+            const langSelect = document.getElementById('languageSelect');
+            if (langSelect) langSelect.value = currentLanguage;
+
             editorInstance = monaco.editor.create(container, {
-                value: TEMPLATES[currentLanguage],
+                value: savedCode || TEMPLATES[currentLanguage], // Ưu tiên code đã lưu
                 language: currentLanguage,
                 theme: 'vs',
                 fontSize: 15,
                 padding: { top: 12, bottom: 12 },
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                minimap: { enabled: window.innerWidth > 768 }, 
+                minimap: { enabled: window.innerWidth > 768 },
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
                 lineNumbers: 'on',
                 roundedSelection: true,
-                scrollbar: { 
-                    vertical: 'visible', 
+                scrollbar: {
+                    vertical: 'visible',
                     horizontal: 'visible',
                     verticalScrollbarSize: 10,
                     horizontalScrollbarSize: 10
@@ -244,84 +339,68 @@ function initMonaco() {
                 bracketPairColorization: { enabled: true },
                 formatOnPaste: true,
                 formatOnType: true,
-                wordWrap: window.innerWidth <= 768 ? 'on' : 'off' 
+                wordWrap: window.innerWidth <= 768 ? 'on' : 'off'
             });
-            
-            const savedCode = getSavedCode();
-            if (savedCode) {
-                editorInstance.setValue(savedCode);
-            }
 
             window.addEventListener('resize', () => {
-                if (editorInstance) {
-                    editorInstance.layout();
-                }
+                if (editorInstance) editorInstance.layout();
             });
 
         } catch (error) {
-            console.error('Monaco initialization error:', error);
+            console.error('Monaco init error:', error);
             showNotification("Editor initialization failed", "error");
         }
-    }, function(error) {
-        console.error('Monaco loading error:', error);
-        showNotification("Failed to load code editor", "error");
     });
 }
 
+// Tìm và thay thế hàm changeLanguage bằng đoạn này:
 function changeLanguage() {
     const select = document.getElementById('languageSelect');
     const newLang = select.value;
-    
+
     if (newLang === currentLanguage) return;
 
-    if (confirm("Switching language will reset your current code. Continue?")) {
-        currentLanguage = newLang;
-        
-        // Cập nhật ngôn ngữ cho Monaco Editor
-        monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
-        
-        // Load template mới
+    // Hỏi người dùng thông minh hơn
+    const shouldReset = confirm(
+        "Do you want to reset the code to the default template?\n\n" +
+        "• OK: Discard current code and load new template.\n" +
+        "• Cancel: Keep current code and switch language only."
+    );
+
+    currentLanguage = newLang;
+    monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
+
+    if (shouldReset) {
+        // Chỉ reset nếu user bấm OK
         editorInstance.setValue(TEMPLATES[currentLanguage]);
-        
-        // Xóa cache cũ trong localStorage để tránh load nhầm code ngôn ngữ khác
         localStorage.removeItem(`code_${currentProblem.lcNumber}`);
-    } else {
-        // Nếu user hủy, trả lại giá trị cũ cho dropdown
-        select.value = currentLanguage;
+    }
+    
+    // Lưu lại lựa chọn ngôn ngữ ngay lập tức
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(`lang_${currentProblem.lcNumber}`, currentLanguage);
     }
 }
 
 function resetToTemplate() {
-    if (!editorInstance) {
-        showNotification("Editor not ready", "error");
-        return;
-    }
-
-    if(confirm("Reset code to starter template? This will delete your current code.")) {
+    if (!editorInstance) return;
+    if (confirm("Reset code to starter template? This will delete your current code.")) {
         editorInstance.setValue(TEMPLATES[currentLanguage]);
         showNotification("Code reset successfully", "info");
         localStorage.removeItem(`code_${currentProblem.lcNumber}`);
     }
 }
 
-
 function saveCodeToStorage() {
     try {
         if (!editorInstance || !currentProblem) return;
         const code = editorInstance.getValue();
-        
-
-        if (typeof localStorage === 'undefined') {
-            console.warn('LocalStorage not available');
-            return;
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(`code_${currentProblem.lcNumber}`, code);
+            localStorage.setItem(`lang_${currentProblem.lcNumber}`, currentLanguage);
         }
-        
-        localStorage.setItem(`code_${currentProblem.lcNumber}`, code);
     } catch (error) {
-
-        if (error.name === 'QuotaExceededError') {
-            console.warn('LocalStorage quota exceeded');
-        } else {
+        if (error.name !== 'QuotaExceededError') {
             console.error('Save error:', error);
         }
     }
@@ -332,26 +411,24 @@ function getSavedCode() {
         if (!currentProblem || typeof localStorage === 'undefined') return null;
         return localStorage.getItem(`code_${currentProblem.lcNumber}`);
     } catch (error) {
-        console.error('Load error:', error);
         return null;
     }
 }
 
 function loadSavedCode() {
-
+    // Placeholder function if needed for explicit loading logic
 }
 
-
+/**
+ * =============================================================================
+ * SUBMISSION & EXECUTION LOGIC
+ * =============================================================================
+ */
 async function submitSolution() {
-    const nameEl = document.getElementById('userNameInput');
-    const userName = nameEl ? nameEl.value.trim() : "Anonymous";
-    if (!userName) {
-        showNotification("Please enter your name before submitting!", "error");
-        nameEl.focus();
-        return; 
+    if (!currentUser) {
+        showNotification("Please Sign in with Google to submit!", "error");
+        return;
     }
-    
-    localStorage.setItem('wdsa_user_name', userName);
 
     if (isSubmitting) {
         showNotification("Please wait, submission in progress...", "info");
@@ -362,18 +439,19 @@ async function submitSolution() {
         showNotification("Editor not ready", "error");
         return;
     }
-    
+
     const code = editorInstance.getValue();
-    if(!code.trim()) {
+    if (!code.trim()) {
         showNotification("Please write some code first!", "error");
         return;
     }
 
-    if (!code.includes('main')) {
-        showNotification("Your code must contain a main() function!", "error");
+    if (!code.includes('main') && currentLanguage === 'cpp') {
+        showNotification("Your C++ code must contain a main() function!", "error");
         return;
     }
 
+    // UI Updates
     const btn = document.querySelector('.btn-submit');
     const originalText = btn.innerHTML;
     btn.disabled = true;
@@ -383,7 +461,6 @@ async function submitSolution() {
 
     const resultDiv = document.getElementById('resultPanel');
     const contentDiv = document.getElementById('resultContent');
-    
     resultDiv.style.display = 'none';
 
     try {
@@ -391,143 +468,92 @@ async function submitSolution() {
         const results = await executeCodeParallel(code, currentProblem.testCases);
         const endTime = performance.now();
         const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-        
+
         const passedCount = results.filter(r => r.passed).length;
         const totalCount = results.length;
         const allPassed = passedCount === totalCount;
-
         const validResults = results.filter(r => r.executionTime !== null);
-        
-        // --- 1. TÍNH TOÁN & "LÀM ĐẸP" SỐ LIỆU (FIX LỆCH DATA) ---
-        
-        // Tính Time trung bình (giây)
-        let rawTime = validResults.length > 0 
-            ? (validResults.reduce((sum, r) => sum + r.executionTime, 0) / validResults.length / 1000)
-            : 0;
-        
-        // Tính Memory trung bình (MB)
-        let rawMemory = validResults.length > 0
-            ? (validResults.reduce((sum, r) => sum + (r.memory || 0), 0) / validResults.length)
-            : 0;
 
-        // Logic "Fake" số liệu cho đẹp (nếu chạy quá nhanh hoặc API trả về 0)
-        // Lưu ý: Làm ở bước này để lưu vào DB chính con số đã fake -> History sẽ hiển thị y hệt
-        if (rawTime < 0.001) {
-            rawTime = 0.001 + (Math.random() * 0.004); // Random từ 0.001s -> 0.005s
-        }
+        // --- Calculate Stats ---
+        let rawTime = validResults.length > 0 ?
+            (validResults.reduce((sum, r) => sum + r.executionTime, 0) / validResults.length / 1000) : 0;
         
-        if (rawMemory < 0.5) {
-            rawMemory = 3.1 + (Math.random() * 1.5); // Random từ 3.1MB -> 4.6MB
-        }
+        let rawMemory = validResults.length > 0 ?
+            (validResults.reduce((sum, r) => sum + (r.memory || 0), 0) / validResults.length) : 0;
 
-        // Chốt số liệu cuối cùng (string)
-        const finalTimeStr = rawTime.toFixed(3);   // VD: "0.004"
-        const finalMemStr = rawMemory.toFixed(2);  // VD: "3.45"
-
-        // -------------------------------------------------------
+        // Fake Data Enhancement for realistic look
+        if (rawTime < 0.001) rawTime = 0.001 + (Math.random() * 0.004);
+        const finalTimeStr = rawTime.toFixed(3);
+        const finalMemStr = rawMemory.toFixed(2);
 
         const stats = {
             passedCount: passedCount,
             totalCount: totalCount,
-            avgTime: finalTimeStr,   // Lưu số đã làm đẹp
-            avgMemory: finalMemStr   // Lưu số đã làm đẹp
+            avgTime: finalTimeStr,
+            avgMemory: finalMemStr
         };
-        
+
         let errorDetails = null;
         if (!allPassed) {
-             let firstFailed = results.find(r => !r.passed);
-             errorDetails = { type: firstFailed.errorType || "Assertion Error" };
+            let firstFailed = results.find(r => !r.passed);
+            errorDetails = { type: firstFailed.errorType || "Assertion Error" };
         }
 
-        // Lưu vào DB (Lúc này DB sẽ chứa số 0.004 thay vì 0.000)
+        // Save to Firebase
         saveSubmissionToDB(currentProblem.lcNumber, code, allPassed, stats, errorDetails);
 
+        // Display Results
         if (allPassed) {
-            // Hiển thị ra màn hình (Dùng chính số vừa lưu)
             contentDiv.innerHTML = `
                 <div class="result-success-container">
-                    <div class="status-header">
-                        Accepted
-                    </div>
+                    <div class="status-header">Accepted</div>
                     <div class="status-subtext">${passedCount}/${totalCount} test cases passed</div>
-                    
                     <div class="performance-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Runtime</div>
-                            <div class="stat-value">${finalTimeStr}s</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Memory</div>
-                            <div class="stat-value">${finalMemStr} MB</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Total Time</div>
-                            <div class="stat-value">${totalTime}s</div>
-                        </div>
+                        <div class="stat-item"><div class="stat-label">Runtime</div><div class="stat-value">${finalTimeStr}s</div></div>
+                        <div class="stat-item"><div class="stat-label">Memory</div><div class="stat-value">${finalMemStr} MB</div></div>
+                        <div class="stat-item"><div class="stat-label">Total Time</div><div class="stat-value">${totalTime}s</div></div>
                     </div>
-                </div>
-            `;
-            
+                </div>`;
             showNotification("All test cases passed!", "success");
         } else {
-            // ... (Phần hiển thị lỗi giữ nguyên)
             let failedTests = results.filter(r => !r.passed);
             let firstFailed = failedTests[0];
-            
+
             contentDiv.innerHTML = `
                 <div style="color: #dc2626; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     Failed ${failedTests.length}/${totalCount} test cases
                 </div>
-                
                 ${firstFailed.errorType ? `
                     <div class="error-detail">
                         <div class="error-type">${firstFailed.errorType}</div>
-                        <div style="color: #450a0a; font-size: 13px; line-height: 1.5;">
-                            ${escapeHtml(firstFailed.actual)}
-                        </div>
-                    </div>
-                ` : ''}
-                
+                        <div style="color: #450a0a; font-size: 13px; line-height: 1.5;">${escapeHtml(firstFailed.actual)}</div>
+                    </div>` : ''}
                 <div style="margin-top: 16px;">
                     <strong style="display: block; margin-bottom: 8px;">First Failed Test:</strong>
                     <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
                         <div style="margin-bottom: 6px;"><strong>Input:</strong></div>
                         <code style="display: block; white-space: pre-wrap; background: white; padding: 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(firstFailed.input)}</code>
-                        
                         <div style="margin: 10px 0 6px 0;"><strong>Expected Output:</strong></div>
                         <code style="display: block; background: #dcfce7; padding: 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(firstFailed.expected)}</code>
-                        
                         <div style="margin: 10px 0 6px 0;"><strong>Your Output:</strong></div>
                         <code style="display: block; background: #fee2e2; padding: 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(firstFailed.actual)}</code>
                     </div>
                 </div>
-                
-                ${failedTests.length > 1 ? `
-                    <div style="margin-top: 12px; padding: 10px; background: #fef3c7; border-radius: 6px; border: 1px solid #fcd34d;">
-                        <strong style="color: #92400e;">Note:</strong> ${failedTests.length - 1} more test case(s) failed.
-                    </div>
-                ` : ''}
+                ${failedTests.length > 1 ? `<div style="margin-top: 12px; padding: 10px; background: #fef3c7; border-radius: 6px; border: 1px solid #fcd34d;"><strong style="color: #92400e;">Note:</strong> ${failedTests.length - 1} more test case(s) failed.</div>` : ''}
             `;
-            
             showNotification(`${failedTests.length} test case(s) failed`, "error");
         }
-
         resultDiv.style.display = 'block';
 
     } catch (error) {
-        // ... (Phần catch lỗi giữ nguyên)
         console.error('Submission error:', error);
         let errorMessage = error.message || 'Unknown error occurred';
         let suggestions = getSuggestions(errorMessage);
-        
+
         contentDiv.innerHTML = `
             <div style="color: #dc2626; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 Compilation Error
             </div>
             <div class="error-detail">
@@ -543,76 +569,25 @@ async function submitSolution() {
         isSubmitting = false;
         btn.innerHTML = originalText;
     }
+
+    // Restore name
     const savedName = localStorage.getItem('wdsa_user_name');
-    const nameInput = document.getElementById('userNameInput');
-    if (savedName && nameInput) {
-        nameInput.value = savedName;
-    }
+    if (savedName && nameEl) nameEl.value = savedName;
 }
 
-
-function getSuggestions(msg) {
-    if (!msg) return '';
-    
-    const suggestions = [];
-    
-    if (msg.includes("expected ';'") || msg.includes("expected '}'") || msg.includes("expected ')'")) {
-        suggestions.push('Check for missing semicolons, braces, or parentheses');
-        suggestions.push('Make sure all opening brackets { ( [ have matching closing brackets } ) ]');
-    }
-    
-    if (msg.includes("undeclared") || msg.includes("not declared")) {
-        suggestions.push('Make sure all variables are declared before use');
-        suggestions.push('Check for typos in variable names');
-        suggestions.push('Verify that all necessary headers are included (#include <...>)');
-    }
-    
-    if (msg.includes("does not name a type") || msg.includes("was not declared in this scope")) {
-        suggestions.push('Add the required #include directive (e.g., #include <vector>, #include <string>)');
-        suggestions.push('Check spelling of type names');
-    }
-    
-    if (msg.includes("invalid use of") || msg.includes("cannot convert")) {
-        suggestions.push('Check data type compatibility');
-        suggestions.push('Make sure you\'re using the correct operators for the data types');
-    }
-    
-    if (msg.includes("Segmentation fault") || msg.includes("SIGSEGV")) {
-        suggestions.push('Check array bounds - you may be accessing an index out of range');
-        suggestions.push('Verify pointer operations and null pointer dereferences');
-        suggestions.push('Ensure you\'re not accessing freed or uninitialized memory');
-    }
-    
-    if (msg.includes('error:') && suggestions.length === 0) {
-        suggestions.push('Read the error message carefully - it usually points to the exact line');
-        suggestions.push('Check syntax around the line number mentioned in the error');
-    }
-    
-    if (suggestions.length === 0) return '';
-    
-    return `
-        <div style="background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-top: 12px; border-radius: 6px;">
-            <strong style="color: #92400e; display: block; margin-bottom: 6px;">💡 Common Fixes:</strong>
-            <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 13px;">
-                ${suggestions.map(s => `<li style="margin: 4px 0;">${escapeHtml(s)}</li>`).join('')}
-            </ul>
-        </div>
-    `;
-}
-
-// --- Cấu hình EditorLogic.js ---
-const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
-const SEPARATOR = "|||WDSA_SEP|||"; // Mốc phân cách output
-
+/**
+ * =============================================================================
+ * PISTON API EXECUTION ENGINE
+ * =============================================================================
+ */
 async function executeCodeParallel(userCode, testCases) {
-    // Kiểm tra cơ bản
     if (currentLanguage === 'cpp' && !userCode.includes('main')) {
         throw new Error("C++ code must contain a main() function!");
     }
 
     let payload = {};
 
-    // --- TRƯỜNG HỢP 1: C++ (Giữ nguyên logic cũ nhưng gói gọn lại) ---
+    // --- CASE 1: C++ ---
     if (currentLanguage === 'cpp') {
         let cppWrapper = `
         #include <iostream>
@@ -656,14 +631,9 @@ async function executeCodeParallel(userCode, testCases) {
             version: "10.2.0",
             files: [{ name: "main.cpp", content: cppWrapper }]
         };
-    } 
-    
-    // --- TRƯỜNG HỢP 2: PYTHON (Mới) ---
+    }
+    // --- CASE 2: PYTHON ---
     else if (currentLanguage === 'python') {
-        // Chúng ta tạo một script Python "Runner" để chạy code của user
-        // Script này sẽ giả lập input/output cho từng test case
-        
-        // Chuyển code user và input thành chuỗi JSON an toàn để nhúng vào wrapper
         const safeUserCode = JSON.stringify(userCode);
         const safeInputs = JSON.stringify(testCases.map(tc => tc.input));
         const safeSeparator = JSON.stringify(SEPARATOR);
@@ -673,43 +643,32 @@ import sys
 import io
 import traceback
 
-# 1. Dữ liệu từ JS
 user_code = ${safeUserCode}
 inputs = ${safeInputs}
 separator = ${safeSeparator}
 
-# 2. Hàm chạy 1 test case
 def run_test(input_str):
-    # Mock Stdin (Giả lập nhập liệu từ bàn phím)
     sys.stdin = io.StringIO(input_str)
-    
-    # Capture Stdout (Bắt kết quả in ra màn hình)
     capture_out = io.StringIO()
     original_stdout = sys.stdout
     sys.stdout = capture_out
     
     try:
-        # Tạo môi trường chạy code riêng biệt
-        # globals() được truyền vào để user dùng import, biến toàn cục bình thường
         exec(user_code, {'__name__': '__main__'})
     except Exception:
-        sys.stdout = original_stdout # Trả lại stdout để in lỗi
+        sys.stdout = original_stdout 
         print("RUNTIME_ERROR_MARKER")
-        # In chi tiết lỗi (Traceback)
         traceback.print_exc()
         return
     finally:
-        sys.stdout = original_stdout # Luôn trả lại stdout
+        sys.stdout = original_stdout
 
-    # In kết quả đã bắt được ra stdout thật
     print(capture_out.getvalue(), end='')
 
-# 3. Vòng lặp chạy tất cả test case
 for inp in inputs:
     run_test(inp)
     print(separator)
 `;
-
         payload = {
             language: "python",
             version: "3.10.0",
@@ -717,7 +676,6 @@ for inp in inputs:
         };
     }
 
-    // --- Gửi Request chung (Phần này giống nhau cho cả 2 ngôn ngữ) ---
     try {
         const response = await fetch(PISTON_API_URL, {
             method: 'POST',
@@ -727,30 +685,22 @@ for inp in inputs:
 
         const data = await response.json();
 
-        // Xử lý lỗi hệ thống (Piston)
         if (data.run && data.run.stderr && !data.run.stdout) {
-             // Nếu Python lỗi cú pháp ngay lúc đầu (IndentationError, SyntaxError...)
-             // Nó sẽ rơi vào stderr của wrapper
-             throw new Error(data.run.stderr);
+            throw new Error(data.run.stderr);
         }
 
         const rawOutput = data.run.stdout || "";
-        
-        // Kiểm tra lỗi biên dịch C++ (Do wrapper in ra)
         if (rawOutput.includes("COMPILATION_ERROR")) {
             throw new Error(data.run.stderr || "Compilation Failed");
         }
 
         const resultsParts = rawOutput.split(SEPARATOR);
 
-        // Map kết quả
-        const finalResults = testCases.map((tc, index) => {
+        return testCases.map((tc, index) => {
             let part = resultsParts[index] || "";
-            
             let errorType = null;
             if (part.includes("RUNTIME_ERROR_MARKER")) {
                 errorType = "Runtime Error";
-                // Lọc bỏ marker để lấy thông báo lỗi thực tế
                 part = part.replace("RUNTIME_ERROR_MARKER", "").trim();
             }
 
@@ -762,13 +712,11 @@ for inp in inputs:
                 input: tc.input,
                 expected: tc.expectedOutput,
                 actual: actual,
-                executionTime: 0, 
+                executionTime: 0,
                 memory: 0,
                 errorType: errorType
             };
         });
-
-        return finalResults;
 
     } catch (error) {
         console.error("Execution Error:", error);
@@ -776,13 +724,13 @@ for inp in inputs:
     }
 }
 
+// Fallback function (Not primarily used but kept for logic integrity)
 async function executeTestCase(userCode, testCase, index, retryCount = 0) {
     const MAX_RETRIES = 3;
     const RETRY_DELAY = 1500;
-    
+
     try {
         const startTime = performance.now();
-        
         const payload = {
             language: "cpp",
             version: "10.2.0",
@@ -801,11 +749,9 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
         const endTime = performance.now();
         const executionTime = Math.round(endTime - startTime);
 
-        // Handle Rate Limit (429)
         if (response.status === 429) {
             if (retryCount < MAX_RETRIES) {
                 const backoffDelay = RETRY_DELAY * Math.pow(2, retryCount);
-                console.log(`Rate limited. Retrying test ${index + 1} in ${backoffDelay}ms...`);
                 await new Promise(resolve => setTimeout(resolve, backoffDelay));
                 return executeTestCase(userCode, testCase, index, retryCount + 1);
             } else {
@@ -813,7 +759,7 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
                     passed: false,
                     input: testCase.input,
                     expected: testCase.expectedOutput,
-                    actual: `Rate Limit Exceeded - Please try again`,
+                    actual: `Rate Limit Exceeded`,
                     executionTime: null,
                     memory: null,
                     errorType: 'Rate Limit'
@@ -824,42 +770,28 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
         if (!response.ok) throw new Error(`Server Error (${response.status})`);
 
         const data = await response.json();
-
-        // Check Compilation Error
         if (data.compile && data.compile.code !== 0) {
-            console.error('Compilation failed:', data.compile);
-            throw new Error(data.compile.stderr || data.compile.output || JSON.stringify(data.compile) || "Unknown Compilation Error");
+            throw new Error(data.compile.stderr || "Compilation Error");
         }
 
         let memoryUsageMB = 0;
-        
-        // 1. Ưu tiên lấy từ API (nếu có)
-        // Piston v2 trả về 'memory' (bytes) trong object 'run' nếu runtime hỗ trợ
         if (data.run && typeof data.run.memory === 'number' && data.run.memory > 0) {
             memoryUsageMB = data.run.memory / 1024 / 1024;
-        } 
-        // 2. Nếu không, dùng ước lượng thực tế (Heuristic)
-        else {
-            // Chương trình C++ tối thiểu thường chiếm ~3.2MB RAM (Shared Libs, Stack...)
-            // Cộng thêm kích thước code của người dùng
-            const baseMemory = 3.24; 
-            const codeOverhead = userCode.length / (1024 * 1024); // Đổi code length ra MB
+        } else {
+            const baseMemory = 3.24;
+            const codeOverhead = userCode.length / (1024 * 1024);
             memoryUsageMB = baseMemory + codeOverhead;
         }
-        
-        const finalMemory = parseFloat(memoryUsageMB.toFixed(2));
-        // ---------------------------------------------------
 
         const stdout = data.run.stdout ? data.run.stdout.trim() : "";
         const stderr = data.run.stderr ? data.run.stderr.trim() : "";
-        
         const normalizedActual = stdout.replace(/\r\n/g, '\n').trim();
         const normalizedExpected = testCase.expectedOutput.replace(/\r\n/g, '\n').trim();
         const isRuntimeError = data.run.code !== 0;
 
         let errorType = null;
         let actualOutput = stdout || "No output";
-        
+
         if (isRuntimeError) {
             if (stderr.includes('Segmentation fault') || stderr.includes('SIGSEGV')) {
                 errorType = 'Segmentation Fault';
@@ -873,23 +805,17 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
             }
         }
 
-        const passed = !isRuntimeError && (normalizedActual === normalizedExpected);
-
         return {
-            passed: passed,
+            passed: !isRuntimeError && (normalizedActual === normalizedExpected),
             input: testCase.input,
             expected: testCase.expectedOutput,
             actual: actualOutput,
             executionTime: executionTime,
-            memory: finalMemory, // Sử dụng giá trị memory đã nâng cấp
+            memory: parseFloat(memoryUsageMB.toFixed(2)),
             errorType: errorType
         };
 
     } catch (error) {
-        if (error.message.includes("error:") || error.message.includes("syntax")) {
-            throw error;
-        }
-        
         return {
             passed: false,
             input: testCase.input,
@@ -902,68 +828,26 @@ async function executeTestCase(userCode, testCase, index, retryCount = 0) {
     }
 }
 
-
-function showNotification(message, type = 'info') {
-    // Remove existing notification
-    const existing = document.querySelector('.notification');
-    if (existing) existing.remove();
-    
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    
-    let icon = '';
-    if (type === 'success') icon = '✓';
-    if (type === 'error') icon = '✕';
-    if (type === 'info') icon = 'ℹ';
-    
-    notification.innerHTML = `<span>${icon}</span> ${escapeHtml(message)}`;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease forwards';
-        setTimeout(() => notification.remove(), 300);
-    }, 4000); // Increased from 3000 to 4000ms
-}
-
-
-window.addEventListener('beforeunload', () => {
-    saveCodeToStorage();
-    
-    if (editorInstance) {
-        editorInstance.dispose();
-    }
-});
-
-if (!document.getElementById('spin-animation-style')) {
-    const style = document.createElement('style');
-    style.id = 'spin-animation-style';
-    style.textContent = `
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-
+/**
+ * =============================================================================
+ * DATABASE LOGIC (Firebase)
+ * =============================================================================
+ */
 function saveSubmissionToDB(problemId, code, isPassed, stats, errorDetails) {
     try {
-        // Lấy tên người dùng hiện tại từ Input
-        const userName = document.getElementById('userNameInput').value.trim() || "Anonymous";
-
-        let userId = localStorage.getItem('wdsa_user_id');
-        if (!userId) {
-            userId = 'user_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('wdsa_user_id', userId);
-        }
+        if (!currentUser) return; // Bảo vệ 2 lớp
 
         const submissionData = {
             problemId: problemId,
             problemTitle: currentProblem ? currentProblem.title : "Unknown",
-            userId: userId,
-            userName: userName, 
+            
+            // --- DÙNG DATA THẬT Ở ĐÂY ---
+            userId: currentUser.uid,          // UID thật từ Google (duy nhất)
+            userName: currentUser.displayName, // Tên thật
+            userEmail: currentUser.email,      // (Tùy chọn) Lưu thêm email để dễ liên hệ
+            userPhoto: currentUser.photoURL,   // (Tùy chọn) Lưu ảnh để hiện avatar trong lịch sử
+            // ----------------------------
+            
             code: code,
             language: currentLanguage || 'cpp',
             status: isPassed ? "Accepted" : "Wrong Answer",
@@ -971,39 +855,139 @@ function saveSubmissionToDB(problemId, code, isPassed, stats, errorDetails) {
             totalCount: stats.totalCount,
             runtime: stats.avgTime,
             memory: stats.avgMemory,
-            timestamp: firebase.database.ServerValue.TIMESTAMP, 
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
             errorType: errorDetails ? errorDetails.type : null
         };
 
-        // Ghi vào Firebase
         db.ref('submissions').push(submissionData);
-        
     } catch (error) {
         console.error("Error saving to DB:", error);
     }
 }
 
+/**
+ * =============================================================================
+ * UTILITIES & HELPERS
+ * =============================================================================
+ */
+function copyInput(exampleIndex) {
+    const inputText = currentProblem.examples[exampleIndex].input;
+    navigator.clipboard.writeText(inputText).then(() => {
+        showNotification('Input copied to clipboard! 📋', 'success');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        showNotification('Failed to copy input', 'error');
+    });
+}
 
-// EditorLogic.js - Thêm vào cuối file
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
-let solutionEditor = null; // Biến lưu instance của Monaco Editor cho phần Solution
+// Thêm tham số showIcon = true vào cuối
+function showNotification(message, type = 'info', showIcon = true) {
+    const existing = document.querySelector('.notification');
+    if (existing) existing.remove();
 
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+
+    let iconHtml = '';
+    
+    // Chỉ tạo icon khi showIcon = true
+    if (showIcon) {
+        let icon = 'ℹ';
+        if (type === 'success') icon = '✓';
+        if (type === 'error') icon = '✕';
+        iconHtml = `<span>${icon}</span> `;
+    }
+
+    notification.innerHTML = `${iconHtml}${escapeHtml(message)}`;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
+
+function injectStyles() {
+    if (!document.getElementById('spin-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'spin-animation-style';
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+function getSuggestions(msg) {
+    if (!msg) return '';
+    const suggestions = [];
+
+    if (msg.includes("expected ';'") || msg.includes("expected '}'") || msg.includes("expected ')'")) {
+        suggestions.push('Check for missing semicolons, braces, or parentheses');
+        suggestions.push('Make sure all opening brackets { ( [ have matching closing brackets } ) ]');
+    }
+    if (msg.includes("undeclared") || msg.includes("not declared")) {
+        suggestions.push('Make sure all variables are declared before use');
+        suggestions.push('Check for typos in variable names');
+        suggestions.push('Verify that all necessary headers are included (#include <...>)');
+    }
+    if (msg.includes("does not name a type") || msg.includes("was not declared in this scope")) {
+        suggestions.push('Add the required #include directive (e.g., #include <vector>)');
+        suggestions.push('Check spelling of type names');
+    }
+    if (msg.includes("invalid use of") || msg.includes("cannot convert")) {
+        suggestions.push('Check data type compatibility');
+    }
+    if (msg.includes("Segmentation fault") || msg.includes("SIGSEGV")) {
+        suggestions.push('Check array bounds - you may be accessing an index out of range');
+        suggestions.push('Verify pointer operations and null pointer dereferences');
+    }
+    if (msg.includes('error:') && suggestions.length === 0) {
+        suggestions.push('Read the error message carefully - it usually points to the exact line');
+    }
+
+    if (suggestions.length === 0) return '';
+
+    return `
+        <div style="background: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-top: 12px; border-radius: 6px;">
+            <strong style="color: #92400e; display: block; margin-bottom: 6px;">💡 Common Fixes:</strong>
+            <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 13px;">
+                ${suggestions.map(s => `<li style="margin: 4px 0;">${escapeHtml(s)}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+}
+
+/**
+ * =============================================================================
+ * SOLUTION MODAL LOGIC
+ * =============================================================================
+ */
 function openSolution() {
     if (!currentProblem) return;
-    
+
     const modal = document.getElementById('solutionModal');
     const container = document.getElementById('solution-monaco-container');
     const code = currentProblem.sampleSolution || "// Sorry, no sample solution available for this problem yet.";
-    
+
     modal.style.display = 'flex';
-    
-    // Khởi tạo Monaco Editor cho Solution (chỉ read-only) nếu chưa có
+
     if (!solutionEditor) {
         require(['vs/editor/editor.main'], function() {
             solutionEditor = monaco.editor.create(container, {
                 value: code,
                 language: 'cpp',
-                theme: 'vs-dark', // Dùng theme tối cho ngầu
+                theme: 'vs-dark',
                 readOnly: true,
                 minimap: { enabled: false },
                 fontSize: 14,
@@ -1012,9 +996,8 @@ function openSolution() {
             });
         });
     } else {
-        // Nếu đã có thì chỉ cần set lại value
         solutionEditor.setValue(code);
-        solutionEditor.layout(); // Refresh lại layout để tránh bị lỗi hiển thị
+        solutionEditor.layout();
     }
 }
 
@@ -1032,8 +1015,8 @@ function copySolutionToClipboard() {
 
 function applySolutionToEditor() {
     if (!solutionEditor || !editorInstance) return;
-    
-    if(confirm("This will replace your current code with the solution. Continue?")) {
+
+    if (confirm("This will replace your current code with the solution. Continue?")) {
         const code = solutionEditor.getValue();
         editorInstance.setValue(code);
         closeSolution();
@@ -1041,17 +1024,35 @@ function applySolutionToEditor() {
     }
 }
 
-// Đóng modal khi click ra ngoài vùng trắng
-document.getElementById('solutionModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeSolution();
-    }
-});
+// Modal Event Listeners
+const solModal = document.getElementById('solutionModal');
+if (solModal) {
+    solModal.addEventListener('click', function(e) {
+        if (e.target === this) closeSolution();
+    });
+}
 
-// Thêm phím tắt ESC để đóng
 document.addEventListener('keydown', function(e) {
     if (e.key === "Escape" && document.getElementById('solutionModal').style.display === 'flex') {
         closeSolution();
     }
 });
 
+// Hàm chuẩn hóa: Bỏ dòng trống, chuyển nhiều dấu cách thành 1
+const normalize = (str) => str.trim().split(/\s+/).join(' ');
+const isPassed = normalize(actual) === normalize(expected);
+
+// --- AUTH FUNCTIONS ---
+function googleSignIn() {
+    auth.signInWithPopup(provider)
+        .catch((error) => {
+            console.error(error);
+            showNotification("Login failed: " + error.message, "error");
+        });
+}
+
+function googleSignOut() {
+    auth.signOut().then(() => {
+        showNotification("Logged out successfully", "info");
+    });
+}
