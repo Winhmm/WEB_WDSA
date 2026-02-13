@@ -16,9 +16,11 @@ const gen = (n, m) => {
  * =============================================================================
  */
 const CHAPTERS = [
+
     // -------------------------------------------------------------------------
     // CHAPTER 1: SORTING & SEARCHING
     // -------------------------------------------------------------------------
+
     {
         id: 1,
         title: "Sorting & Searching",
@@ -121,6 +123,7 @@ const CHAPTERS = [
     // -------------------------------------------------------------------------
     // CHAPTER 2: BACKTRACKING
     // -------------------------------------------------------------------------
+
     {
         id: 2,
         title: "Backtracking",
@@ -945,6 +948,7 @@ int main() {
     // -------------------------------------------------------------------------
     // CHAPTER 3: DYNAMIC PROGRAMMING
     // -------------------------------------------------------------------------
+
     {
         id: 3,
         title: "Dynamic Programming",
@@ -1077,6 +1081,123 @@ int main() {
                     { input: "80", expectedOutput: "23416728348467685" },
                     { input: "85", expectedOutput: "259695496911122585" },
                     { input: "92", expectedOutput: "7540113804746346429" }
+                ]
+            }
+        ]
+    },
+
+    // -------------------------------------------------------------------------
+    // CHAPTER 4: String
+    // -------------------------------------------------------------------------
+
+    {
+        id: 4,
+        title: "String",
+        problems:[
+            {
+                customId: 1,
+                title: "Middle Digit of a Number",
+                difficulty: "easy",
+                tags: ["Math", "String"],
+                description: `
+                    <p>Given a non-negative integer <strong>N</strong>, determine the <strong>middle digit</strong> of N.</p>
+                    
+                    <ul>
+                        <li>If N has an <strong>odd number of digits</strong>, print the middle digit.</li>
+                        <li>If N has an <strong>even number of digits</strong>, print <strong>"NOT FOUND"</strong>.</li>
+                    </ul>
+
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing a non-negative integer N.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>0 ≤ N ≤ 10<sup>18</sup></li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the middle digit of N or <strong>NOT FOUND</strong> if it does not exist.</li>
+                    </ul>
+                `,
+                examples: [
+                    { 
+                        input: "12345", 
+                        output: "3", 
+                        explain: "Explanation: The number has 5 digits (odd), so the middle digit is 3." 
+                    },
+                    { 
+                        input: "2213", 
+                        output: "NOT FOUND", 
+                        explain: "Explanation: The number has 4 digits (even), so there is no middle digit." 
+                    },
+                    { 
+                        input: "999996472", 
+                        output: "9", 
+                        explain: "Explanation: The number has 9 digits, so the middle digit is the 5th digit, which is 9." 
+                    }
+                ],
+                testCases: [
+                    { input: "0", expectedOutput: "0" },
+                    { input: "5", expectedOutput: "5" },
+                    { input: "7", expectedOutput: "7" },
+
+                    { input: "11", expectedOutput: "NOT FOUND" },
+                    { input: "12", expectedOutput: "NOT FOUND" },
+                    { input: "13", expectedOutput: "NOT FOUND" },
+
+                    { input: "1001", expectedOutput: "NOT FOUND" },
+                    { input: "12321", expectedOutput: "3" },
+                    { input: "123321", expectedOutput: "NOT FOUND" },
+                    { input: "987654321", expectedOutput: "5" },
+                    { input: "11111", expectedOutput: "1" },
+                    { input: "222222", expectedOutput: "NOT FOUND" },
+
+                    { input: "101", expectedOutput: "0" },
+                    { input: "222", expectedOutput: "2" },
+                    { input: "345", expectedOutput: "4" },
+                    { input: "909", expectedOutput: "0" },
+                    { input: "12345", expectedOutput: "3" },
+                    { input: "10001", expectedOutput: "0" },
+                    { input: "54321", expectedOutput: "3" },
+                    { input: "99999", expectedOutput: "9" },
+                    { input: "10000", expectedOutput: "0" },
+                    { input: "45678", expectedOutput: "6" },
+                    { input: "80808", expectedOutput: "8" },
+                    { input: "13579", expectedOutput: "5" },
+                    { input: "24680", expectedOutput: "6" },
+                    { input: "100001", expectedOutput: "NOT FOUND" },
+                    { input: "500005", expectedOutput: "NOT FOUND" },
+                    { input: "1234567", expectedOutput: "4" },
+                    { input: "7654321", expectedOutput: "4" },
+                    { input: "999999", expectedOutput: "NOT FOUND" },
+                    { input: "1515151", expectedOutput: "5" },
+                    { input: "1616161", expectedOutput: "6" },
+                    { input: "1717171", expectedOutput: "7" },
+                    { input: "1212121", expectedOutput: "2" },
+                    { input: "1313131", expectedOutput: "3" },
+                    { input: "1414141", expectedOutput: "4" },
+                    { input: "600006", expectedOutput: "NOT FOUND" },
+                    { input: "700007", expectedOutput: "NOT FOUND" },
+                    { input: "800008", expectedOutput: "NOT FOUND" },
+                    { input: "900009", expectedOutput: "NOT FOUND" },
+                    { input: "110011", expectedOutput: "NOT FOUND" },
+                    { input: "1000000", expectedOutput: "0" },
+                    { input: "1200000", expectedOutput: "0" },
+                    { input: "1999999", expectedOutput: "9" },
+                    { input: "5000000", expectedOutput: "0" },
+                    { input: "333333", expectedOutput: "NOT FOUND" },
+                    { input: "123432", expectedOutput: "NOT FOUND" },
+                    { input: "4999994", expectedOutput: "9" },
+                    { input: "2222222", expectedOutput: "2" },
+                    { input: "3333333", expectedOutput: "3" },
+                    { input: "4444444", expectedOutput: "4" },
+                    { input: "2000002", expectedOutput: "0" },
+                    { input: "2345432", expectedOutput: "5" },
+                    { input: "3456543", expectedOutput: "6" },
+                    { input: "4567654", expectedOutput: "7" },
                 ]
             }
         ]

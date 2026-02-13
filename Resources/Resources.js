@@ -19,42 +19,27 @@ let userCode = '';                  // Code hiện tại của người dùng
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        console.log("Đang khởi tạo...");
+        console.log("Đang khởi tạo Resources...");
         
-        // Cách 1: Ưu tiên tải từ Firebase
-        let dataLoaded = false;
-        
-        if (typeof db !== 'undefined') {
-            try {
-                const snapshot = await db.ref('chapters_list').once('value');
-                const firebaseData = snapshot.val();
-                if (firebaseData) {
-                    window.CHAPTERS = firebaseData;
-                    dataLoaded = true;
-                    console.log("✅ Đã tải dữ liệu từ Firebase!");
-                }
-            } catch (err) {
-                console.warn("⚠️ Không tải được từ Firebase, chuyển sang dùng dữ liệu cục bộ (Data.js).", err);
-            }
-        }
-
-        // Cách 2: Nếu Firebase lỗi hoặc không có dữ liệu, dùng Data.js
-        if (!dataLoaded) {
-            if (typeof CHAPTERS !== 'undefined' && Array.isArray(CHAPTERS)) {
-                console.log("ℹ️ Đang sử dụng dữ liệu từ Data.js");
-                // window.CHAPTERS đã có sẵn từ file Data.js
-            } else {
-                throw new Error("Không tìm thấy nguồn dữ liệu nào (Firebase hoặc Data.js đều thiếu).");
-            }
+        // --- [THAY ĐỔI] CHỈ DÙNG DATA.JS ---
+        // Kiểm tra xem Data.js đã load chưa
+        if (typeof CHAPTERS !== 'undefined' && Array.isArray(CHAPTERS)) {
+            console.log("✅ Đã tải dữ liệu từ Data.js local");
+            window.CHAPTERS = CHAPTERS; // Đảm bảo biến global
+        } else {
+            throw new Error("Không tìm thấy dữ liệu bài tập (Data.js chưa được load).");
         }
 
         // --- KHỞI CHẠY GIAO DIỆN ---
-        init(); // Gọi hàm init() để render sidebar và logic
+        init(); 
 
     } catch (error) {
         console.error("Lỗi khởi tạo:", error);
-        // Thay vì alert làm phiền, hãy in log hoặc hiện thông báo nhỏ
-        console.error("Lỗi tải danh sách bài tập. Vui lòng kiểm tra console.");
+        // Hiển thị lỗi ra màn hình nếu Data.js hỏng
+        const container = document.querySelector('.res-content');
+        if(container) {
+            container.innerHTML = `<div class="error-message" style="margin: 20px;">Lỗi: ${error.message}</div>`;
+        }
     }
 });
 

@@ -8,6 +8,47 @@ let solutionEditor = null; // Instance cho modal solution
 let currentProblem = null;
 let isSubmitting = false;
 let currentLanguage = 'cpp';
+let problemFetchPromise = null;
+const params = new URLSearchParams(window.location.search);
+
+// --- 1. CẤU HÌNH MONACO EDITOR LOADER (BỊ THIẾU) ---
+const monacoLoaderPromise = new Promise((resolve, reject) => {
+    try {
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
+        require(['vs/editor/editor.main'], function (monaco) {
+            resolve(monaco);
+        });
+    } catch (e) {
+        reject(e);
+    }
+});
+
+// --- 2. HÀM TÌM BÀI TẬP TỪ DATA.JS LOCAL ---
+function getLocalProblem(id) {
+    if (typeof CHAPTERS === 'undefined') {
+        console.error("Lỗi: Không tìm thấy biến CHAPTERS từ Data.js");
+        return null;
+    }
+    // Duyệt qua từng chương để tìm bài tập khớp ID
+    for (const chapter of CHAPTERS) {
+        const problem = chapter.problems.find(p => 
+            String(p.lcNumber) === String(id) || String(p.customId) === String(id)
+        );
+        if (problem) return problem;
+    }
+    return null;
+}
+
+// --- 3. KHỞI TẠO PROMISE LẤY DATA ---
+const lcNumber = params.get('id');
+if (lcNumber) {
+    problemFetchPromise = new Promise((resolve) => {
+        // Tìm bài trong Data.js
+        const data = getLocalProblem(lcNumber);
+        resolve(data);
+    });
+}
+
 // --- AUTH VARIABLES ---
 let currentUser = null;
 const auth = firebase.auth();
@@ -41,76 +82,58 @@ if __name__ == "__main__":
     solve()`
 };
 
-// Thêm vào đầu EditorLogic.js
-const CACHE_KEY = 'wdsa_problem_cache';
-const CACHE_DURATION = 1000 * 60 * 30; // 30 phút
-
-async function getCachedProblem(problemId) {
-    const cached = localStorage.getItem(`${CACHE_KEY}_${problemId}`);
-    if (cached) {
-        const data = JSON.parse(cached);
-        if (Date.now() - data.timestamp < CACHE_DURATION) {
-            return data.problem;
-        }
-    }
-    return null;
-}
-
-function cacheProblem(problemId, problemData) {
-    localStorage.setItem(`${CACHE_KEY}_${problemId}`, JSON.stringify({
-        problem: problemData,
-        timestamp: Date.now()
-    }));
-}
-
 /**
  * =============================================================================
  * INITIALIZATION (Entry Point)
  * =============================================================================
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- PHẦN 1: KHỞI TẠO EDITOR & DATA TỪ FIREBASE ---
+    // --- PHẦN 1: TẢI SONG SONG DỮ LIỆU & EDITOR ---
     try {
-        // 1. Lấy ID bài tập từ URL (ví dụ: ?id=1)
         const params = new URLSearchParams(window.location.search);
         const lcNumber = params.get('id');
         if (!lcNumber) throw new Error('No problem ID specified');
 
+        // Hiển thị Loading UI cơ bản
+        document.getElementById('pTitle').textContent = "Loading Problem...";
         
-        // 2. Hiển thị Loading
-        document.getElementById('pTitle').textContent = "Loading...";
-        document.getElementById('pDesc').innerHTML = '<i>Đang tải dữ liệu bài tập từ server...</i>';
-
-        // 3. GỌI FIREBASE: Lấy chi tiết bài tập theo ID
-        const snapshot = await db.ref('problems/' + lcNumber).once('value');
-        const problemData = snapshot.val();
+        // --- [CẢI TIẾN] CHẠY SONG SONG ---
+        // problemFetchPromise đã được định nghĩa ở đầu file (Global)
+        // monacoLoaderPromise đã được định nghĩa ở bước 1
+        
+        const [problemData, monacoObj] = await Promise.all([
+            problemFetchPromise, // Lấy data từ Firebase/Cache
+            monacoLoaderPromise  // Tải thư viện Editor
+        ]);
 
         if (!problemData) throw new Error('Không tìm thấy bài tập này!');
 
-        // 4. Gán dữ liệu vào biến currentProblem
+        // Gán dữ liệu
         currentProblem = problemData;
-        // Đảm bảo ID luôn đúng
-        currentProblem.lcNumber = lcNumber; 
+        currentProblem.lcNumber = lcNumber;
 
-        // 5. Khởi tạo giao diện (Giữ nguyên logic cũ của bạn)
+        // Render Giao diện (Text, Description)
         renderProblemUI();
-        initMonaco();
-        initResizablePanes();
-        loadSavedCode();
 
+        // Khởi tạo Editor (Lúc này Monaco đã tải xong 100%)
+        initMonaco(monacoObj);
+
+        // Các thiết lập phụ
+        initResizablePanes();
+        
         // Auto-save & CSS
         setInterval(saveCodeToStorage, 5000);
         injectStyles();
 
     } catch (error) {
-        console.error('Lỗi:', error);
+        console.error('Lỗi khởi tạo:', error);
         document.getElementById('pTitle').textContent = "Error";
         document.getElementById('pDesc').innerHTML = `<div class="error-message">${error.message}</div>`;
     }
 
-    // --- PHẦN 2: XỬ LÝ ĐĂNG NHẬP (AUTH) ---
-    // Đặt ở đây để đảm bảo giao diện đã load xong thì mới tìm element
+    // --- PHẦN 2: AUTH (Giữ nguyên logic cũ) ---
     auth.onAuthStateChanged((user) => {
+        // ... (Giữ nguyên code Auth cũ của bạn ở đây) ...
         const loginBtn = document.getElementById('btnLogin');
         const profileDiv = document.getElementById('userProfile');
         const submitBtn = document.getElementById('btnSubmitSolution');
@@ -118,35 +141,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userDisplayName = document.getElementById('userDisplayName');
         
         if (user) {
-            // Đã đăng nhập
             currentUser = user;
-            
             if (loginBtn) loginBtn.style.display = 'none';
             if (profileDiv) profileDiv.style.display = 'flex';
             if (userAvatar) userAvatar.src = user.photoURL;
             if (userDisplayName) userDisplayName.textContent = user.displayName;
-            
-            // Mở khóa nút nộp bài
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                submitBtn.style.cursor = 'pointer';
-            }
-            
-            showNotification(`Welcome back, ${user.displayName}!`, "success", false);
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.cursor = 'pointer'; }
         } else {
-            // Chưa đăng nhập / Đã logout
             currentUser = null;
-            
             if (loginBtn) loginBtn.style.display = 'flex';
             if (profileDiv) profileDiv.style.display = 'none';
-            
-            // Khóa nút nộp bài
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.5';
-                submitBtn.style.cursor = 'not-allowed';
-            }
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.5'; submitBtn.style.cursor = 'not-allowed'; }
         }
     });
 });
@@ -298,76 +303,53 @@ function initResizablePanes() {
  * =============================================================================
  */
 // Tìm và thay thế toàn bộ hàm initMonaco bằng đoạn này:
-function initMonaco() {
-    if (typeof require === 'undefined') {
-        showNotification("Editor failed to load. Please refresh.", "error");
-        return;
-    }
+function initMonaco(monacoObj) {
+    try {
+        const container = document.getElementById('monaco-container');
+        if (!container) return;
 
-    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+        // 1. Lấy code cũ và ngôn ngữ cũ từ bộ nhớ
+        let savedCode = getSavedCode();
+        let savedLang = localStorage.getItem(`lang_${currentProblem.lcNumber}`);
 
-    require(['vs/editor/editor.main'], function() {
-        try {
-            const container = document.getElementById('monaco-container');
-            if (!container) throw new Error('Monaco container not found');
-
-            // 1. Lấy code cũ và ngôn ngữ cũ từ bộ nhớ
-            let savedCode = getSavedCode();
-            let savedLang = localStorage.getItem(`lang_${currentProblem.lcNumber}`);
-
-            // --- [FIX MỚI] AUTO DETECT PYTHON ---
-            // Nếu ngôn ngữ đang set là C++ (hoặc chưa có) MÀ trong code lại có từ khóa Python
-            if ((!savedLang || savedLang === 'cpp') && savedCode) {
-                if (savedCode.includes('def solve():') || savedCode.includes('import sys') || savedCode.includes('print(')) {
-                    console.log("Auto-detected Python code!");
-                    savedLang = 'python'; // Tự động sửa thành Python
-                }
+        // Auto detect Python (Logic cũ của bạn)
+        if ((!savedLang || savedLang === 'cpp') && savedCode) {
+            if (savedCode.includes('def solve():') || savedCode.includes('import sys') || savedCode.includes('print(')) {
+                savedLang = 'python';
             }
-            // ------------------------------------
-
-            if (savedLang && (savedLang === 'cpp' || savedLang === 'python')) {
-                currentLanguage = savedLang;
-            }
-
-            // Cập nhật cái Dropdown hiển thị cho đúng
-            const langSelect = document.getElementById('languageSelect');
-            if (langSelect) langSelect.value = currentLanguage;
-
-            editorInstance = monaco.editor.create(container, {
-                value: savedCode || TEMPLATES[currentLanguage], // Ưu tiên code đã lưu
-                language: currentLanguage,
-                theme: 'vs',
-                fontSize: 15,
-                padding: { top: 12, bottom: 12 },
-                fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                minimap: { enabled: window.innerWidth > 768 },
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                lineNumbers: 'on',
-                roundedSelection: true,
-                scrollbar: {
-                    vertical: 'visible',
-                    horizontal: 'visible',
-                    verticalScrollbarSize: 10,
-                    horizontalScrollbarSize: 10
-                },
-                quickSuggestions: true,
-                tabSize: 4,
-                bracketPairColorization: { enabled: true },
-                formatOnPaste: true,
-                formatOnType: true,
-                wordWrap: window.innerWidth <= 768 ? 'on' : 'off'
-            });
-
-            window.addEventListener('resize', () => {
-                if (editorInstance) editorInstance.layout();
-            });
-
-        } catch (error) {
-            console.error('Monaco init error:', error);
-            showNotification("Editor initialization failed", "error");
         }
-    });
+
+        if (savedLang && (savedLang === 'cpp' || savedLang === 'python')) {
+            currentLanguage = savedLang;
+        }
+
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) langSelect.value = currentLanguage;
+
+        // Khởi tạo Editor
+        editorInstance = monacoObj.editor.create(container, {
+            value: savedCode || TEMPLATES[currentLanguage],
+            language: currentLanguage,
+            theme: 'vs', // Hoặc 'vs-dark' tùy bạn
+            fontSize: 15,
+            padding: { top: 12, bottom: 12 },
+            fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+            minimap: { enabled: window.innerWidth > 768 },
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            lineNumbers: 'on',
+            roundedSelection: true,
+            tabSize: 4
+        });
+
+        window.addEventListener('resize', () => {
+            if (editorInstance) editorInstance.layout();
+        });
+
+    } catch (error) {
+        console.error('Monaco init error:', error);
+        showNotification("Editor initialization failed", "error");
+    }
 }
 
 // Tìm và thay thế hàm changeLanguage bằng đoạn này:
@@ -1070,6 +1052,6 @@ function googleSignIn() {
 
 function googleSignOut() {
     auth.signOut().then(() => {
-        showNotification("Logged out successfully", "info");
+        showNotification("Logged out successfully", "info", false); 
     });
 }
