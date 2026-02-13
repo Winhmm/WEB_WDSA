@@ -347,6 +347,31 @@
         </svg>
     </button>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFW6cLg1Xh9j8BJOlPXC1IPpxRNFWcNS4",
+            authDomain: "wdsa-6c250.firebaseapp.com",
+            projectId: "wdsa-6c250",
+            storageBucket: "wdsa-6c250.firebasestorage.app",
+            messagingSenderId: "279867470204",
+            appId: "1:279867470204:web:973c0736c69f5779cff4f9",
+            measurementId: "G-SE28C7Y619",
+            databaseURL: "https://wdsa-6c250-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        // Khởi tạo biến db toàn cục để Resources.js sử dụng
+        window.db = firebase.database();
+    </script>
+
+    <script src="Data.js"></script>
+
     <script>
         // ============================================
         // LOGIC CHO HEADER & MOBILE MENU (Chuẩn hóa)
@@ -423,8 +448,6 @@
             });
         });
     </script>
-
-    <script src="Data.js"></script>
     <script src="Resources.js"></script>
 
 </body>

@@ -17,7 +17,46 @@ let userCode = '';                  // Code hiện tại của người dùng
 // ==========================================================================
 // 2. INITIALIZATION (Khởi tạo)
 // ==========================================================================
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        console.log("Đang khởi tạo...");
+        
+        // Cách 1: Ưu tiên tải từ Firebase
+        let dataLoaded = false;
+        
+        if (typeof db !== 'undefined') {
+            try {
+                const snapshot = await db.ref('chapters_list').once('value');
+                const firebaseData = snapshot.val();
+                if (firebaseData) {
+                    window.CHAPTERS = firebaseData;
+                    dataLoaded = true;
+                    console.log("✅ Đã tải dữ liệu từ Firebase!");
+                }
+            } catch (err) {
+                console.warn("⚠️ Không tải được từ Firebase, chuyển sang dùng dữ liệu cục bộ (Data.js).", err);
+            }
+        }
+
+        // Cách 2: Nếu Firebase lỗi hoặc không có dữ liệu, dùng Data.js
+        if (!dataLoaded) {
+            if (typeof CHAPTERS !== 'undefined' && Array.isArray(CHAPTERS)) {
+                console.log("ℹ️ Đang sử dụng dữ liệu từ Data.js");
+                // window.CHAPTERS đã có sẵn từ file Data.js
+            } else {
+                throw new Error("Không tìm thấy nguồn dữ liệu nào (Firebase hoặc Data.js đều thiếu).");
+            }
+        }
+
+        // --- KHỞI CHẠY GIAO DIỆN ---
+        init(); // Gọi hàm init() để render sidebar và logic
+
+    } catch (error) {
+        console.error("Lỗi khởi tạo:", error);
+        // Thay vì alert làm phiền, hãy in log hoặc hiện thông báo nhỏ
+        console.error("Lỗi tải danh sách bài tập. Vui lòng kiểm tra console.");
+    }
+});
 
 function init() {
     renderSidebar();

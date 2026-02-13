@@ -41,54 +41,71 @@ if __name__ == "__main__":
     solve()`
 };
 
+// Thêm vào đầu EditorLogic.js
+const CACHE_KEY = 'wdsa_problem_cache';
+const CACHE_DURATION = 1000 * 60 * 30; // 30 phút
+
+async function getCachedProblem(problemId) {
+    const cached = localStorage.getItem(`${CACHE_KEY}_${problemId}`);
+    if (cached) {
+        const data = JSON.parse(cached);
+        if (Date.now() - data.timestamp < CACHE_DURATION) {
+            return data.problem;
+        }
+    }
+    return null;
+}
+
+function cacheProblem(problemId, problemData) {
+    localStorage.setItem(`${CACHE_KEY}_${problemId}`, JSON.stringify({
+        problem: problemData,
+        timestamp: Date.now()
+    }));
+}
+
 /**
  * =============================================================================
  * INITIALIZATION (Entry Point)
  * =============================================================================
  */
-document.addEventListener('DOMContentLoaded', () => {
-    // --- PHẦN 1: KHỞI TẠO EDITOR & DATA ---
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- PHẦN 1: KHỞI TẠO EDITOR & DATA TỪ FIREBASE ---
     try {
-        // 1. Kiểm tra Data
-        if (typeof CHAPTERS === 'undefined' || !Array.isArray(CHAPTERS)) {
-            throw new Error('CHAPTERS data not loaded properly');
-        }
-
-        // 2. Lấy Problem ID từ URL
+        // 1. Lấy ID bài tập từ URL (ví dụ: ?id=1)
         const params = new URLSearchParams(window.location.search);
         const lcNumber = params.get('id');
+        if (!lcNumber) throw new Error('No problem ID specified');
 
-        if (!lcNumber) {
-            throw new Error('No problem ID specified');
-        }
+        
+        // 2. Hiển thị Loading
+        document.getElementById('pTitle').textContent = "Loading...";
+        document.getElementById('pDesc').innerHTML = '<i>Đang tải dữ liệu bài tập từ server...</i>';
 
-        // 3. Tìm bài tập trong Data
-        CHAPTERS.forEach(chap => {
-            const found = chap.problems.find(p => p.lcNumber == lcNumber);
-            if (found) currentProblem = found;
-        });
+        // 3. GỌI FIREBASE: Lấy chi tiết bài tập theo ID
+        const snapshot = await db.ref('problems/' + lcNumber).once('value');
+        const problemData = snapshot.val();
 
-        if (!currentProblem) {
-            showNotification("Problem not found! Redirecting...", "error");
-            setTimeout(() => window.location.href = "Resources.html", 2000);
-            return;
-        }
+        if (!problemData) throw new Error('Không tìm thấy bài tập này!');
 
-        // 4. Khởi tạo giao diện và Editor
+        // 4. Gán dữ liệu vào biến currentProblem
+        currentProblem = problemData;
+        // Đảm bảo ID luôn đúng
+        currentProblem.lcNumber = lcNumber; 
+
+        // 5. Khởi tạo giao diện (Giữ nguyên logic cũ của bạn)
         renderProblemUI();
         initMonaco();
         initResizablePanes();
         loadSavedCode();
 
-        // 5. Auto-save mỗi 5 giây
+        // Auto-save & CSS
         setInterval(saveCodeToStorage, 5000);
-
-        // 6. Inject CSS cho animation loading
         injectStyles();
 
     } catch (error) {
-        console.error('Initialization error:', error);
-        showNotification(`Error loading page: ${error.message}`, "error");
+        console.error('Lỗi:', error);
+        document.getElementById('pTitle').textContent = "Error";
+        document.getElementById('pDesc').innerHTML = `<div class="error-message">${error.message}</div>`;
     }
 
     // --- PHẦN 2: XỬ LÝ ĐĂNG NHẬP (AUTH) ---
@@ -1040,8 +1057,8 @@ document.addEventListener('keydown', function(e) {
 
 // Hàm chuẩn hóa: Bỏ dòng trống, chuyển nhiều dấu cách thành 1
 const normalize = (str) => str.trim().split(/\s+/).join(' ');
-const isPassed = normalize(actual) === normalize(expected);
 
+// --- AUTH FUNCTIONS ---
 // --- AUTH FUNCTIONS ---
 function googleSignIn() {
     auth.signInWithPopup(provider)
