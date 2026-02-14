@@ -495,4 +495,93 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /* =========================================
+       16. FIREBASE AUTHENTICATION (GOOGLE SIGN-IN)
+       ========================================= */
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    const desktopAuth = document.querySelector('.desktop-auth');
+    const mobileAuth = document.querySelector('.mobile-auth');
+
+    // Hàm chung để vẽ UI người dùng
+    // Hàm chung để vẽ UI người dùng
+    const renderUserUI = (container, user) => {
+        if (!container) return;
+        if (user) {
+            // Lấy tên ngắn gọn (Từ cuối cùng trong chuỗi tên, thường là Tên chính)
+            const shortName = user.displayName ? user.displayName.split(' ').pop() : 'User';
+
+            container.innerHTML = `
+                <div class="user-profile-group">
+                    <div class="user-info-modern">
+                        <img src="${user.photoURL}" alt="Avatar" class="user-avatar-modern" referrerpolicy="no-referrer">
+                        <span class="user-name-modern">Hi, ${shortName}</span>
+                    </div>
+                    <div class="user-divider"></div>
+                    <button onclick="googleSignOut()" class="btn-logout-modern" title="Logout">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <a href="javascript:void(0)" onclick="googleSignIn()" class="btn btn-login">Sign In</a>
+                <a href="#register" class="btn btn-register">Get Started</a>
+            `;
+        }
+    };
+
+    // 1. TỐI ƯU HIỂN THỊ TỨC THÌ (CHỐNG NHÁY 1 GIÂY)
+    const cachedUser = JSON.parse(localStorage.getItem('wdsa_user'));
+    if (cachedUser) {
+        renderUserUI(desktopAuth, cachedUser);
+        renderUserUI(mobileAuth, cachedUser);
+    }
+
+    // 2. CÁC HÀM XỬ LÝ CLICK
+    window.googleSignIn = function() {
+        auth.signInWithPopup(provider).then((result) => {
+            // Lưu vào cache ngay lập tức
+            localStorage.setItem('wdsa_user', JSON.stringify({
+                displayName: result.user.displayName,
+                photoURL: result.user.photoURL
+            }));
+            showToast("success", "Login Successful", `Welcome back, ${result.user.displayName}!`);
+        }).catch((error) => {
+            showToast("error", "Login Failed", error.message);
+        });
+    };
+
+    window.googleSignOut = function() {
+        auth.signOut().then(() => {
+            localStorage.removeItem('wdsa_user'); // Xóa cache
+            renderUserUI(desktopAuth, null);
+            renderUserUI(mobileAuth, null);
+            showToast("info", "Logged Out", "You have been logged out successfully.");
+        });
+    };
+
+    // 3. FIREBASE XÁC THỰC LẠI NGẦM BÊN DƯỚI
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Cập nhật lại cache cho chắc chắn
+            localStorage.setItem('wdsa_user', JSON.stringify({
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            }));
+            renderUserUI(desktopAuth, user);
+            renderUserUI(mobileAuth, user);
+        } else {
+            localStorage.removeItem('wdsa_user');
+            renderUserUI(desktopAuth, null);
+            renderUserUI(mobileAuth, null);
+        }
+    });
 });
+

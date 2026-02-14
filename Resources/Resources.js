@@ -20,22 +20,148 @@ let userCode = '';                  // Code hiện tại của người dùng
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log("Đang khởi tạo Resources...");
-        
-        // --- [THAY ĐỔI] CHỈ DÙNG DATA.JS ---
-        // Kiểm tra xem Data.js đã load chưa
         if (typeof CHAPTERS !== 'undefined' && Array.isArray(CHAPTERS)) {
-            console.log("✅ Đã tải dữ liệu từ Data.js local");
-            window.CHAPTERS = CHAPTERS; // Đảm bảo biến global
+            window.CHAPTERS = CHAPTERS;
         } else {
-            throw new Error("Không tìm thấy dữ liệu bài tập (Data.js chưa được load).");
+            throw new Error("Không tìm thấy dữ liệu bài tập.");
         }
 
-        // --- KHỞI CHẠY GIAO DIỆN ---
-        init(); 
+        const layout = document.querySelector('.res-layout');
+        const mainContainer = document.querySelector('.res-main .container');
+        const desktopAuth = document.querySelector('.desktop-auth');
+        const mobileAuth = document.querySelector('.mobile-auth');
+
+        // Hàm vẽ UI Header
+        const renderUserUI = (container, user) => {
+            if (!container) return;
+            if (user) {
+                // Lấy tên ngắn gọn (Từ cuối cùng trong chuỗi tên, thường là Tên chính)
+                const shortName = user.displayName ? user.displayName.split(' ').pop() : 'User';
+
+                container.innerHTML = `
+                    <div class="user-profile-group">
+                        <div class="user-info-modern">
+                            <img src="${user.photoURL}" alt="Avatar" class="user-avatar-modern" referrerpolicy="no-referrer">
+                            <span class="user-name-modern">Hi, ${shortName}</span>
+                        </div>
+                        <div class="user-divider"></div>
+                        <button onclick="googleSignOut()" class="btn-logout-modern" title="Logout">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="javascript:void(0)" onclick="googleSignIn()" class="btn btn-login">Sign In</a>
+                    <a href="#register" class="btn btn-register">Get Started</a>
+                `;
+            }
+        };
+
+        // Hàm vẽ màn hình khóa
+        const showLockScreen = () => {
+            layout.style.display = 'none';
+            if (!document.getElementById('requireLoginMsg')) {
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'requireLoginMsg';
+                msgDiv.innerHTML = `
+                    <div style="text-align:center; padding: 100px 20px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 600px; margin: 40px auto;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2d7a4e" stroke-width="2" style="margin-bottom: 20px;">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <h2 style="color:#1a472a; margin-bottom: 15px; font-size: 28px; font-weight:800;">Members Only Access</h2>
+                        <p style="color:#666; margin-bottom: 30px; font-size: 16px; line-height:1.6;">Please sign in with your Google account to access our premium Data Structures & Algorithms problem library.</p>
+                        <button onclick="googleSignIn()" class="btn btn-register" style="font-size: 16px; padding: 12px 30px; display:inline-flex; align-items:center; gap:10px;">
+                            Sign In with Google
+                        </button>
+                    </div>
+                `;
+                mainContainer.appendChild(msgDiv);
+            }
+        };
+
+        // ========================================================
+        // 1. KIỂM TRA BỘ NHỚ TẠM (CACHE) ĐỂ MỞ TỨC THÌ
+        // ========================================================
+        const cachedUserStr = localStorage.getItem('wdsa_user');
+        let isInitRun = false;
+
+        if (cachedUserStr) {
+            const cachedUser = JSON.parse(cachedUserStr);
+            // Render tức thì không cần chờ
+            renderUserUI(desktopAuth, cachedUser);
+            renderUserUI(mobileAuth, cachedUser);
+            
+            // Xóa khóa & hiện bài tập lập tức
+            const lockMsg = document.getElementById('requireLoginMsg');
+            if (lockMsg) lockMsg.remove();
+            layout.style.display = 'flex';
+            
+            init(); // Render các chapter
+            isInitRun = true;
+        } else {
+            // Chưa có cache -> Vẽ màn hình khóa
+            layout.style.display = 'none';
+            showLockScreen();
+        }
+
+        // ========================================================
+        // 2. FIREBASE KIỂM TRA VÀ CHỐT TRẠNG THÁI CUỐI CÙNG
+        // ========================================================
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        window.googleSignIn = function() {
+            auth.signInWithPopup(provider).then(result => {
+                localStorage.setItem('wdsa_user', JSON.stringify({
+                    displayName: result.user.displayName,
+                    photoURL: result.user.photoURL
+                }));
+            }).catch(error => console.error(error));
+        };
+
+        window.googleSignOut = function() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('wdsa_user');
+                window.location.reload();
+            });
+        };
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Đã đăng nhập chuẩn xác
+                localStorage.setItem('wdsa_user', JSON.stringify({
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                }));
+                renderUserUI(desktopAuth, user);
+                renderUserUI(mobileAuth, user);
+
+                const lockMsg = document.getElementById('requireLoginMsg');
+                if (lockMsg) lockMsg.remove();
+                layout.style.display = 'flex';
+                
+                if (!isInitRun) {
+                    init();
+                    isInitRun = true;
+                }
+            } else {
+                // Mất phiên đăng nhập (Token hết hạn...)
+                localStorage.removeItem('wdsa_user');
+                renderUserUI(desktopAuth, null);
+                renderUserUI(mobileAuth, null);
+                showLockScreen();
+            }
+        });
 
     } catch (error) {
         console.error("Lỗi khởi tạo:", error);
-        // Hiển thị lỗi ra màn hình nếu Data.js hỏng
         const container = document.querySelector('.res-content');
         if(container) {
             container.innerHTML = `<div class="error-message" style="margin: 20px;">Lỗi: ${error.message}</div>`;
