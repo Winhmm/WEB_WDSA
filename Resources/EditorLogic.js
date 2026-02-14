@@ -209,6 +209,8 @@ function renderProblemUI() {
 
     // 4. Render Editor Toolbar (Reset & Solution Buttons) -> Right Pane
     renderEditorToolbar();
+
+    updateSolvedUI();
 }
 
 function renderEditorToolbar() {
@@ -503,6 +505,9 @@ async function submitSolution() {
 
         // Display Results
         if (allPassed) {
+            
+            markProblemAsSolved(currentProblem.lcNumber);
+            updateSolvedUI();
             contentDiv.innerHTML = `
                 <div class="result-success-container">
                     <div class="status-header">Accepted</div>
@@ -965,6 +970,34 @@ function getSuggestions(msg) {
             </ul>
         </div>
     `;
+}
+
+function markProblemAsSolved(id) {
+    let solved = JSON.parse(localStorage.getItem('wdsa_solved_problems') || '[]');
+    if (!solved.includes(String(id))) {
+        solved.push(String(id));
+        localStorage.setItem('wdsa_solved_problems', JSON.stringify(solved));
+    }
+}
+
+function isProblemSolved(id) {
+    let solved = JSON.parse(localStorage.getItem('wdsa_solved_problems') || '[]');
+    return solved.includes(String(id));
+}
+
+function updateSolvedUI() {
+    if (isProblemSolved(currentProblem.lcNumber)) {
+        const metaDiv = document.querySelector('.problem-meta');
+        let solvedBadge = document.getElementById('pSolvedBadge');
+        
+        if (!solvedBadge && metaDiv) {
+            solvedBadge = document.createElement('span');
+            solvedBadge.id = 'pSolvedBadge';
+            solvedBadge.className = 'badge solved';
+            solvedBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Solved';
+            metaDiv.appendChild(solvedBadge);
+        }
+    }
 }
 
 /**

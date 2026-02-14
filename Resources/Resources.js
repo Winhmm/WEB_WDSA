@@ -133,6 +133,7 @@ function showProblemList(chapter) {
 }
 
 /** Render Grid các thẻ bài tập */
+/** Render Grid các thẻ bài tập */
 function renderProblemGrid(problemsToRender) {
     const grid = document.getElementById('problemGrid');
     if (!grid) return;
@@ -148,16 +149,28 @@ function renderProblemGrid(problemsToRender) {
         return;
     }
 
+    // LẤY DANH SÁCH BÀI ĐÃ GIẢI TỪ LOCALSTORAGE
+    const solvedList = JSON.parse(localStorage.getItem('wdsa_solved_problems') || '[]');
+
     grid.innerHTML = problemsToRender.map((p) => {
         // Tìm index gốc để openProblem hoạt động đúng
         const originalIndex = currentChapterProblems.indexOf(p);
         
+        // KIỂM TRA XEM BÀI NÀY ĐÃ LÀM CHƯA
+        const isSolved = solvedList.includes(String(p.lcNumber));
+        const solvedHtml = isSolved ? `
+            <span class="res-pc-solved-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Solved
+            </span>
+        ` : '';
+
         return `
         <div class="res-problem-card" onclick="openProblem(${originalIndex})">
             <div class="res-pc-top">
                 <span class="res-pc-number">#${p.customId || p.lcNumber}</span>
                 <span class="res-diff ${p.difficulty}">${p.difficulty}</span>
-            </div>
+                ${solvedHtml} </div>
             <div class="res-pc-title">${p.title}</div>
             <div class="res-pc-tags">
                 ${p.tags.map(t => `<span class="res-pc-tag">${t}</span>`).join('')}
