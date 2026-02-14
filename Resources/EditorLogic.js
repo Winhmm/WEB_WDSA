@@ -60,15 +60,16 @@ const SEPARATOR = "|||WDSA_SEP|||"; // Mốc phân cách output cho Piston
 const TEMPLATES = {
     cpp: `#include <bits/stdc++.h>
 using namespace std;
+const int MOD = 1e9 + 7;
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     
-    // Code here
-    
-    return 0;
+
+return 0;
 }`,
+
     python: `import sys
 
 # Fast I/O
@@ -1024,7 +1025,8 @@ function openSolution() {
                 minimap: { enabled: false },
                 fontSize: 14,
                 automaticLayout: true,
-                scrollBeyondLastLine: false
+                scrollBeyondLastLine: false,
+                padding: { top: 16, bottom: 16 }
             });
         });
     } else {

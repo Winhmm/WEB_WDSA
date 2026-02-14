@@ -1095,6 +1095,7 @@ int main() {
         title: "String",
         problems:[
             {
+                lcNumber: 2006,
                 customId: 1,
                 title: "Middle Digit of a Number",
                 difficulty: "easy",
@@ -1122,6 +1123,26 @@ int main() {
                         <li>Print the middle digit of N or <strong>NOT FOUND</strong> if it does not exist.</li>
                     </ul>
                 `,
+                sampleSolution: `// Solution for Middle Digit of a Number
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	
+	if(s.size() % 2 == 0) {
+		cout<<"NOT FOUND";
+		return 0;
+	}
+	
+	int middleIndex = s.size() / 2;
+	cout<<s[middleIndex];
+}`,
                 examples: [
                     { 
                         input: "12345", 
@@ -1197,7 +1218,97 @@ int main() {
                     { input: "2000002", expectedOutput: "0" },
                     { input: "2345432", expectedOutput: "5" },
                     { input: "3456543", expectedOutput: "6" },
-                    { input: "4567654", expectedOutput: "7" },
+                    { input: "4567654", expectedOutput: "7" }
+                ]
+            },
+            {
+                lcNumber: 2007,
+                customId: 2,
+                title: "Custom String Operations",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                description: `
+                    <p>Given a string <strong>S</strong> containing at most 10,000 characters. The string <strong>S</strong> may consist of uppercase letters, lowercase letters, digits, and special characters.</p>
+                    <p>Your task is to write 3 custom functions to:</p>
+                    <ol>
+                        <li>Reverse the string <strong>S</strong>.</li>
+                        <li>Convert the string <strong>S</strong> to lowercase.</li>
+                        <li>Convert the string <strong>S</strong> to uppercase.</li>
+                    </ol>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Line 1: Print the <strong>reversed</strong> string.</li>
+                        <li>Line 2: Print the string in <strong>lowercase</strong>.</li>
+                        <li>Line 3: Print the string in <strong>uppercase</strong>.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Custom String Operations
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	
+	for(auto it = s.rbegin(); it != s.rend(); it++) {
+		cout<<*it;
+	}
+	cout<<endl;
+	
+	for(char &x : s) {
+		if(isalpha(x)) {
+			x = tolower(x);
+		}
+	}
+	
+	cout<<s<<endl;
+	
+	for(char &x : s) {
+		if(isalpha(x)) {
+			x = toupper(x);
+		}
+	}
+	
+	cout<<s<<endl;	
+}`,
+                examples: [
+                    { 
+                        input: "hjweXafgbDeGxEa", 
+                        output: "aExGeDbgfaXewjh\nhjwexafgbdegxea\nHJWEXAFGBDEGXEA", 
+                        explain: "Explanation: The first line is the string reversed. The second is entirely lowercase, and the third is entirely uppercase." 
+                    }
+                ],
+                testCases: [
+                    { input: "hjweXafgbDeGxEa", expectedOutput: "aExGeDbgfaXewjh\nhjwexafgbdegxea\nHJWEXAFGBDEGXEA" },
+                    { input: "hjweXafgbDeGxEa", expectedOutput: "aExGeDbgfaXewjh\nhjwexafgbdegxea\nHJWEXAFGBDEGXEA" },
+                    { input: "AbC123", expectedOutput: "321CbA\nabc123\nABC123" },
+                    { input: "a123", expectedOutput: "321a\na123\nA123" },
+                    { input: "Z123", expectedOutput: "321Z\nz123\nZ123" },
+                    { input: "1234567890", expectedOutput: "0987654321\n1234567890\n1234567890" },
+                    { input: "HelloWORLD", expectedOutput: "DLROWolleH\nhelloworld\nHELLOWORLD" },
+                    { input: "x123", expectedOutput: "321x\nx123\nX123" },
+                    { input: "a1B2c3D4e5", expectedOutput: "5e4D3c2B1a\na1b2c3d4e5\nA1B2C3D4E5" },
+                    { input: "CODE", expectedOutput: "EDOC\ncode\nCODE" },
+                    { input: "ptit", expectedOutput: "titp\nptit\nPTIT" },
+                    { input: "Python3", expectedOutput: "3nohtyP\npython3\nPYTHON3" },
+                    { input: "AaBbCcDdEe", expectedOutput: "eEdDcCbBaA\naabbccddee\nAABBCCDDEE" },
+                    { input: "1a2B3c4D", expectedOutput: "D4c3B2a1\n1a2b3c4d\n1A2B3C4D" },
+                    { input: "zZ123", expectedOutput: "321Zz\nzz123\nZZ123" },
                 ]
             }
         ]
