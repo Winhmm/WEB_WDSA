@@ -241,6 +241,7 @@ header.scrolled {
     display: flex; /* Các thành phần bên trong nằm ngang */
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .logo {
@@ -250,11 +251,14 @@ header.scrolled {
 }
 
 .nav-menu {
-    display: flex; /* Flexbox dàn ngang */
-    gap: 30px; /* Khoảng cách giữa nhau là 30 */
-    align-items: center; /* Luôn nằm giữa thanh Header */
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    justify-content: space-evenly; /* Tự động chia đều khoảng cách giữa các chữ */
+    align-items: center;
+    flex: 1; /* Cho menu giãn ra chiếm hết khoảng trống bên trái cụm User */
+    margin-left: 0;
+    margin-right: 40px; /* Khoảng cách an toàn với cụm User bên phải */
+    
+    /* Lưu ý: Đã xóa gap: 30px; để máy tính tự động chia đều khoảng cách */
 }
 
 .nav-menu > li {
@@ -1874,3 +1878,11 @@ header.scrolled {
     color: #ffffff; /* Chữ trắng */
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 }
+
+/* Làm Header rộng ra sát 2 lề màn hình */
+header .container {
+    max-width: 95% !important;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+

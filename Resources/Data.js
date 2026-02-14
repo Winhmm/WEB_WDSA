@@ -1310,6 +1310,784 @@ int main() {
                     { input: "1a2B3c4D", expectedOutput: "D4c3B2a1\n1a2b3c4d\n1A2B3C4D" },
                     { input: "zZ123", expectedOutput: "321Zz\nzz123\nZZ123" },
                 ]
+            },
+            {
+                lcNumber: 2009,
+                customId: 3,
+                title: "Sum of Digits in a String",
+                difficulty: "easy",
+                tags: ["String", "Math"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting only of alphanumeric characters (letters and digits). Your task is to calculate the total sum of all the digits appearing in the string.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print a single integer: the sum of the digits in the string.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Sum of Digits in a String
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	int tong = 0;
+	
+	for(char x : s) {
+		if(isdigit(x)) {
+			tong += x - '0';
+		}
+	}
+	
+	cout<<tong;
+}`,
+                examples: [
+                    { 
+                        input: "28tech28techtechdsacpp", 
+                        output: "20", 
+                        explain: "Explanation: The digits present in the string are 2, 8, 2, and 8. Their sum is 2 + 8 + 2 + 8 = 20." 
+                    }
+                ],
+
+                testCases: [
+                    { input: "28tech28techtechdsacpp", expectedOutput: "20" },
+                    { input: "abc", expectedOutput: "0" },
+                    { input: "12345", expectedOutput: "15" },
+                    { input: "a1b2c3d4e5", expectedOutput: "15" },
+                    { input: "00000", expectedOutput: "0" },
+                    { input: "999", expectedOutput: "27" },
+                    { input: "HelloWorld", expectedOutput: "0" },
+                    { input: "1a2b3c", expectedOutput: "6" },
+                    { input: "A10B20", expectedOutput: "3" },
+                    { input: "z9y8x7", expectedOutput: "24" },
+                    { input: "9876543210", expectedOutput: "45" },
+                    { input: "a0b0c0", expectedOutput: "0" },
+                    { input: "7", expectedOutput: "7" },
+                    { input: "Z", expectedOutput: "0" },
+                    { input: "1111111111", expectedOutput: "10" },
+                    { input: "55555", expectedOutput: "25" },
+                    { input: "a1", expectedOutput: "1" },
+                    { input: "1a", expectedOutput: "1" },
+                    { input: "A1b2C3d4E5f6G7h8I9j0", expectedOutput: "45" },
+                    { input: "9a9b9c9", expectedOutput: "36" },
+                    { input: "x0y0z0", expectedOutput: "0" },
+                    { input: "CODE1234PTIT", expectedOutput: "10" },
+                    { input: "2023", expectedOutput: "7" },
+                    { input: "abc123def456", expectedOutput: "21" },
+                    { input: "qwertyuiop", expectedOutput: "0" },
+                    { input: "123456789", expectedOutput: "45" },
+                    { input: "m1n2o3p4q5", expectedOutput: "15" },
+                    { input: "99a99", expectedOutput: "36" },
+                    { input: "b1c2d3", expectedOutput: "6" },
+                    { input: "x9y9z9", expectedOutput: "27" },
+                    { input: "5a5b5c5", expectedOutput: "20" },
+                    { input: "0123456789", expectedOutput: "45" },
+                    { input: "test0case", expectedOutput: "0" },
+                    { input: "t3stc4s3", expectedOutput: "10" },
+                    { input: "0a0b0c0d", expectedOutput: "0" },
+                    { input: "1000000000", expectedOutput: "1" },
+                    { input: "987000", expectedOutput: "24" },
+                    { input: "abc999def", expectedOutput: "27" },
+                    { input: "1x2y3z", expectedOutput: "6" },
+                    { input: "314159", expectedOutput: "23" },
+                    { input: "271828", expectedOutput: "28" },
+                    { input: "161803", expectedOutput: "19" },
+                    { input: "602214", expectedOutput: "15" },
+                    { input: "a1a1a1", expectedOutput: "3" },
+                    { input: "b2b2b2", expectedOutput: "6" },
+                    { input: "c3c3c3", expectedOutput: "9" },
+                    { input: "d4d4d4", expectedOutput: "12" },
+                    { input: "e5e5e5", expectedOutput: "15" },
+                    { input: "f6f6f6", expectedOutput: "18" },
+                    { input: "g7g7g7", expectedOutput: "21" }
+                ]
+            },
+            {
+                lcNumber: 2010,
+                customId: 4,
+                title: "Beautiful Number",
+                difficulty: "easy",
+                tags: ["String", "Math"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a positive integer <strong>N</strong> with at least 2 digits. A number is considered a <strong>"beautiful number"</strong> if the absolute difference between every two adjacent digits is exactly 1.</p>
+                    <p>Examples of beautiful numbers: 12345, 121212, 78987.</p>
+                    <p>Your task is to check if <strong>N</strong> is a beautiful number.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the positive integer <strong>N</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>10 &le; N &le; 10<sup>18</sup></li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print <strong>YES</strong> if N is a beautiful number, otherwise print <strong>NO</strong>.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Beautiful Number
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    string s;
+    if (cin >> s) {
+        bool isBeautiful = true;
+        for (size_t i = 1; i < s.length(); i++) {
+            // Check if the absolute difference between adjacent digits is exactly 1
+            if (abs(s[i] - s[i - 1]) != 1) {
+                isBeautiful = false;
+                break;
+            }
+        }
+        
+        if (isBeautiful) {
+            cout << "YES\\n";
+        } else {
+            cout << "NO\\n";
+        }
+    }
+    return 0;
+}`,
+                examples: [
+                    { 
+                        input: "244", 
+                        output: "NO", 
+                        explain: "Explanation: The difference between 2 and 4 is 2 (not 1), and the difference between 4 and 4 is 0 (not 1)." 
+                    },
+                    { 
+                        input: "1232", 
+                        output: "YES", 
+                        explain: "Explanation: |1-2|=1, |2-3|=1, and |3-2|=1. All adjacent digits differ by exactly 1." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(1)",
+                testCases: [
+                    { input: "244", expectedOutput: "NO" },
+                    { input: "1232", expectedOutput: "YES" },
+                    { input: "98", expectedOutput: "YES" },
+                    { input: "11", expectedOutput: "NO" },
+                    { input: "10", expectedOutput: "YES" },
+                    { input: "90", expectedOutput: "NO" },
+                    { input: "101", expectedOutput: "YES" },
+                    { input: "121", expectedOutput: "YES" },
+                    { input: "123", expectedOutput: "YES" },
+                    { input: "321", expectedOutput: "YES" },
+                    { input: "111", expectedOutput: "NO" },
+                    { input: "124", expectedOutput: "NO" },
+                    { input: "987", expectedOutput: "YES" },
+                    { input: "989", expectedOutput: "YES" },
+                    { input: "1234", expectedOutput: "YES" },
+                    { input: "4321", expectedOutput: "YES" },
+                    { input: "1212", expectedOutput: "YES" },
+                    { input: "2345", expectedOutput: "YES" },
+                    { input: "5432", expectedOutput: "YES" },
+                    { input: "1235", expectedOutput: "NO" },
+                    { input: "1223", expectedOutput: "NO" },
+                    { input: "12345", expectedOutput: "YES" },
+                    { input: "54321", expectedOutput: "YES" },
+                    { input: "12121", expectedOutput: "YES" },
+                    { input: "78987", expectedOutput: "YES" },
+                    { input: "98789", expectedOutput: "YES" },
+                    { input: "12346", expectedOutput: "NO" },
+                    { input: "10101", expectedOutput: "YES" },
+                    { input: "10123", expectedOutput: "YES" },
+                    { input: "10100", expectedOutput: "NO" },
+                    { input: "123456", expectedOutput: "YES" },
+                    { input: "654321", expectedOutput: "YES" },
+                    { input: "121212", expectedOutput: "YES" },
+                    { input: "123454", expectedOutput: "YES" },
+                    { input: "898989", expectedOutput: "YES" },
+                    { input: "898988", expectedOutput: "NO" },
+                    { input: "1234567", expectedOutput: "YES" },
+                    { input: "7654321", expectedOutput: "YES" },
+                    { input: "1212121", expectedOutput: "YES" },
+                    { input: "9876543", expectedOutput: "YES" },
+                    { input: "1234568", expectedOutput: "NO" },
+                    { input: "12345678", expectedOutput: "YES" },
+                    { input: "87654321", expectedOutput: "YES" },
+                    { input: "123456789", expectedOutput: "YES" },
+                    { input: "987654321", expectedOutput: "YES" },
+                    { input: "1234567890", expectedOutput: "NO" },
+                    { input: "101010101010101010", expectedOutput: "YES" },
+                    { input: "123456789876543210", expectedOutput: "YES" },
+                    { input: "23456789876543212", expectedOutput: "YES" },
+                    { input: "12121212121212121", expectedOutput: "YES" },
+                    { input: "12121212121212122", expectedOutput: "NO" },
+                    { input: "12321232123212321", expectedOutput: "YES" },
+                    { input: "54545454545454545", expectedOutput: "YES" },
+                    { input: "98765456789876567", expectedOutput: "YES" },
+                    { input: "989898989898989870", expectedOutput: "NO" },
+                ]
+            },
+            {
+                lcNumber: 2011,
+                customId: 5,
+                title: "Format Number with Commas",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>When writing a very large positive integer, people often add commas between the digits to make it easier to read.</p>
+                    <p>For example: the number <strong>N = 123456789</strong> is written as <strong>123,456,789</strong>, and <strong>N = 12345</strong> is written as <strong>12,345</strong>.</p>
+                    <p>Your task is to properly insert commas into the given number <strong>N</strong>.</p>
+                    
+                    <p><em>Hint: Iterate through the string representation of N from right to left. Append the characters to a result string, and keep a counter. Every time you count 3 characters (and it's not the last character), append a comma. Finally, reverse the result string.</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the positive integer <strong>N</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; N &le; 10<sup>18</sup></li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the number <strong>N</strong> formatted with commas.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Format Number with Commas
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	int dem = 0;
+	string res = "";
+
+	for(int i = s.size() - 1; i >= 0; i--) {
+		res += s[i];
+		++dem;
+		if(dem % 3 == 0 && i != 0) {
+			res += ",";
+		}
+	}
+
+	reverse(res.begin(), res.end());
+	cout<<res;
+}`,
+                examples: [
+                    { 
+                        input: "999970094", 
+                        output: "999,970,094", 
+                        explain: "Explanation: Commas are added every 3 digits from the right." 
+                    },
+                    { 
+                        input: "12345", 
+                        output: "12,345", 
+                        explain: "Explanation: Commas are added every 3 digits from the right." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "999970094", expectedOutput: "999,970,094" },
+                    { input: "12345", expectedOutput: "12,345" },
+                    { input: "1", expectedOutput: "1" },
+                    { input: "12", expectedOutput: "12" },
+                    { input: "123", expectedOutput: "123" },
+                    { input: "1234", expectedOutput: "1,234" },
+                    { input: "1000", expectedOutput: "1,000" },
+                    { input: "123456", expectedOutput: "123,456" },
+                    { input: "1000000", expectedOutput: "1,000,000" },
+                    { input: "9876543210", expectedOutput: "9,876,543,210" },
+                    { input: "1000000000000000000", expectedOutput: "1,000,000,000,000,000,000" },
+                    { input: "987654321987654321", expectedOutput: "987,654,321,987,654,321" },
+                    { input: "50", expectedOutput: "50" },
+                    { input: "500", expectedOutput: "500" },
+                    { input: "10000000", expectedOutput: "10,000,000" },
+                    { input: "10000000000000000", expectedOutput: "10,000,000,000,000,000" },
+                    { input: "1234567890123456", expectedOutput: "1,234,567,890,123,456" },
+                    { input: "999999", expectedOutput: "999,999" },
+                    { input: "100000", expectedOutput: "100,000" },
+                    { input: "314159265358979323", expectedOutput: "314,159,265,358,979,323" }
+                ]
+            },
+            {
+                lcNumber: 2012,
+                customId: 6,
+                title: "Sort Digits",
+                difficulty: "easy",
+                tags: ["String", "Sorting", "Math"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a non-negative integer <strong>N</strong>, sort its digits in ascending order and print the resulting number.</p>
+                    <p>If the number contains leading zeros after sorting, do not print these meaningless leading zeros.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the non-negative integer <strong>N</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>0 &le; N &le; 10<sup>18</sup></li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the number <strong>N</strong> after sorting its digits without meaningless leading zeros.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Sort Digits
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	sort(s.begin(), s.end());
+	string res = "";
+	
+	for(char x : s) {
+		if(x != '0') {
+			res += x;
+		}
+	}
+	
+	if(res.empty()) {
+		cout<<0;
+	} else {
+		cout<<res;
+	}
+}`,
+                examples: [
+                    { 
+                        input: "999968677", 
+                        output: "667789999", 
+                        explain: "Explanation: The digits sorted in ascending order are 6, 6, 7, 7, 8, 9, 9, 9, 9." 
+                    },
+                    { 
+                        input: "2828000", 
+                        output: "2288", 
+                        explain: "Explanation: After sorting, we get 0002288. Removing the meaningless leading zeros gives 2288." 
+                    }
+                ],
+                timeComplexity: "O(L log L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "999968677", expectedOutput: "667789999" },
+                    { input: "2828000", expectedOutput: "2288" },
+                    { input: "0", expectedOutput: "0" },
+                    { input: "100", expectedOutput: "1" },
+                    { input: "543210", expectedOutput: "12345" },
+                    { input: "123", expectedOutput: "123" },
+                    { input: "987654321", expectedOutput: "123456789" },
+                    { input: "101010", expectedOutput: "111" },
+                    { input: "80808080", expectedOutput: "8888" },
+                    { input: "1000000000000000000", expectedOutput: "1" },
+                    { input: "400400400", expectedOutput: "444" },
+                    { input: "11111", expectedOutput: "11111" },
+                    { input: "909090909", expectedOutput: "99999" },
+                    { input: "200200200", expectedOutput: "222" },
+                    { input: "1234567890", expectedOutput: "123456789" },
+                    { input: "987650", expectedOutput: "56789" },
+                    { input: "50005", expectedOutput: "55" },
+                    { input: "102030", expectedOutput: "123" },
+                    { input: "998877665544332211", expectedOutput: "112233445566778899" },
+                    { input: "100000000000000000", expectedOutput: "1" }
+                ]
+            },
+            {
+                lcNumber: 2013,
+                customId: 7,
+                title: "Separate Digits and Letters",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of letters and digits, your task is to separate the digits and the letters from the string.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Line 1: Print all the digits appearing in <strong>S</strong> in their original order.</li>
+                        <li>Line 2: Print all the letters appearing in <strong>S</strong> in their original order.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Separate Digits and Letters
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	
+	string res1 = "";
+	string res2 = "";
+	
+	for(char x : s) {
+		if(isdigit(x)) {
+			res1 += x;
+		} else if(isalpha(x)) {
+			res2 += x;
+		}
+	}
+	
+	cout<<res1<<endl<<res2;
+}`,
+                examples: [
+                    { 
+                        input: "28tech2828techcpp", 
+                        output: "282828\ntechtechcpp", 
+                        explain: "Explanation: The digits in the string are extracted in order to form '282828', and the letters are extracted to form 'techtechcpp'." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "28tech2828techcpp", expectedOutput: "282828\ntechtechcpp" },
+                    { input: "abc123def456", expectedOutput: "123456\nabcdef" },
+                    { input: "12345", expectedOutput: "12345\n" },
+                    { input: "abcdef", expectedOutput: "\nabcdef" },
+                    { input: "a1b2c3d4e5", expectedOutput: "12345\nabcde" },
+                    { input: "9876543210", expectedOutput: "9876543210\n" },
+                    { input: "Z", expectedOutput: "\nZ" },
+                    { input: "0", expectedOutput: "0\n" },
+                    { input: "HelloWorld2024", expectedOutput: "2024\nHelloWorld" },
+                    { input: "A10B20C30", expectedOutput: "102030\nABC" },
+                    { input: "x9y8z7", expectedOutput: "987\nxyz" },
+                    { input: "000aaa000", expectedOutput: "000000\naaa" },
+                    { input: "test0case", expectedOutput: "0\ntestcase" },
+                    { input: "1a1a1a1a", expectedOutput: "1111\naaaa" },
+                    { input: "CODE1234PTIT", expectedOutput: "1234\nCODEPTIT" },
+                    { input: "2023ptit", expectedOutput: "2023\nptit" },
+                    { input: "m1n2o3p4q5", expectedOutput: "12345\nmnopq" },
+                    { input: "99a99b", expectedOutput: "9999\nab" },
+                    { input: "x9y9z9", expectedOutput: "999\nxyz" },
+                    { input: "5a5b5c5", expectedOutput: "5555\nabc" },
+                    { input: "A1B2C3D4E5F6G7H8I9J0", expectedOutput: "1234567890\nABCDEFGHIJ" },
+                    { input: "onlyletters", expectedOutput: "\nonlyletters" },
+                    { input: "1357924680", expectedOutput: "1357924680\n" },
+                    { input: "aA1bB2cC3", expectedOutput: "123\naAbBcC" },
+                    { input: "0a0b0c0d", expectedOutput: "0000\nabcd" },
+                    { input: "100000000000000000", expectedOutput: "100000000000000000\n" },
+                    { input: "a1a1a1a1a1", expectedOutput: "11111\naaaaa" },
+                    { input: "abc999def", expectedOutput: "999\nabcdef" },
+                    { input: "1x2y3z", expectedOutput: "123\nxyz" },
+                    { input: "t3stc4s3", expectedOutput: "343\ntstcs" }
+                ]
+            },
+            {
+                lcNumber: 2014,
+                customId: 8,
+                title: "Insert Substring",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> and an integer <strong>K</strong>. You are required to insert the string <strong>"wdsa"</strong> into <strong>S</strong> exactly at index <strong>K</strong>.</p>
+                    <p><em>Note: The string is 0-indexed, meaning the insertion happens just before the character currently at index K.</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Line 1: Contains the string <strong>S</strong>.</li>
+                        <li>Line 2: Contains the integer <strong>K</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li>0 &le; K &lt; length of S</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the string <strong>S</strong> after inserting "wdsa".</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Insert Substring
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	int k;
+	cin>>s>>k;
+	s.insert(k, "wdsa");
+	cout<<s;
+}`,
+                examples: [
+                    { 
+                        input: "ClhiSYBOSg5Re\n10", 
+                        output: "ClhiSYBOSgwdsa5Re", 
+                        explain: "Explanation: The character at index 10 is '5'. We insert 'wdsa' right before '5', resulting in 'ClhiSYBOSgwdsa5Re'." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "ClhiSYBOSg5Re\n10", expectedOutput: "ClhiSYBOSgwdsa5Re" },
+                    { input: "abc\n0", expectedOutput: "wdsaabc" },
+                    { input: "abc\n1", expectedOutput: "awdsabc" },
+                    { input: "abc\n2", expectedOutput: "abwdsac" },
+                    { input: "a\n0", expectedOutput: "wdsaa" },
+                    { input: "programming\n3", expectedOutput: "prowdsagramming" },
+                    { input: "1234567890\n9", expectedOutput: "123456789wdsa0" },
+                    { input: "testcase\n4", expectedOutput: "testwdsacase" },
+                    { input: "28tech\n2", expectedOutput: "28wdsatech" },
+                    { input: "HelloWorld\n5", expectedOutput: "HellowdsaWorld" },
+                    { input: "Cplusplus\n1", expectedOutput: "Cwdsaplusplus" },
+                    { input: "data\n0", expectedOutput: "wdsadata" },
+                    { input: "structures\n9", expectedOutput: "structurewdsas" },
+                    { input: "algorithm\n4", expectedOutput: "algowdsarithm" },
+                    { input: "xyz\n2", expectedOutput: "xywdsaz" },
+                    { input: "javascript\n4", expectedOutput: "javawdsascript" },
+                    { input: "python\n3", expectedOutput: "pytwdsahon" },
+                    { input: "competitve\n6", expectedOutput: "competwdsaitve" },
+                    { input: "insert\n3", expectedOutput: "inswdsaert" },
+                    { input: "A\n0", expectedOutput: "wdsaA" }
+                ]
+            },
+            {
+                lcNumber: 2015,
+                customId: 9,
+                title: "Teo Hates \"wdsa\"",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Teo hates the word <strong>"wdsa"</strong> because he thinks it gives him too many difficult exercises that cause headaches.</p>
+                    <p>Because of this, he hates all the individual characters that appear in the word "wdsa" (i.e., 'w', 'd', 's', and 'a'). Teo wants your help to delete <strong>all occurrences of these characters</strong> from a given string <strong>S</strong>.</p>
+                    <p>If the string <strong>S</strong> becomes completely empty after the deletion, you must print <strong>EMPTY</strong>.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the string <strong>S</strong> after deleting the characters, or print <strong>EMPTY</strong> if no characters are left.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Teo Hates "wdsa"
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	string res = "";
+	
+	for(char x : s) {
+		if(x != 'w' && x != 'd' && x != 's' && x != 'a') {
+			res += x;
+		}
+	}
+	
+	if(res == "") {
+		cout<<"EMPTY";
+		return 0;
+	}
+	cout<<res;
+}`,
+                examples: [
+                    { 
+                        input: "wdsacpp288", 
+                        output: "cpp288", 
+                        explain: "Explanation: The characters 'w', 'd', 's', and 'a' are removed from the string, leaving 'cpp288'." 
+                    },
+                    { 
+                        input: "wdsa", 
+                        output: "EMPTY", 
+                        explain: "Explanation: All characters in the string are removed, so the output is EMPTY." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "wdsacpp288", expectedOutput: "cpp288" },
+                    { input: "wdsa", expectedOutput: "EMPTY" },
+                    { input: "awdsawdsa", expectedOutput: "EMPTY" },
+                    { input: "hello", expectedOutput: "hello" },
+                    { input: "world", expectedOutput: "orl" },
+                    { input: "w", expectedOutput: "EMPTY" },
+                    { input: "d", expectedOutput: "EMPTY" },
+                    { input: "s", expectedOutput: "EMPTY" },
+                    { input: "a", expectedOutput: "EMPTY" },
+                    { input: "12345", expectedOutput: "12345" },
+                    { input: "w1d2s3a4", expectedOutput: "1234" },
+                    { input: "WdSa", expectedOutput: "WS" },
+                    { input: "WWDDSSAA", expectedOutput: "WWDDSSAA" },
+                    { input: "aassddww", expectedOutput: "EMPTY" },
+                    { input: "wdsawdsawdsaxyz", expectedOutput: "xyz" },
+                    { input: "xwyzd", expectedOutput: "xyz" },
+                    { input: "testing", expectedOutput: "teting" },
+                    { input: "apple", expectedOutput: "pple" },
+                    { input: "software", expectedOutput: "oftre" },
+                    { input: "data", expectedOutput: "t" },
+                    { input: "algorithm", expectedOutput: "lgorithm" },
+                    { input: "structures", expectedOutput: "tructure" },
+                    { input: "javascript", expectedOutput: "jvcript" },
+                    { input: "python", expectedOutput: "python" },
+                    { input: "cpp", expectedOutput: "cpp" },
+                    { input: "competitive", expectedOutput: "competitive" },
+                    { input: "programming", expectedOutput: "progrmming" },
+                    { input: "wds", expectedOutput: "EMPTY" },
+                    { input: "dsa", expectedOutput: "EMPTY" },
+                    { input: "awd", expectedOutput: "EMPTY" }
+                ]
+            },
+            {
+                lcNumber: 2016,
+                customId: 10,
+                title: "First Repeated Character",
+                difficulty: "easy",
+                tags: ["String", "Hash Table"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong>, your task is to find the first repeated character in the string. The "first repeated character" is the first character you encounter while reading from left to right that has already appeared earlier in the string.</p>
+                    <p>If the string <strong>S</strong> does not contain any repeated characters, print <strong>NONE</strong>.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the first repeated character, or <strong>NONE</strong> if all characters are unique.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for First Repeated Character
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	set<char> se;
+	
+	for(char x : s) {
+		if(se.count(x)) {
+			cout<<x;
+			return 0;
+		}
+		se.insert(x);
+	}
+	
+	cout<<"NONE";
+}`,
+                examples: [
+                    { 
+                        input: "5nLQokt1QgU7nnn5", 
+                        output: "Q", 
+                        explain: "Explanation: Reading from left to right, the character 'Q' appears for the second time before 'n' or '5' appear again. So 'Q' is the first repeated character." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(1)",
+                testCases: [
+                    { input: "5nLQokt1QgU7nnn5", expectedOutput: "Q" },
+                    { input: "abcdef", expectedOutput: "NONE" },
+                    { input: "aab", expectedOutput: "a" },
+                    { input: "aba", expectedOutput: "a" },
+                    { input: "abcba", expectedOutput: "b" },
+                    { input: "abcdeff", expectedOutput: "f" },
+                    { input: "12345678901", expectedOutput: "1" },
+                    { input: "zZ", expectedOutput: "NONE" },
+                    { input: "programming", expectedOutput: "r" },
+                    { input: "hello", expectedOutput: "l" },
+                    { input: "world", expectedOutput: "NONE" },
+                    { input: "algorithm", expectedOutput: "NONE" },
+                    { input: "datastructures", expectedOutput: "a" },
+                    { input: "javascript", expectedOutput: "a" },
+                    { input: "python3", expectedOutput: "NONE" },
+                    { input: "cplusplus", expectedOutput: "p" },
+                    { input: "developer", expectedOutput: "e" },
+                    { input: "competitive", expectedOutput: "t" },
+                    { input: "abcCBA", expectedOutput: "NONE" },
+                    { input: "12345678900", expectedOutput: "0" },
+                    { input: "11234567890", expectedOutput: "1" },
+                    { input: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz", expectedOutput: "a" },
+                    { input: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", expectedOutput: "NONE" },
+                    { input: "teotungtang", expectedOutput: "t" },
+                    { input: "x", expectedOutput: "NONE" },
+                    { input: "xx", expectedOutput: "x" },
+                    { input: "123123", expectedOutput: "1" },
+                    { input: "qwertyuiopasdfghjklzxcvbnmq", expectedOutput: "q" },
+                    { input: "!@#$%^&*()!@#", expectedOutput: "!" },
+                    { input: "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzA", expectedOutput: "A" }
+                ]
             }
         ]
     }
