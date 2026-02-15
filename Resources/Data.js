@@ -1097,6 +1097,7 @@ int main() {
             {
                 lcNumber: 2006,
                 customId: 1,
+                link: "https://drive.google.com/file/d/1P-u3q_0tJHxUuFvQYTLhGkHQ5AxkO1D6/view?usp=sharing",
                 title: "Middle Digit of a Number",
                 difficulty: "easy",
                 tags: ["Math", "String"],
@@ -1225,6 +1226,7 @@ int main() {
                 lcNumber: 2007,
                 customId: 2,
                 title: "Custom String Operations",
+                link: "https://drive.google.com/file/d/1bgvsVBFj7V25TveTSY7RLg0-Vq0uZtM4/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Implementation"],
                 description: `
@@ -1315,6 +1317,7 @@ int main() {
                 lcNumber: 2009,
                 customId: 3,
                 title: "Sum of Digits in a String",
+                link: "https://drive.google.com/file/d/1t3i6reTEFFiuyklE3FwoC9vcB6hViGqc/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Math"],
                 lcUrl: "#",
@@ -1423,6 +1426,7 @@ int main() {
                 lcNumber: 2010,
                 customId: 4,
                 title: "Beautiful Number",
+                link: "https://drive.google.com/file/d/1c1_5QbZbDlq2sNOvlwaUbjTb5VvSgck-/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Math"],
                 lcUrl: "#",
@@ -1549,6 +1553,7 @@ int main() {
                 lcNumber: 2011,
                 customId: 5,
                 title: "Format Number with Commas",
+                link: "https://drive.google.com/file/d/1GnksqNe8MEFC-mau6MAnjAQlo1n_QwH_/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Implementation"],
                 lcUrl: "#",
@@ -1641,6 +1646,7 @@ int main() {
                 lcNumber: 2012,
                 customId: 6,
                 title: "Sort Digits",
+                link: "https://drive.google.com/file/d/1lGV36O_Dd7B_Dwqq6Ka8hmfsA9cf6D5r/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Sorting", "Math"],
                 lcUrl: "#",
@@ -1731,6 +1737,7 @@ int main() {
                 lcNumber: 2013,
                 customId: 7,
                 title: "Separate Digits and Letters",
+                link: "https://drive.google.com/file/d/1dSBvwXbwgWzBTCwNq4plp9O1WwzTU1zw/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Implementation"],
                 lcUrl: "#",
@@ -1825,6 +1832,7 @@ int main() {
                 lcNumber: 2014,
                 customId: 8,
                 title: "Insert Substring",
+                link: "https://drive.google.com/file/d/17bODW3tf4ZGn6HM9f2ye7A1WCpzw0mGH/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Implementation"],
                 lcUrl: "#",
@@ -1901,6 +1909,7 @@ int main() {
                 lcNumber: 2015,
                 customId: 9,
                 title: "Teo Hates \"wdsa\"",
+                link: "https://drive.google.com/file/d/17bODW3tf4ZGn6HM9f2ye7A1WCpzw0mGH/view?usp=sharing",
                 difficulty: "easy",
                 tags: ["String", "Implementation"],
                 lcUrl: "#",
@@ -2087,6 +2096,483 @@ int main() {
                     { input: "qwertyuiopasdfghjklzxcvbnmq", expectedOutput: "q" },
                     { input: "!@#$%^&*()!@#", expectedOutput: "!" },
                     { input: "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzA", expectedOutput: "A" }
+                ]
+            },
+            {
+                lcNumber: 2017,
+                customId: 11,
+                title: "Standardize Date of Birth",
+                link: "https://drive.google.com/file/d/1jpASFH8WC7jswDD4gGc4-QK5Nx9r-hvm/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a person's date of birth in the format <strong>day/month/year</strong>. Your task is to standardize this date of birth to the exact <strong>dd/mm/yyyy</strong> format.</p>
+                    <p>For example: if the date of birth is <code>1/10/2002</code>, it should be standardized to <code>01/10/2002</code>. If it is <code>5/2/2002</code>, it should be standardized to <code>05/02/2002</code>.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing a string that describes the date of birth.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>The day, month, and year are separated by the <code>/</code> character.</li>
+                        <li>The year is always guaranteed to be a 4-digit number.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the standardized date of birth.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Standardize Date of Birth
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	cin>>s;
+	
+	if(s[2] != '/') {
+		s.insert(0, 1, '0');
+	}
+	
+	if(s[5] != '/') {
+		s.insert(3, 1, '0');
+	}
+	
+	cout<<s;
+}`,
+                examples: [
+                    { 
+                        input: "30/7/1991", 
+                        output: "30/07/1991", 
+                        explain: "Explanation: The month '7' is missing a leading zero. We add '0' to make it '07'." 
+                    },
+                    { 
+                        input: "5/2/2002", 
+                        output: "05/02/2002", 
+                        explain: "Explanation: Both the day '5' and month '2' need a leading zero. The standardized date becomes '05/02/2002'." 
+                    }
+                ],
+                timeComplexity: "O(1)",
+                spaceComplexity: "O(1)",
+                testCases: [
+                    { input: "30/7/1991", expectedOutput: "30/07/1991" },
+                    { input: "1/10/2002", expectedOutput: "01/10/2002" },
+                    { input: "5/2/2002", expectedOutput: "05/02/2002" },
+                    { input: "15/10/2005", expectedOutput: "15/10/2005" },
+                    { input: "1/1/2000", expectedOutput: "01/01/2000" },
+                    { input: "5/12/1999", expectedOutput: "05/12/1999" },
+                    { input: "9/9/9999", expectedOutput: "09/09/9999" },
+                    { input: "29/2/2024", expectedOutput: "29/02/2024" },
+                    { input: "31/1/2023", expectedOutput: "31/01/2023" },
+                    { input: "2/11/2022", expectedOutput: "02/11/2022" },
+                    { input: "10/1/1990", expectedOutput: "10/01/1990" },
+                    { input: "1/11/1991", expectedOutput: "01/11/1991" },
+                    { input: "12/3/1980", expectedOutput: "12/03/1980" },
+                    { input: "3/12/1980", expectedOutput: "03/12/1980" },
+                    { input: "9/10/1000", expectedOutput: "09/10/1000" },
+                    { input: "10/9/2000", expectedOutput: "10/09/2000" },
+                    { input: "1/2/3000", expectedOutput: "01/02/3000" },
+                    { input: "20/2/2020", expectedOutput: "20/02/2020" },
+                    { input: "7/7/1777", expectedOutput: "07/07/1777" },
+                    { input: "8/8/1888", expectedOutput: "08/08/1888" },
+                    { input: "31/12/2099", expectedOutput: "31/12/2099" },
+                    { input: "1/12/2100", expectedOutput: "01/12/2100" },
+                    { input: "12/1/2200", expectedOutput: "12/01/2200" },
+                    { input: "4/4/2004", expectedOutput: "04/04/2004" },
+                    { input: "14/4/2014", expectedOutput: "14/04/2014" },
+                    { input: "9/11/2001", expectedOutput: "09/11/2001" },
+                    { input: "11/9/2001", expectedOutput: "11/09/2001" },
+                    { input: "22/2/2022", expectedOutput: "22/02/2022" },
+                    { input: "6/8/1995", expectedOutput: "06/08/1995" },
+                    { input: "25/5/1985", expectedOutput: "25/05/1985" }
+                ]
+            },
+            {
+                lcNumber: 2018,
+                customId: 12,
+                title: "Count Uppercase Words",
+                link: "https://drive.google.com/file/d/1qkUusePCYz438deFPg1skXphUMXkQOWE/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Counting"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of English letters and spaces. Your task is to count the number of <strong>fully uppercase words</strong> in the string.</p>
+                    <p><em>Note: A word is considered "fully uppercase" if every single character in that word is an uppercase letter.</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print a single integer: the count of fully uppercase words in the string.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Count Uppercase Words
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+bool check(string s) {
+	for(char x : s) {
+		if(!isupper(x)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	int dem = 0;
+	while(cin>>s) {
+		if(check(s)) {
+			++dem;
+		}
+	}
+	
+	cout<<dem;
+}`,
+                examples: [
+                    { 
+                        input: "Tech Dev DSA CPP", 
+                        output: "2", 
+                        explain: "Explanation: There are 4 words in total. 'DSA' and 'CPP' are fully uppercase words, so the output is 2." 
+                    },
+                    { 
+                        input: "HELLO WORLD", 
+                        output: "2", 
+                        explain: "Explanation: Both 'HELLO' and 'WORLD' are fully uppercase." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "Tech Dev DSA CPP", expectedOutput: "2" },
+                    { input: "HELLO WORLD", expectedOutput: "2" },
+                    { input: "hello world", expectedOutput: "0" },
+                    { input: "THIS is A test STRING", expectedOutput: "3" },
+                    { input: "ONE TWO THREE FOUR FIVE", expectedOutput: "5" },
+                    { input: "one TWO three FOUR five", expectedOutput: "2" },
+                    { input: "ONLY", expectedOutput: "1" },
+                    { input: "only", expectedOutput: "0" },
+                    { input: "MixedCase Word HERE", expectedOutput: "1" },
+                    { input: "I love CPLUSPLUS", expectedOutput: "2" },
+                    { input: "A B C D E F", expectedOutput: "6" },
+                    { input: "a b c d e f", expectedOutput: "0" },
+                    { input: "The QUICK brown FOX jumps OVER the LAZY DOG", expectedOutput: "5" },
+                    { input: "a A b B c C", expectedOutput: "3" },
+                    { input: "PROGRAMMING is FUN", expectedOutput: "2" },
+                    { input: "no UPPER case words HERE", expectedOutput: "2" },
+                    { input: "ABC def GHI jkl MNO", expectedOutput: "3" },
+                    { input: "abc DEF ghi JKL mno", expectedOutput: "2" },
+                    { input: "I AM A STUDENT", expectedOutput: "4" },
+                    { input: "i am a student", expectedOutput: "0" },
+                    { input: "lowercase UPPERCASE", expectedOutput: "1" },
+                    { input: "UPPERCASE lowercase", expectedOutput: "1" },
+                    { input: "word WORD Word wORd WorD", expectedOutput: "1" },
+                    { input: "X y Z", expectedOutput: "2" },
+                    { input: "Aa Bb Cc Dd", expectedOutput: "0" },
+                    { input: "AA BB CC DD", expectedOutput: "4" },
+                    { input: "aa bb cc dd", expectedOutput: "0" },
+                    { input: "SOME words ARE upper SOME are LOWER", expectedOutput: "4" },
+                    { input: "XYZ", expectedOutput: "1" },
+                    { input: "a b c D E F g h i J K L", expectedOutput: "6" }
+                ]
+            },
+            {
+                lcNumber: 2019,
+                customId: 13,
+                title: "Extract Words",
+                link: "https://drive.google.com/file/d/1ydV8jUFMKxEjXKA1RqVWwtEmlFfwvAXz/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Parsing"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of multiple words. The words are separated by spaces or punctuation marks including: <code>.</code>, <code>,</code>, <code>!</code>, <code>?</code>.</p>
+                    <p>Your task is to extract and list all the words that appear in the string, separated by a single space.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li><strong>S</strong> only contains English letters, spaces, and the specified punctuation marks (., !, ?).</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>List all the words in the string, separated by a single space.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Extract Words
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	getline(cin, s);
+	
+	for(char &x : s) {
+		if(x == '.' || x == ',' || x == '!' || x == '?') {
+			x = ' ';
+		}
+	}
+	
+	stringstream ss(s);
+	string res = "";
+	while(ss>>res) {
+		cout<<res<<" ";
+	}
+}`,
+                examples: [
+                    { 
+                        input: "oSAz ?oiiaz iSaSz SDA ,bbW oWA AIIia .", 
+                        output: "oSAz oiiaz iSaSz SDA bbW oWA AIIia", 
+                        explain: "Explanation: Punctuation marks '?', ',', and '.' are treated as separators along with spaces. The extracted words are printed with a single space between them." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "oSAz ?oiiaz iSaSz SDA ,bbW oWA AIIia .", expectedOutput: "oSAz oiiaz iSaSz SDA bbW oWA AIIia" },
+                    { input: "Hello, world!", expectedOutput: "Hello world" },
+                    { input: "a.b,c!d?e", expectedOutput: "a b c d e" },
+                    { input: "C is fun, right?", expectedOutput: "C is fun right" },
+                    { input: "Wait... What?!", expectedOutput: "Wait What" },
+                    { input: "apple, banana, cherry.", expectedOutput: "apple banana cherry" },
+                    { input: "no punctuations here", expectedOutput: "no punctuations here" },
+                    { input: " , . ! ? ", expectedOutput: "" },
+                    { input: "A! B? C, D.", expectedOutput: "A B C D" },
+                    { input: "   Leading and trailing   ", expectedOutput: "Leading and trailing" },
+                    { input: "Multiple,,,commas...here", expectedOutput: "Multiple commas here" },
+                    { input: "Word.Word,Word!Word?Word", expectedOutput: "Word Word Word Word Word" },
+                    { input: "JustOneWord", expectedOutput: "JustOneWord" },
+                    { input: "?!?!?!", expectedOutput: "" },
+                    { input: "a B c D e F", expectedOutput: "a B c D e F" },
+                    { input: "test.case,number!sixteen?", expectedOutput: "test case number sixteen" },
+                    { input: "A.B.C.D.E", expectedOutput: "A B C D E" },
+                    { input: "Z", expectedOutput: "Z" },
+                    { input: "hello...world!!!", expectedOutput: "hello world" },
+                    { input: ",start with comma", expectedOutput: "start with comma" },
+                    { input: "end with period.", expectedOutput: "end with period" },
+                    { input: "question mark? inside", expectedOutput: "question mark inside" },
+                    { input: "exclamation! mark", expectedOutput: "exclamation mark" },
+                    { input: "mix . of , everything ! here ?", expectedOutput: "mix of everything here" },
+                    { input: "a,b.c?d!e,f.g?h!i", expectedOutput: "a b c d e f g h i" },
+                    { input: "one.two.three.four.five.six", expectedOutput: "one two three four five six" },
+                    { input: "ALL UPPERCASE. WORDS, HERE!", expectedOutput: "ALL UPPERCASE WORDS HERE" },
+                    { input: "all lowercase. words, here!", expectedOutput: "all lowercase words here" },
+                    { input: "  a  ,  b  .  c  ?  d  !  ", expectedOutput: "a b c d" },
+                    { input: "   ?   .   ,   !   Word   ", expectedOutput: "Word" }
+                ]
+            },
+            {
+                lcNumber: 2020,
+                customId: 14,
+                title: "Ti Loves \"wdsa\"",
+                link: "https://drive.google.com/file/d/1uX4RiacKsZAXoxdcu4WR_RQNM5-5HPSJ/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Counting"],
+                lcUrl: "#",
+                description: `
+                    <p>Although they are best friends, Ti and Teo are very different when it comes to <strong>"wdsa"</strong>. Unlike Teo, Ti really loves "wdsa".</p>
+                    <p>Therefore, Ti asks you to count how many times the word <strong>"wdsa"</strong> appears in a given string <strong>S</strong>.</p>
+                    <p><em>Note: The counting must be <strong>case-insensitive</strong>. This means words like <code>WDsa</code>, <code>wDsA</code>, <code>WdSa</code>, etc., are all accepted as valid occurrences of "wdsa".</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li>Words are separated by spaces.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print a single integer: the number of times the word "wdsa" (case-insensitive) appears in the string.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Ti Loves "wdsa"
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	string s;
+	int dem = 0;
+	
+	while(cin>>s) {
+		for(char &x : s) {
+			x = tolower(x);
+		}
+		if(s == "wdsa") {
+			++dem;
+		}
+	}
+	
+	cout<<dem;
+}`,
+                examples: [
+                    { 
+                        input: "zzA WdSa AAAa AAW Dobc czo wDsA zIo bic", 
+                        output: "2", 
+                        explain: "Explanation: The words 'WdSa' and 'wDsA' both match 'wdsa' case-insensitively. They appear 2 times in total." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "zzA WdSa AAAa AAW Dobc czo wDsA zIo bic", expectedOutput: "2" },
+                    { input: "wdsa WDSA WdSa wDsA wdsA Wdsa", expectedOutput: "6" },
+                    { input: "hello world wdsa", expectedOutput: "1" },
+                    { input: "no match here wds dsa awdsa wdsawdsa", expectedOutput: "0" },
+                    { input: "wdsa wdsa wdsa", expectedOutput: "3" },
+                    { input: "WDSA", expectedOutput: "1" },
+                    { input: "WdsA", expectedOutput: "1" },
+                    { input: "wDSA", expectedOutput: "1" },
+                    { input: "wdsa", expectedOutput: "1" },
+                    { input: "Wdsa wDsa wdSa wdsA", expectedOutput: "4" },
+                    { input: "I love WDSA very much", expectedOutput: "1" },
+                    { input: "Teo hates wdsa but Ti loves wDsA", expectedOutput: "2" },
+                    { input: "a b c d e f g wdsa", expectedOutput: "1" },
+                    { input: "W D S A wdsa w d s a", expectedOutput: "1" },
+                    { input: "WDSAwdsa", expectedOutput: "0" },
+                    { input: "wdsa_is_great", expectedOutput: "0" },
+                    { input: "learning wdsa everyday wDsA", expectedOutput: "2" },
+                    { input: "WDSA WDSA WDSA WDSA", expectedOutput: "4" },
+                    { input: "wdsA Wdsa wDSA WdSA wdSa wDsA WdsA WDsa", expectedOutput: "8" },
+                    { input: "just random words here nothing to see", expectedOutput: "0" },
+                    { input: "w d s a wd sa w dsa", expectedOutput: "0" },
+                    { input: "wdsa", expectedOutput: "1" },
+                    { input: "WDsA WDsA WDsA", expectedOutput: "3" },
+                    { input: "this is WDSA testing wDsa", expectedOutput: "2" },
+                    { input: "awdsa wdsaw wdsa", expectedOutput: "1" },
+                    { input: "wDsa! wdsa? wdsa.", expectedOutput: "0" }, // Dấu câu liền vào từ sẽ làm từ đó khác "wdsa", output 0 là đúng chuẩn C++ cin >> word
+                    { input: "1234 wdsa 5678", expectedOutput: "1" },
+                    { input: "wdsawdsa wdsawdsa wdsawdsa", expectedOutput: "0" },
+                    { input: "WDSA is not wdsaawdsa it is just wdsa", expectedOutput: "2" },
+                    { input: "W D S A wdsa WDSA wdsa", expectedOutput: "3" }
+                ]
+            },
+            {
+                lcNumber: 2021,
+                customId: 15,
+                title: "Reverse Words at Even Positions",
+                link: "https://drive.google.com/file/d/16WrvVG5gz_di_ZJ31OqyZ9HG2Awh7sJF/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> containing multiple words separated by one or more spaces.</p>
+                    <p>Your task is to process the words based on their positions (1-indexed):</p>
+                    <ul>
+                        <li>If a word is at an <strong>odd position</strong> (1st, 3rd, 5th, etc.), print it exactly as it is.</li>
+                        <li>If a word is at an <strong>even position</strong> (2nd, 4th, 6th, etc.), you must <strong>reverse</strong> the word before printing it.</li>
+                    </ul>
+                    <p><em>Note: The words in the final output must be separated by exactly one single space.</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the processed words separated by a single space.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Reverse Words at Even Positions
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	string s;
+	int dem = 0;
+	while(cin>>s) {
+		++dem;
+		if(dem % 2 != 0) {
+			cout<<s<<" ";
+		} else {
+			reverse(s.begin(), s.end());
+			cout<<s<<" ";
+		}
+	}
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "bWo    ziD cWS DIi    bzA zADzi aIio", 
+                        output: "bWo Diz cWS iID bzA izDAz aIio", 
+                        explain: "Explanation: \nWord 1: 'bWo' (odd) -> 'bWo'\nWord 2: 'ziD' (even) -> reversed to 'Diz'\nWord 3: 'cWS' (odd) -> 'cWS'\nWord 4: 'DIi' (even) -> reversed to 'iID'\nAnd so on." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "bWo    ziD cWS DIi    bzA zADzi aIio", expectedOutput: "bWo Diz cWS iID bzA izDAz aIio" },
+                    { input: "hello world", expectedOutput: "hello dlrow" },
+                    { input: "one two three four five", expectedOutput: "one owt three ruof five" },
+                    { input: "ab cd ef gh", expectedOutput: "ab dc ef hg" },
+                    { input: "abc def ghi jkl", expectedOutput: "abc fed ghi lkj" },
+                    { input: "onlyoneword", expectedOutput: "onlyoneword" },
+                    { input: "   leading and trailing spaces   ", expectedOutput: "leading dna trailing secaps" },
+                    { input: "123 456 789 000", expectedOutput: "123 654 789 000" },
+                    { input: "apple banana orange kiwi", expectedOutput: "apple ananab orange iwik" },
+                    { input: "cplusplus java python javascript", expectedOutput: "cplusplus avaj python tpircsavaj" },
+                    { input: "I love competitive programming", expectedOutput: "I evol competitive gnimmargorp" },
+                    { input: "a bc def ghij klmno", expectedOutput: "a cb def jihg klmno" },
+                    { input: "1 22 333 4444 55555", expectedOutput: "1 22 333 4444 55555" },
+                    { input: "xyz zyx abc cba", expectedOutput: "xyz xyz abc abc" },
+                    { input: "reverse THIS string NOW", expectedOutput: "reverse SIHT string WON" },
+                    { input: "Hello    World   Test   Case", expectedOutput: "Hello dlroW Test esaC" },
+                    { input: "  first second   third fourth  fifth ", expectedOutput: "first dnoces third htruof fifth" },
+                    { input: "one", expectedOutput: "one" },
+                    { input: "two words", expectedOutput: "two sdrow" },
+                    { input: "ABC DEF GHI JKL MNO PQR STU", expectedOutput: "ABC FED GHI LKJ MNO RQP STU" },
+                    { input: "1234 5678", expectedOutput: "1234 8765" },
+                    { input: "a b c d e f g h i j", expectedOutput: "a b c d e f g h i j" },
+                    { input: "W X Y Z", expectedOutput: "W X Y Z" },
+                    { input: "odd EVEN odd EVEN odd", expectedOutput: "odd NEVE odd NEVE odd" },
+                    { input: "test1 test2 test3 test4", expectedOutput: "test1 2tset test3 4tset" },
                 ]
             }
         ]

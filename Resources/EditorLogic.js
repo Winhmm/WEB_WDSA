@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- PHẦN 2: AUTH (Giữ nguyên logic cũ) ---
+    // --- PHẦN 2: AUTH ---
     auth.onAuthStateChanged((user) => {
-        // ... (Giữ nguyên code Auth cũ của bạn ở đây) ...
         const loginBtn = document.getElementById('btnLogin');
         const profileDiv = document.getElementById('userProfile');
         const submitBtn = document.getElementById('btnSubmitSolution');
@@ -148,11 +148,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (userAvatar) userAvatar.src = user.photoURL;
             if (userDisplayName) userDisplayName.textContent = user.displayName;
             if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.cursor = 'pointer'; }
+
+            // LẤY DỮ LIỆU BÀI ĐÃ GIẢI TỪ FIREBASE VÀ ĐỒNG BỘ VỀ MÁY (MỚI)
+            db.ref('users/' + user.uid + '/solvedProblems').once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Firebase trả về object dạng: { "1": true, "704": true }
+                    const solvedData = snapshot.val(); 
+                    const solvedArray = Object.keys(solvedData); // Biến thành mảng ["1", "704"]
+                    
+                    // Lưu đè vào localStorage để các trang khác (như trang danh sách bài) cũng thấy
+                    localStorage.setItem('wdsa_solved_problems', JSON.stringify(solvedArray));
+                    
+                    // Cập nhật lại UI ngay lập tức trên trang hiện tại
+                    updateSolvedUI(); 
+                }
+            }).catch(err => console.error("Lỗi lấy dữ liệu solved:", err));
+
         } else {
             currentUser = null;
             if (loginBtn) loginBtn.style.display = 'flex';
             if (profileDiv) profileDiv.style.display = 'none';
             if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.5'; submitBtn.style.cursor = 'not-allowed'; }
+            
+            // Xóa dữ liệu local khi đăng xuất để bảo mật (MỚI - Tùy chọn)
+            // localStorage.removeItem('wdsa_solved_problems');
+            // document.getElementById('pSolvedBadge')?.remove();
         }
     });
 });
@@ -179,6 +199,17 @@ function renderProblemUI() {
     diffEl.textContent = currentProblem.difficulty;
     diffEl.className = `badge ${currentProblem.difficulty.toLowerCase()}`;
 
+    const linkEl = document.getElementById('pOriginalLink');
+    if (linkEl) {
+        // Kiểm tra xem bài tập có trường 'link' không
+        if (currentProblem.link) {
+            linkEl.href = currentProblem.link;
+            linkEl.style.display = 'inline-flex'; // Hiện nút nếu có link
+        } else {
+            linkEl.style.display = 'none'; // Ẩn nút nếu bài này không có link gốc
+        }
+    }
+    
     // 2. Render Description
     document.getElementById('pDesc').innerHTML = currentProblem.description;
 
@@ -974,10 +1005,18 @@ function getSuggestions(msg) {
 }
 
 function markProblemAsSolved(id) {
+    // 1. Lưu local (như cũ)
     let solved = JSON.parse(localStorage.getItem('wdsa_solved_problems') || '[]');
     if (!solved.includes(String(id))) {
         solved.push(String(id));
         localStorage.setItem('wdsa_solved_problems', JSON.stringify(solved));
+    }
+
+    // 2. LƯU LÊN FIREBASE (MỚI)
+    // Cấu trúc: users -> [UID của user] -> solvedProblems -> [ID bài toán] = true
+    if (currentUser) {
+        db.ref('users/' + currentUser.uid + '/solvedProblems/' + id).set(true)
+          .catch(err => console.error("Lỗi đồng bộ Firebase:", err));
     }
 }
 

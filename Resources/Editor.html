@@ -173,6 +173,29 @@
             margin-left: 8px;
         }
 
+        .original-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s;
+            margin-left: 4px;
+        }
+
+        .original-link-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
         .problem-content {
             padding: 4px 24px 24px 24px;
             overflow-y: auto;
@@ -634,6 +657,14 @@
                 <h1 class="problem-title" id="pTitle">Loading...</h1>
                 <div class="problem-meta">
                     <span class="badge easy" id="pDiff">Easy</span>
+                    <a href="#" target="_blank" id="pOriginalLink" class="original-link-btn" style="display: none;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        Original Source
+                    </a>
                 </div>
             </div>
             
