@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDSA Contest Editor</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFW6cLg1Xh9j8BJOlPXC1IPpxRNFWcNS4",
+            authDomain: "wdsa-6c250.firebaseapp.com",
+            projectId: "wdsa-6c250",
+            storageBucket: "wdsa-6c250.firebasestorage.app",
+            messagingSenderId: "279867470204",
+            appId: "1:279867470204:web:973c0736c69f5779cff4f9",
+            measurementId: "G-SE28C7Y619",
+            databaseURL: "https://wdsa-6c250-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        window.db = firebase.database();
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f1f1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d7a4e 60%, #3d9b6a 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .contest-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #2d7a4e;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .contest-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #fef3c7;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        /* Container nhóm các nút bên phải */
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+        }
+
+        /* Nút Leaderboard */
+        .btn-leaderboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f3f4f6;
+            color: #374151;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-leaderboard:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #3d9b6a;
+        }
+
+        /* Main Workspace */
+        .main-workspace {
+            flex: 1;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Problem Selector */
+        .problems-sidebar {
+            width: 280px;
+            background: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .problems-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .problems-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .total-points {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .problem-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .problem-item:hover {
+            background: white;
+        }
+
+        .problem-item.active {
+            background: white;
+            border-left: 4px solid #3d9b6a;
+        }
+
+        .problem-item.solved {
+            background: #dcfce7;
+        }
+
+        .problem-number {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .problem-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .problem-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .problem-difficulty {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .problem-points {
+            color: #3d9b6a;
+            font-weight: 700;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .resize-divider {
+            width: 5px;
+            background: #e5e7eb;
+            cursor: col-resize;
+            position: relative;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .resize-divider:hover {
+            background: #3d9b6a;
+        }
+
+        /* Problem Pane */
+        .problem-pane {
+            width: 40%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .problem-header-info h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .problem-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .problem-description {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .problem-description p {
+            margin-bottom: 15px;
+        }
+
+        .problem-description ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .problem-description strong {
+            color: #1f2937;
+            font-weight: 700;
+        }
+
+        .examples-section {
+            margin-top: 30px;
+        }
+
+        .examples-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .example-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .example-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #0f172a;
+        }
+
+        .btn-copy {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #f0fdf4;
+        }
+
+        .example-content {
+            padding: 16px;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .example-code {
+            background: #f8fafc; /* Màu xám siêu nhạt giống hệt ảnh */
+            color: #1e293b;      /* Chữ màu xám đen, không bị chói */
+            padding: 12px 16px;
+            border-radius: 6px;  
+            border: 1px solid #e2e8f0; /* Viền xám nhạt */
+            
+            /* ĐÂY LÀ DÒNG QUYẾT ĐỊNH KIỂU CHỮ GIỐNG ẢNH CỦA BẠN */
+            font-family: ui-monospace, SFMono-Regular, Consolas, Menlo, Monaco, 'Liberation Mono', 'Courier New', monospace;
+            
+            font-size: 13.5px;   /* Cỡ chữ vừa phải */
+            line-height: 1.6;    /* Khoảng cách dòng thoáng để dễ nhìn */
+            white-space: pre;    /* Giữ nguyên định dạng xuống dòng và khoảng trắng */
+            overflow-x: auto;    /* Có thanh cuộn ngang nếu code quá dài */
+            margin-bottom: 16px;
+        }
+
+        .example-explain {
+            font-size: 14px;
+            color: #64748b;
+            font-style: italic;
+            margin-top: -4px;
+        }
+
+        /* Code Editor Pane */
+        .editor-pane {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+        }
+
+        .editor-header {
+            padding: 15px 20px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .language-selector {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-weight: 600;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-run, .btn-submit {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-run {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-run:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-submit {
+            background: #3d9b6a;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #2d7a4e;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #editor {
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
+            max-height: 40%;
+            overflow-y: auto;
+        }
+
+        .results-header {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .results-summary {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .results-summary.passed {
+            color: #166534;
+        }
+
+        .results-summary.failed {
+            color: #991b1b;
+        }
+
+        .test-case {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .test-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .test-case-title {
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-icon.passed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-icon.failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .test-case-details {
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .detail-block {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .detail-content {
+            background: #ffffff; /* Sửa thành nền trắng */
+            color: #1f2937;      /* Sửa thành chữ đen/xám đậm */
+            border: 1px solid #d1d5db; /* Thêm viền xám nhạt */
+            padding: 10px;
+            border-radius: 6px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #3d9b6a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* --- CSS CHO NÚT NEXT PROBLEM VÀ LEADERBOARD --- */
+        .btn-next-problem {
+            margin-top: 16px; background: #3d9b6a; color: #fff; border: none; padding: 10px 18px; 
+            border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; 
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.3);
+        }
+        
+        /* Hiệu ứng khi di chuột: nút nảy to ra một chút, đẩy lên trên và bóng đổ đậm hơn */
+        .btn-next-problem:hover {
+            background: #2d7a4e;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 15px -3px rgba(22, 163, 74, 0.4);
+        }
+        
+        /* Hiệu ứng mũi tên bay về phía trước */
+        .btn-next-problem svg { transition: transform 0.3s; }
+        .btn-next-problem:hover svg { transform: translateX(4px); }
+
+        .btn-view-leaderboard {
+            margin-top: 16px; background: #f59e0b; color: #fff; border: none; padding: 10px 18px; 
+            border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; 
+            display: inline-flex; align-items: center; gap: 8px; text-decoration: none; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+        
+        /* Hiệu ứng khi di chuột của nút Leaderboard */
+        .btn-view-leaderboard:hover {
+            background: #d97706;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 15px -3px rgba(245, 158, 11, 0.4);
+        }
+        
+        /* Hiệu ứng icon lắc nhẹ */
+        .btn-view-leaderboard svg { transition: transform 0.3s; }
+        .btn-view-leaderboard:hover svg { transform: scale(1.15) rotate(5deg); }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .problems-sidebar {
+                width: 220px;
+            }
+
+            .problem-pane {
+                width: 100%;
+            }
+
+            .editor-pane {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="contest-info">
+            <a href="Contest-index.html" class="back-btn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back
+            </a>
+            <div>
+                <div class="contest-title" id="contestTitle">Loading Contest...</div>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <a href="#" id="btnLeaderboard" class="btn-leaderboard">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                </svg>
+                Leaderboard
+            </a>
+
+            <div class="timer" id="timer">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                </svg>
+                <span id="timerText">--:--:--</span>
+            </div>
+            
+            <div class="user-section">
+                <img id="userAvatar" class="user-avatar" src="https://via.placeholder.com/40" alt="User">
+                <div>
+                    <div style="font-weight: 600; font-size: 14px;" id="userName">Guest</div>
+                    <div style="font-size: 12px; color: #6b7280;" id="userScore">0 points</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-workspace">
+        <!-- Problems Sidebar -->
+        <div class="problems-sidebar">
+            <div class="problems-header">
+                <h3>Problems</h3>
+                <div class="total-points" id="totalPoints">0 / 0 points</div>
+            </div>
+            <div id="problemsList">
+                <!-- Problems will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Problem Description -->
+            <div class="problem-pane">
+                <div class="problem-header-info">
+                    <h2 id="problemTitle">Select a problem</h2>
+                    <div class="problem-tags" id="problemTags"></div>
+                </div>
+                <div class="problem-description" id="problemDescription">
+                    <p>Select a problem from the sidebar to start solving.</p>
+                </div>
+                <div class="examples-section" id="examplesSection" style="display: none;">
+                    <h3>Examples</h3>
+                    <div id="examplesContainer"></div>
+                </div>
+            </div>
+
+            <div class="resize-divider"></div>
+
+            <!-- Code Editor -->
+            <div class="editor-pane">
+                <div class="editor-header">
+                    <select class="language-selector" id="languageSelector">
+                        <option value="cpp">C++</option>
+                        <option value="python">Python</option>
+                    </select>
+                    <div class="editor-actions">
+                        <button class="btn-submit" id="btnSubmit" disabled>
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Submit
+                        </button>
+                    </div>
+                </div>
+                <div id="editor"></div>
+                <div class="results-panel" id="resultsPanel" style="display: none;">
+                    <div class="results-header">
+                        <h3>Test Results</h3>
+                        <span class="results-summary" id="resultsSummary"></span>
+                    </div>
+                    <div id="resultsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ContestData.js"></script>
+    <script src="ContestEditorLogic.js"></script>
+</body>
+</html>

@@ -1165,18 +1165,15 @@ int main() {
                     { input: "0", expectedOutput: "0" },
                     { input: "5", expectedOutput: "5" },
                     { input: "7", expectedOutput: "7" },
-
                     { input: "11", expectedOutput: "NOT FOUND" },
                     { input: "12", expectedOutput: "NOT FOUND" },
                     { input: "13", expectedOutput: "NOT FOUND" },
-
                     { input: "1001", expectedOutput: "NOT FOUND" },
                     { input: "12321", expectedOutput: "3" },
                     { input: "123321", expectedOutput: "NOT FOUND" },
                     { input: "987654321", expectedOutput: "5" },
                     { input: "11111", expectedOutput: "1" },
                     { input: "222222", expectedOutput: "NOT FOUND" },
-
                     { input: "101", expectedOutput: "0" },
                     { input: "222", expectedOutput: "2" },
                     { input: "345", expectedOutput: "4" },
@@ -1470,9 +1467,9 @@ int main() {
         }
         
         if (isBeautiful) {
-            cout << "YES\\n";
+            cout << "YES";
         } else {
-            cout << "NO\\n";
+            cout << "NO";
         }
     }
     return 0;
@@ -2573,6 +2570,547 @@ return 0;
                     { input: "W X Y Z", expectedOutput: "W X Y Z" },
                     { input: "odd EVEN odd EVEN odd", expectedOutput: "odd NEVE odd NEVE odd" },
                     { input: "test1 test2 test3 test4", expectedOutput: "test1 2tset test3 4tset" },
+                ]
+            },
+            {
+                lcNumber: 2022,
+                customId: 16,
+                title: "Sort Characters in a String",
+                link: "https://drive.google.com/file/d/1Nzi3qJe0qAXqoGUjdq7swDFuXn2HVi_r/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Sorting"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong>. Your task is to sort the characters in the string in <strong>lexicographically ascending</strong> order and then in <strong>lexicographically descending</strong> order, and print both results.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 1000</li>
+                        <li><strong>S</strong> contains only alphanumeric characters (uppercase letters, lowercase letters, and digits).</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Line 1: Print the string <strong>S</strong> after sorting its characters in <strong>ascending</strong> order.</li>
+                        <li>Line 2: Print the string <strong>S</strong> after sorting its characters in <strong>descending</strong> order.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Sort Characters in a String
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+int main() {
+	
+	string s;
+	cin>>s;
+	sort(s.begin(), s.end());
+	cout<<s;
+	cout<<endl;
+	sort(s.rbegin(), s.rend());
+	cout<<s;
+	
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "wFJvCFumWtOt7U", 
+                        output: "7CFFJOUWmttuvw\nwvuttmWUOJFFC7", 
+                        explain: "Explanation: Digits come before uppercase letters, and uppercase letters come before lowercase letters in ASCII/lexicographical order." 
+                    }
+                ],
+                timeComplexity: "O(L log L)",
+                spaceComplexity: "O(1)",
+                testCases: [
+                    { input: "wFJvCFumWtOt7U", expectedOutput: "7CFFJOUWmttuvw\nwvuttmWUOJFFC7" },
+                    { input: "abc", expectedOutput: "abc\ncba" },
+                    { input: "cba", expectedOutput: "abc\ncba" },
+                    { input: "a", expectedOutput: "a\na" },
+                    { input: "Z", expectedOutput: "Z\nZ" },
+                    { input: "123", expectedOutput: "123\n321" },
+                    { input: "321", expectedOutput: "123\n321" },
+                    { input: "aA1", expectedOutput: "1Aa\naA1" },
+                    { input: "hello", expectedOutput: "ehllo\nollhe" },
+                    { input: "WORLD", expectedOutput: "DLORW\nWROLD" },
+                    { input: "programming", expectedOutput: "aggimmnoprr\nrrponmmigga" },
+                    { input: "1a2b3c", expectedOutput: "123abc\ncba321" },
+                    { input: "zZ", expectedOutput: "Zz\nzZ" },
+                    { input: "0000", expectedOutput: "0000\n0000" },
+                    { input: "aaaa", expectedOutput: "aaaa\naaaa" },
+                    { input: "AaBbCc", expectedOutput: "ABCabc\ncbaCBA" },
+                    { input: "9876543210", expectedOutput: "0123456789\n9876543210" },
+                    { input: "TestCASE123", expectedOutput: "123ACESTest\ntseTSECA321" },
+                    { input: "python3", expectedOutput: "3hnopty\nytponh3" },
+                    { input: "CodePTIT2024", expectedOutput: "0224CIPTTdeo\noedTTPIC4220" },
+                    { input: "AbCdEfGh1234", expectedOutput: "1234ACEGbdfh\nhfdbGECA4321" },
+                    { input: "xYz12XyZ", expectedOutput: "12XYZxyz\nzyxZYX21" },
+                    { input: "aB3dE2", expectedOutput: "23BEad\ndaEB32" },
+                    { input: "algorithm", expectedOutput: "aghilmort\ntromlihga" },
+                    { input: "Data123", expectedOutput: "123Daat\ntaaD321" },
+                    { input: "ZzZz00", expectedOutput: "00ZZzz\nzzZZ00" },
+                    { input: "a1b2c3d4", expectedOutput: "1234abcd\ndcba4321" },
+                    { input: "1q2w3e4r", expectedOutput: "1234eqrw\nwrqe4321" },
+                    { input: "mNoPqR", expectedOutput: "NPRmoq\nqomRPN" },
+                    { input: "Tien123xyz", expectedOutput: "123Teinxyz\nzyxnieT321" }
+                ]
+            },
+            {
+                lcNumber: 2023,
+                customId: 17,
+                title: "Sort Words by Length",
+                link: "https://drive.google.com/file/d/1o55X2gsuGYKexfGu1B0lO1tTJES2syXC/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Sorting"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of multiple words separated by one or more spaces.</p>
+                    <p>Your task is to sort the words in the string based on their <strong>length in ascending order</strong>. If two words have the exact same length, they should be sorted in <strong>lexicographically ascending order</strong>.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li><strong>S</strong> contains only alphanumeric characters (letters and digits) and spaces.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the words after sorting, separated by a single space.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Sort Words by Length
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+bool cmp(string x, string y) {
+	if(x.size() != y.size()) {
+		return x.size() < y.size();
+	}
+	return x < y;
+}
+
+int main() {
+	
+	string s;
+	vector<string> v;
+	
+	while(cin>>s) {
+		v.push_back(s);
+	}
+	
+	sort(v.begin(), v.end(), cmp);
+	for(string x : v) {
+		cout<<x<<" ";
+	}
+}`,
+                examples: [
+                    { 
+                        input: "28tech dev c", 
+                        output: "c dev 28tech", 
+                        explain: "Explanation:\n- 'c' has length 1.\n- 'dev' has length 3.\n- '28tech' has length 6.\nSorted by length: c -> dev -> 28tech." 
+                    }
+                ],
+                timeComplexity: "O(W log W * L)", // W = number of words, L = max length of a word
+                spaceComplexity: "O(N)", // N = length of the string
+                testCases: [
+                    { input: "28tech dev c", expectedOutput: "c dev 28tech" },
+                    { input: "apple banana cherry date", expectedOutput: "date apple banana cherry" },
+                    { input: "a b c d e f", expectedOutput: "a b c d e f" },
+                    { input: "aa bb cc dd ee ff", expectedOutput: "aa bb cc dd ee ff" },
+                    { input: "python java c cpp js ruby", expectedOutput: "c js cpp java ruby python" },
+                    { input: "code ptit 2024 ptit 2023", expectedOutput: "2023 2024 code ptit ptit" },
+                    { input: "zz yyy xxxx w", expectedOutput: "w zz yyy xxxx" },
+                    { input: "abc ab a", expectedOutput: "a ab abc" },
+                    { input: "123 12 1 1234 12345", expectedOutput: "1 12 123 1234 12345" },
+                    { input: "z y x c b a", expectedOutput: "a b c x y z" },
+                    { input: "Hello World test case", expectedOutput: "case test Hello World" },
+                    { input: "algorithm data structure", expectedOutput: "data algorithm structure" },
+                    { input: "A B C AA BB CC AAA BBB CCC", expectedOutput: "A B C AA BB CC AAA BBB CCC" },
+                    { input: "short longer longest", expectedOutput: "short longer longest" },
+                    { input: "1 22 333 4444", expectedOutput: "1 22 333 4444" },
+                    { input: "4444 333 22 1", expectedOutput: "1 22 333 4444" },
+                    { input: "one two three four five six", expectedOutput: "one six two five four three" },
+                    { input: "apple pie is very good", expectedOutput: "is pie good very apple" },
+                    { input: "1a 2b 3c 1A 2B 3C", expectedOutput: "1A 1a 2B 2b 3C 3c" },
+                    { input: "testing the sorting algorithm", expectedOutput: "the sorting testing algorithm" },
+                    { input: "I am a student at PTIT", expectedOutput: "I a am at PTIT student" },
+                    { input: "ab ba cd dc", expectedOutput: "ab ba cd dc" },
+                    { input: "x xy xyz xyza", expectedOutput: "x xy xyz xyza" },
+                    { input: "100 10 1 0", expectedOutput: "0 1 10 100" },
+                    { input: "z zzz zz zzzz", expectedOutput: "z zz zzz zzzz" }
+                ]
+            },
+            {
+                lcNumber: 2024,
+                customId: 18,
+                title: "Count Unique Words",
+                link: "https://drive.google.com/file/d/1e5qwaTaX3rxcPdVtq0wZ_dL3JNiLJOEf/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Hash Table"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of multiple words separated by one or more spaces.</p>
+                    <p>Your task is to count the number of <strong>unique words</strong> in the string. The counting should be <strong>case-insensitive</strong>. For example, "WdSa" and "wDsA" are considered the exact same word.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li><strong>S</strong> contains only alphanumeric characters (letters and digits) and spaces.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print a single integer representing the number of unique words (case-insensitive) in the string.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Count Unique Words
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+int main() {
+	
+	string s;
+	set<string> se;
+	while(cin>>s) {
+		for(char &x : s) {
+			x = tolower(x);
+		}
+		se.insert(s);
+	}
+	cout<<se.size();
+	
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "wdsa WDSA wDSA dev", 
+                        output: "2", 
+                        explain: "Explanation: After converting to lowercase, we have 'wdsa', 'wdsa', 'wdsa', and 'dev'. There are exactly 2 unique words: 'wdsa' and 'dev'." 
+                    }
+                ],
+                timeComplexity: "O(L log W)", // L is the total length of the string, W is the number of words.
+                spaceComplexity: "O(L)", // To store the unique words in the set
+                testCases: [
+                    { input: "wdsa WDSA wDSA dev", expectedOutput: "2" },
+                    { input: "A a B b C c", expectedOutput: "3" },
+                    { input: "Hello hello HeLlO", expectedOutput: "1" },
+                    { input: "abc 123 ABC 123", expectedOutput: "2" },
+                    { input: "one TWO three FOUR five", expectedOutput: "5" },
+                    { input: "word", expectedOutput: "1" },
+                    { input: "W w W w", expectedOutput: "1" },
+                    { input: "1 1 1 1 1", expectedOutput: "1" },
+                    { input: "123a 123A 123b", expectedOutput: "2" },
+                    { input: "Python java C CPP JS Ruby", expectedOutput: "6" },
+                    { input: "ptit PTIT Ptit pTiT", expectedOutput: "1" },
+                    { input: "a B c D e F g H i J", expectedOutput: "10" },
+                    { input: "Zebra zebra ZEBRA", expectedOutput: "1" },
+                    { input: "test TEST Test test1", expectedOutput: "2" },
+                    { input: "1a 1A 2b 2B 3c 3C", expectedOutput: "3" },
+                    { input: "apple banana cherry date", expectedOutput: "4" },
+                    { input: "mixed CASE words MIXED case WORDS", expectedOutput: "3" },
+                    { input: "A b C d E f G h I j K l M n O p Q r S t U v W x Y z", expectedOutput: "26" },
+                    { input: "Aa aA AA aa Bb bB BB bb", expectedOutput: "2" },
+                    { input: "code ptit 2024 ptit 2023", expectedOutput: "4" },
+                    { input: "same same same same same", expectedOutput: "1" },
+                    { input: "D1ff3r3nt ca5e", expectedOutput: "2" },
+                    { input: "Z zZ Zz zz", expectedOutput: "2" },
+                    { input: "abc ABC aBc AbC abC", expectedOutput: "1" },
+                    { input: "100 10 1 0", expectedOutput: "4" }
+                ]
+            },
+            {
+                lcNumber: 2025,
+                customId: 19,
+                title: "Sort Palindromic Words",
+                link: "https://drive.google.com/file/d/14QJDvSbIE_t3eE96nOEgIGnjCK1B0w49/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Sorting", "Two Pointers"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong> consisting of multiple words separated by one or more spaces.</p>
+                    <p>Your task is to extract all the <strong>palindromic words</strong> from the string, sort them in <strong>lexicographically ascending order</strong>, and print the result.</p>
+                    <p><em>Note: A palindromic word is a word that reads the same forwards and backwards (e.g., "madam", "12321", "a"). The sorting is case-sensitive based on ASCII values. If a palindrome appears multiple times, print all its occurrences.</em></p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10000</li>
+                        <li><strong>S</strong> contains only alphanumeric characters (letters and digits) and spaces.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the sorted palindromic words separated by a single space. If there are no palindromic words, print nothing.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Sort Palindromic Words
+#include <bits/stdc++.h>
+using namespace std;
+
+bool tn (string s){
+    string lat = s;
+    reverse (lat.begin(),lat.end());
+    if (s == lat){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int main(){
+    vector<string> v;
+    string s;
+    while (cin >> s){
+        if (tn(s)){
+            v.push_back(s);
+        }
+    }
+    
+    sort(v.begin(),v.end());
+    
+    for (string x : v){
+        cout <<x<<" ";
+    }
+}`,
+                examples: [
+                    { 
+                        input: "IAzbbzAI   ocoS iIA ccAAAAAAcc izzbb   aoI iIiAWWAiIi", 
+                        output: "IAzbbzAI ccAAAAAAcc iIiAWWAiIi", 
+                        explain: "Explanation: The palindromic words in the string are 'IAzbbzAI', 'ccAAAAAAcc', and 'iIiAWWAiIi'. After sorting them lexicographically, we get the output." 
+                    }
+                ],
+                timeComplexity: "O(W \\log W \\cdot L)", // W = number of palindromes, L = max length
+                spaceComplexity: "O(N)", // N = length of the string to store the array
+                testCases: [
+                    { input: "IAzbbzAI   ocoS iIA ccAAAAAAcc izzbb   aoI iIiAWWAiIi", expectedOutput: "IAzbbzAI ccAAAAAAcc iIiAWWAiIi" },
+                    { input: "aba cba xyz zyz", expectedOutput: "aba zyz" },
+                    { input: "a b c aa bb cc", expectedOutput: "a aa b bb c cc" },
+                    { input: "hello world programming", expectedOutput: "" },
+                    { input: "racecar level radar civic madam", expectedOutput: "civic level madam racecar radar" },
+                    { input: "121 123 12321 22 33 45", expectedOutput: "121 12321 22 33" },
+                    { input: "A a B b", expectedOutput: "A B a b" },
+                    { input: "wow wow wow", expectedOutput: "wow wow wow" },
+                    { input: "a aa aaa aaaa aaaaa", expectedOutput: "a aa aaa aaaa aaaaa" },
+                    { input: "abcde edcba", expectedOutput: "" },
+                    { input: "aBAca abcba", expectedOutput: "abcba" },
+                    { input: "AaaA bBBb cCcc", expectedOutput: "AaaA bBBb" },
+                    { input: "11 222 3333 44444", expectedOutput: "11 222 3333 44444" },
+                    { input: "12321 121 11 1", expectedOutput: "1 11 121 12321" },
+                    { input: "z y x w v u t s r q p o n m l k j i h g f e d c b a", expectedOutput: "a b c d e f g h i j k l m n o p q r s t u v w x y z" },
+                    { input: "code ptit 2024 codeptit", expectedOutput: "" },
+                    { input: "XYX ABBA QWERTY YTREWQ", expectedOutput: "ABBA XYX" },
+                    { input: "0 00 000 0000", expectedOutput: "0 00 000 0000" },
+                    { input: "1a1 2b2 3c3 4d4 5e5 5e5", expectedOutput: "1a1 2b2 3c3 4d4 5e5 5e5" },
+                    { input: "z zz zzz zzzz zzzzz", expectedOutput: "z zz zzz zzzz zzzzz" },
+                    { input: "noon rotator stats tenet", expectedOutput: "noon rotator stats tenet" },
+                    { input: "AaA bBb cCc DdD EeE", expectedOutput: "AaA DdD EeE bBb cCc" },
+                    { input: "1001 2002 3003 1010", expectedOutput: "1001 2002 3003" },
+                    { input: "kayak deified repaper", expectedOutput: "deified kayak repaper" },
+                    { input: "xyz zyx racecar aabaa test aabaa bob", expectedOutput: "aabaa aabaa bob racecar" }
+                ]
+            },
+            {
+                lcNumber: 2026,
+                customId: 20,
+                title: "Custom to_string Function",
+                link: "https://drive.google.com/file/d/1kNufGZGkZ-WoJrdL0Bixlp1B7b7cl6nF/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Math", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given an integer <strong>N</strong>, your task is to convert it into a string representation.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the integer <strong>N</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>-10<sup>18</sup> &le; N &le; 10<sup>18</sup></li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the string representation of the integer <strong>N</strong>.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Custom to_string Function
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	
+	long long n;
+	cin>>n;
+	string s = to_string(n);
+	cout<<s;
+	
+}`,
+                examples: [
+                    { 
+                        input: "28282828282", 
+                        output: "28282828282", 
+                        explain: "Explanation: The integer 28282828282 is successfully converted to the string \"28282828282\" and printed." 
+                    }
+                ],
+                timeComplexity: "O(\\log_{10}|N|)", // The number of digits in N
+                spaceComplexity: "O(\\log_{10}|N|)", // The space required to store the string
+                testCases: [
+                    { input: "28282828282", expectedOutput: "28282828282" },
+                    { input: "0", expectedOutput: "0" },
+                    { input: "1", expectedOutput: "1" },
+                    { input: "-1", expectedOutput: "-1" },
+                    { input: "123456789", expectedOutput: "123456789" },
+                    { input: "-123456789", expectedOutput: "-123456789" },
+                    { input: "1000000000000000000", expectedOutput: "1000000000000000000" },
+                    { input: "-1000000000000000000", expectedOutput: "-1000000000000000000" },
+                    { input: "9223372036854775807", expectedOutput: "9223372036854775807" },
+                    { input: "-9223372036854775808", expectedOutput: "-9223372036854775808" },
+                    { input: "10", expectedOutput: "10" },
+                    { input: "-10", expectedOutput: "-10" },
+                    { input: "999999999999", expectedOutput: "999999999999" },
+                    { input: "-999999999999", expectedOutput: "-999999999999" },
+                    { input: "100", expectedOutput: "100" },
+                    { input: "-100", expectedOutput: "-100" },
+                    { input: "5050505050", expectedOutput: "5050505050" },
+                    { input: "-5050505050", expectedOutput: "-5050505050" },
+                    { input: "98765432101234567", expectedOutput: "98765432101234567" },
+                    { input: "-98765432101234567", expectedOutput: "-98765432101234567" },
+                    { input: "5", expectedOutput: "5" },
+                    { input: "-5", expectedOutput: "-5" },
+                    { input: "20242024", expectedOutput: "20242024" },
+                    { input: "-20232023", expectedOutput: "-20232023" },
+                    { input: "123000456000", expectedOutput: "123000456000" }
+                ]
+            }
+        ]
+    },
+
+    // -------------------------------------------------------------------------
+    // CHAPTER 5: DATA STRUCTURES
+    // -------------------------------------------------------------------------
+
+    {
+        id: 5,
+        title: "Vector",
+        problems: [
+            {
+                lcNumber: 2100,
+                customId: 1,
+                title: "Push And Pop",
+                difficulty: "easy",
+                tags: ["Array", "Data Structure", "Implementation", "Vector"],
+                lcUrl: "#",
+                description: `
+                    <p>You are given a vector and two types of operations:</p>
+                    <ul>
+                        <li><strong>Operation 1:</strong> Add an element to the end of the vector.</li>
+                        <li><strong>Operation 2:</strong> Remove the last element from the vector (if the vector is not empty).</li>
+                    </ul>
+                    <p>Your task is to perform a series of these operations and print the vector after all operations are completed.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Line 1: An integer <strong>N</strong> representing the number of operations.</li>
+                        <li>Next <strong>N</strong> lines: Each line describes an operation. If it is <strong>1</strong>, it will be followed by a space and the integer to be added. If it is <strong>2</strong>, it means remove the last element.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; N &le; 200</li>
+                        <li>The elements added to the vector are 32-bit signed integers.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print <strong>EMPTY</strong> if the vector is empty. Otherwise, print the elements in the vector space-separated on a single line.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Vector Operations
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+	
+	vector<int> v;
+	int q;
+	cin>>q;
+	
+	while(q--) {
+		int t;
+		cin>>t;
+		if(t == 1) {
+			int x;
+			cin>>x;
+			v.push_back(x);
+		} else if(t == 2) {
+			if(!v.empty()) {
+				v.pop_back();
+			}
+		}
+	}
+	
+	if(v.empty()) {
+		cout<<"EMPTY";
+	} else {
+		for(int x : v) {
+			cout<<x<<" ";
+		}
+	}
+}`,
+                examples: [
+                    { 
+                        input: "7\n1 58\n2\n2\n1 52\n1 81\n1 12\n1 2", 
+                        output: "52 81 12 2", 
+                        explain: "Explanation:\n- Add 58 -> [58]\n- Remove last -> []\n- Remove last -> [] (Vector is already empty, so nothing happens)\n- Add 52 -> [52]\n- Add 81 -> [52, 81]\n- Add 12 -> [52, 81, 12]\n- Add 2 -> [52, 81, 12, 2]" 
+                    }
+                ],
+                timeComplexity: "O(N)",
+                spaceComplexity: "O(N)",
+                testCases: [
+                    { input: "7\n1 58\n2\n2\n1 52\n1 81\n1 12\n1 2", expectedOutput: "52 81 12 2" },
+                    { input: "4\n1 10\n1 20\n2\n2", expectedOutput: "EMPTY" },
+                    { input: "3\n2\n2\n2", expectedOutput: "EMPTY" },
+                    { input: "5\n1 1\n1 2\n1 3\n1 4\n1 5", expectedOutput: "1 2 3 4 5" },
+                    { input: "6\n1 100\n2\n1 -5\n1 0\n2\n1 42", expectedOutput: "-5 42" },
+                    { input: "1\n1 999", expectedOutput: "999" },
+                    { input: "1\n2", expectedOutput: "EMPTY" },
+                    { input: "10\n1 5\n1 10\n2\n1 15\n1 20\n2\n2\n1 25\n1 30\n2", expectedOutput: "5 25" },
+                    { input: "8\n2\n2\n1 1000000\n1 -1000000\n2\n1 0\n1 50\n2", expectedOutput: "1000000 0" },
+                    { input: "5\n1 7\n1 7\n1 7\n2\n1 7", expectedOutput: "7 7 7" },
+                    { input: "6\n2\n1 15\n2\n2\n1 99\n1 100", expectedOutput: "99 100" },
+                    { input: "8\n1 10\n1 20\n1 30\n1 40\n2\n2\n2\n2", expectedOutput: "EMPTY" },
+                    { input: "3\n1 2147483647\n1 -2147483648\n2", expectedOutput: "2147483647" },
+                    { input: "10\n1 1\n2\n1 2\n2\n1 3\n2\n1 4\n2\n1 5\n2", expectedOutput: "EMPTY" },
+                    { input: "7\n1 8\n1 8\n2\n1 8\n1 8\n2\n1 9", expectedOutput: "8 8 9" },
+                    { input: "5\n1 0\n1 0\n1 0\n2\n1 0", expectedOutput: "0 0 0" },
+                    { input: "9\n1 123\n2\n2\n1 456\n2\n1 789\n1 101\n2\n1 202", expectedOutput: "789 202" },
+                    { input: "2\n1 -1\n1 -2", expectedOutput: "-1 -2" },
+                    { input: "4\n1 99\n2\n1 100\n2", expectedOutput: "EMPTY" },
+                    { input: "6\n1 5\n1 10\n1 15\n2\n1 20\n1 25", expectedOutput: "5 10 20 25" }
                 ]
             }
         ]

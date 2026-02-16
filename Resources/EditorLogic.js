@@ -54,7 +54,7 @@ let currentUser = null;
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
-const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
+const PISTON_API_URL = '/api/execute';
 const SEPARATOR = "|||WDSA_SEP|||"; // Mốc phân cách output cho Piston
 
 const TEMPLATES = {

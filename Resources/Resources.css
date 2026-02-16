@@ -399,8 +399,9 @@ code,
 
 .res-pc-top {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Đổi thành flex-start để gom các phần tử về bên trái */
     align-items: flex-start;
+    gap: 10px; /* Giữ khoảng cách cố định là 10px */
 }
 
 .res-pc-number {

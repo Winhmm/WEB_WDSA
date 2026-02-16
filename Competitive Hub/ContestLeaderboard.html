@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDSA Contest Leaderboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d7a4e 50%, #3d9b6a 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header p { 
+            font-size: 18px; 
+            opacity: 0.9;
+        }
+
+        .leaderboard-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f9fafb;
+            padding: 20px 28px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 20px 28px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1f2937;
+            font-weight: 500;
+            vertical-align: middle;
+        }
+
+        tr:last-child td { 
+            border-bottom: none; 
+        }
+        
+        tr:hover { 
+            background: #f9fafb; 
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Top 3 styling */
+        tr:nth-child(1) .rank-badge { 
+            background: #fef08a; 
+            color: #854d0e; 
+        }
+        
+        tr:nth-child(2) .rank-badge { 
+            background: #e2e8f0; 
+            color: #475569; 
+        }
+        
+        tr:nth-child(3) .rank-badge { 
+            background: #fed7aa; 
+            color: #9a3412; 
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #3d9b6a;
+        }
+
+        .user-name { 
+            font-weight: 600; 
+            color: #1f2937;
+            font-size: 15px;
+        }
+
+        .points-cell {
+            font-weight: 700;
+            color: #16a34a;
+            font-size: 18px;
+        }
+
+        .loader-container {
+            padding: 60px;
+            text-align: center;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .points-pill {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .loader-spinner {
+            display: inline-block; width: 30px; height: 30px;
+            border: 3px solid #e5e7eb; border-top-color: #3d9b6a;
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { 
+                font-size: 32px; 
+            }
+            
+            th, td { 
+                padding: 14px 16px; 
+                font-size: 14px; 
+            }
+            
+            .rank-badge { 
+                width: 32px; 
+                height: 32px; 
+                font-size: 14px; 
+            }
+            
+            .user-avatar { 
+                width: 36px; 
+                height: 36px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="Contest-index.html" class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Contests
+        </a>
+
+        <div class="header">
+            <h1 id="contestName">Loading Leaderboard...</h1>
+            <p>Xếp hạng dựa trên tổng điểm cao nhất của các bài tập</p>
+        </div>
+
+        <div class="leaderboard-card">
+            <div class="table-container">
+                <table id="leaderboardTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th width="10%">Rank</th>
+                            <th width="50%">Participant</th>
+                            <th width="20%">Solved</th>
+                            <th width="20%">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        </tbody>
+                </table>
+                <div id="loadingIndicator" class="loader-container">
+                    <div class="loader-spinner"></div>
+                    <div style="margin-top: 10px;">Đang tải dữ liệu...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ContestData.js"></script>
+
+    <script>
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFW6cLg1Xh9j8BJOlPXC1IPpxRNFWcNS4",
+            authDomain: "wdsa-6c250.firebaseapp.com",
+            projectId: "wdsa-6c250",
+            storageBucket: "wdsa-6c250.firebasestorage.app",
+            messagingSenderId: "279867470204",
+            appId: "1:279867470204:web:973c0736c69f5779cff4f9",
+            measurementId: "G-SE28C7Y619",
+            databaseURL: "https://wdsa-6c250-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // Lấy Contest ID từ URL
+        const params = new URLSearchParams(window.location.search);
+        const contestId = parseInt(params.get('contestId'));
+
+        const currentContest = CONTESTS.find(c => c.id === contestId);
+
+        if (!currentContest) {
+            document.getElementById('contestName').textContent = "Contest Not Found";
+            document.getElementById('loadingIndicator').textContent = "Không tìm thấy thông tin cuộc thi.";
+        } else {
+            document.getElementById('contestName').textContent = `🏆 ${currentContest.title}`;
+            loadLeaderboardData();
+        }
+
+        function loadLeaderboardData() {
+            // Lấy toàn bộ submission của contest hiện tại
+            db.ref('contest_submissions').once('value').then(snapshot => {
+                const submissions = snapshot.val();
+                const usersMap = {};
+
+                if (submissions) {
+                    // Lọc và gộp điểm
+                    Object.values(submissions).forEach(sub => {
+                        if (sub.contestId === contestId) {
+                            if (!usersMap[sub.userId]) {
+                                usersMap[sub.userId] = {
+                                    name: sub.userName || "Unknown User",
+                                    photo: sub.userPhoto || "https://via.placeholder.com/36",
+                                    problems: {} // Lưu điểm cao nhất của từng bài
+                                };
+                            }
+                            
+                            // Chỉ lưu điểm cao nhất cho mỗi Problem ID
+                            const currentBest = usersMap[sub.userId].problems[sub.problemId] || 0;
+                            if (sub.points > currentBest) {
+                                usersMap[sub.userId].problems[sub.problemId] = sub.points;
+                            }
+                        }
+                    });
+                }
+
+                // Tính tổng điểm và số bài đã giải
+                const leaderboard = Object.values(usersMap).map(user => {
+                    let totalScore = 0;
+                    let solvedCount = 0;
+                    
+                    Object.values(user.problems).forEach(points => {
+                        totalScore += points;
+                        if (points > 0) solvedCount++;
+                    });
+
+                    return {
+                        name: user.name,
+                        photo: user.photo,
+                        score: totalScore,
+                        solved: solvedCount
+                    };
+                });
+
+                // Sắp xếp theo điểm giảm dần
+                leaderboard.sort((a, b) => b.score - a.score);
+
+                renderLeaderboard(leaderboard);
+            }).catch(error => {
+                console.error("Lỗi khi tải bảng xếp hạng:", error);
+                document.getElementById('loadingIndicator').textContent = "Đã xảy ra lỗi khi tải dữ liệu.";
+            });
+        }
+
+        function renderLeaderboard(data) {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            const table = document.getElementById('leaderboardTable');
+            const tbody = document.getElementById('leaderboardBody');
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Chưa có ai nộp bài trong cuộc thi này.</td></tr>`;
+            } else {
+                tbody.innerHTML = data.map((user, index) => `
+                    <tr>
+                        <td><div class="rank-badge">${index + 1}</div></td>
+                        <td>
+                            <div class="user-cell">
+                                <img src="${user.photo}" class="user-avatar" alt="Avatar">
+                                <span class="user-name">${escapeHtml(user.name)}</span>
+                            </div>
+                        </td>
+                        <td>${user.solved} / ${currentContest.problems.length}</td>
+                        <td class="points-cell">${user.score} pts</td>
+                    </tr>
+                `).join('');
+            }
+            
+            table.style.display = 'table';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
