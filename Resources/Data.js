@@ -3001,6 +3001,76 @@ int main() {
                     { input: "-20232023", expectedOutput: "-20232023" },
                     { input: "123000456000", expectedOutput: "123000456000" }
                 ]
+            },
+            {
+                lcNumber: 2027,
+                customId: 21,
+                title: "Char Array to String",
+                link: "https://drive.google.com/file/d/19KF2NP6iGO0uFHHtMQChMghnnHGZrn8W/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Array", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a char array <strong>A[]</strong> consisting of <strong>N</strong> characters, your task is to concatenate these characters to form a single string.</p>
+                     
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Line 1: An integer <strong>N</strong> representing the number of characters.</li>
+                        <li>Line 2: <strong>N</strong> characters separated by a single space.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; N &le; 10000</li>
+                        <li>The characters in the array <strong>A[]</strong> are lowercase English letters or digits.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the resulting concatenated string.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Char Array to String
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	
+	int n;
+	cin>>n;
+	char a[n];
+	string s = "";
+	for(int i = 0; i < n; i++) {
+		cin>>a[i];
+		s += a[i];
+	}
+	cout<<s;
+	
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "4\nw d s a", 
+                        output: "wdsa", 
+                        explain: "Explanation: The characters 'w', 'd', 's', and 'a' are concatenated together to form the string 'wdsa'." 
+                    }
+                ],
+                timeComplexity: "O(N)",
+                spaceComplexity: "O(N)",
+                testCases: [
+                    { input: "6\n2 8 t e c h", expectedOutput: "28tech" },
+                    { input: "1\na", expectedOutput: "a" },
+                    { input: "5\n1 2 3 4 5", expectedOutput: "12345" },
+                    { input: "10\na b c d e f g h i j", expectedOutput: "abcdefghij" },
+                    { input: "4\nc o d e", expectedOutput: "code" },
+                    { input: "4\np t i t", expectedOutput: "ptit" },
+                    { input: "3\nc p p", expectedOutput: "cpp" },
+                    { input: "7\nj a v a 1 2 3", expectedOutput: "java123" },
+                    { input: "8\na l g o r i t h", expectedOutput: "algorith" },
+                    { input: "2\nx y", expectedOutput: "xy" },
+                    { input: "5\n0 0 0 0 0", expectedOutput: "00000" },
+                    { input: "6\nx y z 1 2 3", expectedOutput: "xyz123" }
+                ]
             }
         ]
     },
