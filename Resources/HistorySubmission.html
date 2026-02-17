@@ -566,7 +566,7 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Updating...</td></tr>';
         
-        db.ref('submissions').limitToLast(100).on('value', (snapshot) => {
+        db.ref('submissions').limitToLast(500).on('value', (snapshot) => {
             const data = snapshot.val();
             
             if (!data) {

@@ -3069,14 +3069,22 @@ return 0;
                     { input: "8\na l g o r i t h", expectedOutput: "algorith" },
                     { input: "2\nx y", expectedOutput: "xy" },
                     { input: "5\n0 0 0 0 0", expectedOutput: "00000" },
-                    { input: "6\nx y z 1 2 3", expectedOutput: "xyz123" }
+                    { input: "6\nx y z 1 2 3", expectedOutput: "xyz123" },
+                    { input: "1\n9", expectedOutput: "9" },
+                    { input: "8\nw d s a w d s a", expectedOutput: "wdsawdsa" },
+                    { input: "9\nt e o t i w d s a", expectedOutput: "teotiwdsa" },
+                    { input: "6\n1 0 0 0 0 0", expectedOutput: "100000" },
+                    { input: "10\nz z z z z z z z z z", expectedOutput: "zzzzzzzzzz" },
+                    { input: "26\na b c d e f g h i j k l m n o p q r s t u v w x y z", expectedOutput: "abcdefghijklmnopqrstuvwxyz" },
+                    { input: "10\n9 8 7 6 5 4 3 2 1 0", expectedOutput: "9876543210" },
+                    { input: "4\nw d s a", expectedOutput: "wdsa" }
                 ]
             }
         ]
     },
 
     // -------------------------------------------------------------------------
-    // CHAPTER 5: DATA STRUCTURES
+    // CHAPTER 5: VECTOR
     // -------------------------------------------------------------------------
 
     {

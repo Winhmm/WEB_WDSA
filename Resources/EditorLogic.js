@@ -243,6 +243,47 @@ function renderProblemUI() {
     renderEditorToolbar();
 
     updateSolvedUI();
+    const adj = getAdjacentProblems(currentProblem.lcNumber || currentProblem.customId);
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+
+    if (btnPrev) {
+        if (adj.prev) {
+            btnPrev.disabled = false;
+            btnPrev.style.opacity = '1';
+            btnPrev.style.cursor = 'pointer';
+            btnPrev.onmouseover = () => { btnPrev.style.background = '#e2e8f0'; btnPrev.style.color = '#0f172a'; };
+            btnPrev.onmouseout = () => { btnPrev.style.background = '#f1f5f9'; btnPrev.style.color = '#475569'; };
+            // Chuyển trang khi click
+            btnPrev.onclick = () => window.location.href = `Editor.html?id=${adj.prev.lcNumber || adj.prev.customId}`;
+        } else {
+            // Nếu là bài đầu tiên thì mờ nút Prev đi
+            btnPrev.disabled = true;
+            btnPrev.style.opacity = '0.4';
+            btnPrev.style.cursor = 'not-allowed';
+            btnPrev.onmouseover = null;
+            btnPrev.onmouseout = null;
+        }
+    }
+
+    if (btnNext) {
+        if (adj.next) {
+            btnNext.disabled = false;
+            btnNext.style.opacity = '1';
+            btnNext.style.cursor = 'pointer';
+            btnNext.onmouseover = () => { btnNext.style.background = '#e2e8f0'; btnNext.style.color = '#0f172a'; };
+            btnNext.onmouseout = () => { btnNext.style.background = '#f1f5f9'; btnNext.style.color = '#475569'; };
+            // Chuyển trang khi click
+            btnNext.onclick = () => window.location.href = `Editor.html?id=${adj.next.lcNumber || adj.next.customId}`;
+        } else {
+            // Nếu là bài cuối cùng thì mờ nút Next đi
+            btnNext.disabled = true;
+            btnNext.style.opacity = '0.4';
+            btnNext.style.cursor = 'not-allowed';
+            btnNext.onmouseover = null;
+            btnNext.onmouseout = null;
+        }
+    }
 }
 
 function renderEditorToolbar() {
@@ -1115,7 +1156,6 @@ document.addEventListener('keydown', function(e) {
 const normalize = (str) => str.trim().split(/\s+/).join(' ');
 
 // --- AUTH FUNCTIONS ---
-// --- AUTH FUNCTIONS ---
 function googleSignIn() {
     auth.signInWithPopup(provider)
         .catch((error) => {
@@ -1128,4 +1168,27 @@ function googleSignOut() {
     auth.signOut().then(() => {
         showNotification("Logged out successfully", "info", false); 
     });
+}
+
+// Hàm tìm bài liền trước và liền sau xuyên suốt các Chapter
+function getAdjacentProblems(currentId) {
+    let allProblems = [];
+    // Gom tất cả bài tập từ các chương thành một mảng duy nhất để user đi liền mạch
+    if (typeof CHAPTERS !== 'undefined') {
+        CHAPTERS.forEach(chapter => {
+            allProblems = allProblems.concat(chapter.problems);
+        });
+    }
+    
+    // Tìm index của bài hiện tại
+    const currentIndex = allProblems.findIndex(p => 
+        String(p.lcNumber) === String(currentId) || String(p.customId) === String(currentId)
+    );
+    
+    if (currentIndex === -1) return { prev: null, next: null };
+    
+    return {
+        prev: currentIndex > 0 ? allProblems[currentIndex - 1] : null,
+        next: currentIndex < allProblems.length - 1 ? allProblems[currentIndex + 1] : null
+    };
 }

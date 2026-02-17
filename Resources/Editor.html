@@ -9,11 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 
     <script>
@@ -128,12 +126,18 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 13px;
-            margin-bottom: 12px;
             transition: color 0.2s;
         }
 
         .back-btn:hover {
             color: #1a472a;
+        }
+
+        /* CSS Nâng cấp cho nút Prev/Next */
+        .problem-nav button:not(:disabled):hover {
+            background: #e2e8f0 !important;
+            color: #0f172a !important;
+            border-color: #94a3b8 !important;
         }
 
         .problem-title {
@@ -650,10 +654,22 @@
     <div class="main-workspace">
         <div class="problem-pane">
             <div class="problem-header">
-                <a href="Resources.html" class="back-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                    Back to Problems
-                </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <a href="Resources.html" class="back-btn" style="margin-bottom: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                        Back to Problems
+                    </a>
+                    
+                    <div class="problem-nav" style="display: flex; gap: 8px;">
+                        <button id="btnPrev" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 4px;" disabled>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg> Prev
+                        </button>
+                        <button id="btnNext" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 4px;" disabled>
+                            Next <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+                
                 <h1 class="problem-title" id="pTitle">Loading...</h1>
                 <div class="problem-meta">
                     <span class="badge easy" id="pDiff">Easy</span>
@@ -718,7 +734,7 @@
                     </div>
                 </div>
 
-                <button id="btnSubmitSolution" class="btn-submit" onclick="submitSolution()" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <button id="btnSubmitSolution" class="btn-submit" onclick="submitSolution()" title="Shortcut: Ctrl + Enter (or Cmd + Enter)" disabled style="opacity: 0.5; cursor: not-allowed;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     Submit Solution
                 </button>
@@ -752,13 +768,70 @@
             </div>
         </div>
     </div>
-    
+
     <script src="Data.js"></script>
     <script src="EditorLogic.js"></script>
+
     <script>
+        // Lỗi load Data
         window.addEventListener('error', function(e) {
             if (e.message.includes('CHAPTERS') || e.filename.includes('Data.js')) {
                 document.body.innerHTML = '<div class="error-message">Error: Data.js failed to load. Please refresh the page.</div>';
+            }
+        });
+
+        // Tích hợp Next/Prev Navigation hoạt động độc lập với EditorLogic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Chờ cho đến khi Data.js và EditorLogic.js xử lý xong việc móc currentProblem
+            const navInterval = setInterval(() => {
+                if (window.currentProblem && window.CHAPTERS) {
+                    clearInterval(navInterval);
+                    setupNavigation();
+                }
+            }, 100);
+
+            function setupNavigation() {
+                let allProblems = [];
+                // Nối tất cả mảng problems lại để đi xuyên suốt mọi chương
+                window.CHAPTERS.forEach(chapter => {
+                    allProblems = allProblems.concat(chapter.problems);
+                });
+
+                const currentId = window.currentProblem.lcNumber || window.currentProblem.customId;
+                
+                // Tìm vị trí của bài hiện tại trên mảng tổng
+                const currentIndex = allProblems.findIndex(p => 
+                    String(p.lcNumber) === String(currentId) || String(p.customId) === String(currentId)
+                );
+
+                const btnPrev = document.getElementById('btnPrev');
+                const btnNext = document.getElementById('btnNext');
+
+                // Móc sự kiện Prev
+                if (currentIndex > 0) {
+                    const prevProb = allProblems[currentIndex - 1];
+                    btnPrev.disabled = false;
+                    btnPrev.style.opacity = '1';
+                    btnPrev.style.cursor = 'pointer';
+                    btnPrev.onclick = () => window.location.href = `Editor.html?id=${prevProb.lcNumber || prevProb.customId}`;
+                } else {
+                    btnPrev.disabled = true;
+                    btnPrev.style.opacity = '0.4';
+                    btnPrev.style.cursor = 'not-allowed';
+                }
+
+                // Móc sự kiện Next
+                if (currentIndex !== -1 && currentIndex < allProblems.length - 1) {
+                    const nextProb = allProblems[currentIndex + 1];
+                    btnNext.disabled = false;
+                    btnNext.style.opacity = '1';
+                    btnNext.style.cursor = 'pointer';
+                    btnNext.onclick = () => window.location.href = `Editor.html?id=${nextProb.lcNumber || nextProb.customId}`;
+                } else {
+                    btnNext.disabled = true;
+                    btnNext.style.opacity = '0.4';
+                    btnNext.style.cursor = 'not-allowed';
+                }
             }
         });
     </script>
