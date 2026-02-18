@@ -1100,7 +1100,6 @@ function openSolution() {
             solutionEditor = monaco.editor.create(container, {
                 value: code,
                 language: 'cpp',
-                theme: 'vs-dark',
                 readOnly: true,
                 minimap: { enabled: false },
                 fontSize: 14,

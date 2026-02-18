@@ -3079,6 +3079,394 @@ return 0;
                     { input: "10\n9 8 7 6 5 4 3 2 1 0", expectedOutput: "9876543210" },
                     { input: "4\nw d s a", expectedOutput: "wdsa" }
                 ]
+            },
+            {
+                lcNumber: 2028,
+                customId: 22,
+                title: "Check Palindrome String",
+                link: "https://drive.google.com/file/d/1RSvUEFJECCvO_ubnDCE4GBETNM0-KzrS/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Two Pointers"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong>, your task is to check whether the string is a palindrome or not.</p>
+                    <p>A palindrome is a string that reads the same forwards and backwards.</p>
+        
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 100,000</li>
+                        <li><strong>S</strong> may consist of alphanumeric characters.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print <code>true</code> if the string <strong>S</strong> is a palindrome, otherwise print <code>false</code>.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Check Palindrome String
+#include <bits/stdc++.h>
+using namespace std;
+
+bool check(string s) {
+	int l = 0;
+	int r = s.size()-1;
+	while(l < r) {
+		if(s[l] != s[r]) {
+			return false;
+		}
+		l++;
+		r--;
+	}
+	return true;
+}
+
+int main() {
+	
+	string s;
+	cin>>s;
+	if(check(s)) {
+		cout<<"true";
+	} else {
+		cout<<"false";
+	}
+	
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "wdsaasdw", 
+                        output: "true", 
+                        explain: "Explanation: The string 'wdsaasdw' reads exactly the same forwards and backwards." 
+                    },
+                    { 
+                        input: "wdsa", 
+                        output: "false", 
+                        explain: "Explanation: The string 'wdsa' reversed is 'asdw', which is not the same." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(1)",
+                testCases: [
+                    { input: "wdsaasdw", expectedOutput: "true" },
+                    { input: "wdsa", expectedOutput: "false" },
+                    { input: "a", expectedOutput: "true" },
+                    { input: "aa", expectedOutput: "true" },
+                    { input: "ab", expectedOutput: "false" },
+                    { input: "aba", expectedOutput: "true" },
+                    { input: "abcba", expectedOutput: "true" },
+                    { input: "abccba", expectedOutput: "true" },
+                    { input: "racecar", expectedOutput: "true" },
+                    { input: "madam", expectedOutput: "true" },
+                    { input: "level", expectedOutput: "true" },
+                    { input: "civic", expectedOutput: "true" },
+                    { input: "radar", expectedOutput: "true" },
+                    { input: "hello", expectedOutput: "false" },
+                    { input: "world", expectedOutput: "false" },
+                    { input: "Aba", expectedOutput: "false" },
+                    { input: "WdsaasdW", expectedOutput: "true" },
+                    { input: "12321", expectedOutput: "true" },
+                    { input: "123321", expectedOutput: "true" },
+                    { input: "123456", expectedOutput: "false" },
+                    { input: "1122332211", expectedOutput: "true" },
+                    { input: "zZ", expectedOutput: "false" },
+                    { input: "zz", expectedOutput: "true" },
+                    { input: "x", expectedOutput: "true" },
+                    { input: "1", expectedOutput: "true" },
+                    { input: "98765432123456789", expectedOutput: "true" },
+                    { input: "abcdefggfedcba", expectedOutput: "true" },
+                    { input: "programming", expectedOutput: "false" },
+                    { input: "cplusplus", expectedOutput: "false" },
+                    { input: "aibohphobia", expectedOutput: "true" }
+                ]
+            },
+            {
+                lcNumber: 2029,
+                customId: 23,
+                title: "Remove Extra Spaces",
+                link: "https://drive.google.com/file/d/1gHsHpHYTJE-N7yaEJECbtNFqwoy5BCfn/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Two Pointers", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>Given a string <strong>S</strong>, your task is to remove all extra spaces.</p>
+                    <p>Specifically, you must remove all leading spaces, all trailing spaces, and reduce any multiple spaces between words to a single space.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>A single line containing the string <strong>S</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; length of S &le; 10<sup>5</sup></li>
+                        <li><strong>S</strong> consists of letters, digits, and space characters.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print the normalized string <strong>S</strong>.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Remove Extra Spaces
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+
+	string s;
+	getline(cin,s);
+	stringstream ss(s);
+	string word;
+	while(ss >> word) {
+		cout<<word<<" ";
+	}
+
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "   wdsa    di hoc   lap trinh", 
+                        output: "wdsa di hoc lap trinh", 
+                        explain: "Explanation: Leading spaces are removed, and the multiple spaces between the words are reduced to exactly one space." 
+                    },
+                    { 
+                        input: "hello     world   ", 
+                        output: "hello world", 
+                        explain: "Explanation: Multiple spaces between 'hello' and 'world' are reduced to one, and the trailing spaces are removed." 
+                    }
+                ],
+                timeComplexity: "O(L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "   wdsa    di hoc   lap trinh", expectedOutput: "wdsa di hoc lap trinh" },
+                    { input: "hello     world   ", expectedOutput: "hello world" },
+                    { input: "  leading spaces", expectedOutput: "leading spaces" },
+                    { input: "trailing spaces  ", expectedOutput: "trailing spaces" },
+                    { input: "  both sides  ", expectedOutput: "both sides" },
+                    { input: "a  b  c  d  e", expectedOutput: "a b c d e" },
+                    { input: "     wdsa    ", expectedOutput: "wdsa" },
+                    { input: "a", expectedOutput: "a" },
+                    { input: "  ", expectedOutput: "" },
+                    { input: "wdsa", expectedOutput: "wdsa" },
+                    { input: "one two three", expectedOutput: "one two three" },
+                    { input: "  one   two  three  ", expectedOutput: "one two three" },
+                    { input: "multiple   spaces    between     words", expectedOutput: "multiple spaces between words" },
+                    { input: "123  456   789", expectedOutput: "123 456 789" },
+                    { input: "a1   b2  c3 d4", expectedOutput: "a1 b2 c3 d4" },
+                    { input: "          x          ", expectedOutput: "x" },
+                    { input: "y z", expectedOutput: "y z" },
+                    { input: "   A B C D E F G   ", expectedOutput: "A B C D E F G" },
+                    { input: "noExtraSpacesHere", expectedOutput: "noExtraSpacesHere" },
+                    { input: "wdsa wdsa wdsa", expectedOutput: "wdsa wdsa wdsa" },
+                    { input: "    wdsa    wdsa    wdsa    ", expectedOutput: "wdsa wdsa wdsa" },
+                    { input: "C++     is   fun", expectedOutput: "C++ is fun" },
+                    { input: " I  love   programming   ", expectedOutput: "I love programming" },
+                    { input: "competitive   programming   is    awesome", expectedOutput: "competitive programming is awesome" },
+                    { input: " a b c d e f g h i j k l m n o p q r s t u v w x y z ", expectedOutput: "a b c d e f g h i j k l m n o p q r s t u v w x y z" }
+                ]
+            },
+            {
+                lcNumber: 2030,
+                customId: 24,
+                title: "Valid Phone Number",
+                link: "https://drive.google.com/file/d/1yX-8CNDe4EfQ0iEwnov92ho60q3ggO1H/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>A phone number is considered valid if it has exactly <strong>10 or 11 digits</strong> and starts with the digit <strong>'0'</strong>.</p>
+                    <p>Additionally, it must not contain any special characters or letters (it must consist entirely of digits).</p>
+                    <p>Given a list of phone numbers, your task is to determine whether each phone number is valid or invalid.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Line 1: An integer <strong>T</strong> representing the number of phone numbers to check.</li>
+                        <li>Next <strong>T</strong> lines: Each line contains a string representing a phone number.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; T &le; 1000</li>
+                        <li>The length of each string does not exceed 100 characters.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>Print <strong>YES</strong> if the phone number is valid, otherwise print <strong>NO</strong>. Print the result for each test case on a new line.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Valid Phone Number
+#include <bits/stdc++.h>
+using namespace std;
+
+bool check(string s) {
+
+	if(s.size() != 10 && s.size() != 11) {
+		return false;
+	}
+	if(s[0] != '0') {
+		return false;
+	}
+	for(char x : s) {
+		if(!isdigit(x)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+int main() {
+
+	int n;
+	cin>>n;
+	while(n--) {
+		string s;
+		cin>>s;
+		if(check(s)) {
+			cout<<"YES"<<endl;
+		} else {
+			cout<<"NO"<<endl;
+		}
+	}
+
+}`,
+                examples: [
+                    { 
+                        input: "6\nk20472090a\n20400855kk8\nk0k02d0078\n0sks0s0k0\n160080955800\n0965303260", 
+                        output: "NO\nNO\nNO\nNO\nNO\nYES", 
+                        explain: "Explanation:\n- 'k20472090a' contains letters (NO).\n- '20400855kk8' contains letters and doesn't start with 0 (NO).\n- 'k0k02d0078' contains letters (NO).\n- '0sks0s0k0' contains letters (NO).\n- '160080955800' does not start with 0 and has 12 digits (NO).\n- '0965303260' starts with 0, has exactly 10 digits, and only contains numbers (YES)." 
+                    }
+                ],
+                timeComplexity: "O(T * L)", // T is number of test cases, L is the length of the string
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "6\nk20472090a\n20400855kk8\nk0k02d0078\n0sks0s0k0\n160080955800\n0965303260", expectedOutput: "NO\nNO\nNO\nNO\nNO\nYES" },
+                    { input: "1\n0123456789", expectedOutput: "YES" },
+                    { input: "1\n01234567890", expectedOutput: "YES" },
+                    { input: "1\n1123456789", expectedOutput: "NO" },
+                    { input: "1\n012345678", expectedOutput: "NO" },
+                    { input: "1\n012345678901", expectedOutput: "NO" },
+                    { input: "1\n01234a6789", expectedOutput: "NO" },
+                    { input: "2\n0987654321\n01234567890", expectedOutput: "YES\nYES" },
+                    { input: "3\n0999999999\n0000000000\n0111111111", expectedOutput: "YES\nYES\nYES" },
+                    { input: "3\n9012345678\n0123456789\n0123456789a", expectedOutput: "NO\nYES\nNO" },
+                    { input: "1\n0abc456789", expectedOutput: "NO" },
+                    { input: "1\n0123456789!", expectedOutput: "NO" },
+                    { input: "1\n0 12345678", expectedOutput: "NO" },
+                    { input: "4\n0123456789\n09876543210\n1234567890\n01234", expectedOutput: "YES\nYES\nNO\nNO" },
+                    { input: "5\n0123456789\n0012345678\n0001234567\n0000123456\n0000012345", expectedOutput: "YES\nYES\nYES\nYES\nYES" },
+                    { input: "2\n000000000\n000000000000", expectedOutput: "NO\nNO" },
+                    { input: "1\n0123456789.0", expectedOutput: "NO" },
+                    { input: "1\n0+12345678", expectedOutput: "NO" },
+                    { input: "2\n0932111222\n08412345678", expectedOutput: "YES\nYES" },
+                    { input: "6\n0123\n0123456789\n01234567890\n012345678901\na012345678\n012345678a", expectedOutput: "NO\nYES\nYES\nNO\nNO\nNO" }
+                ]
+            },
+            {
+                lcNumber: 2031,
+                customId: 25,
+                title: "Valid Number",
+                link: "https://drive.google.com/file/d/1PkxlJkCdQB-LXZp0hJrF5evRVZormRfw/view?usp=sharing",
+                difficulty: "easy",
+                tags: ["String", "Math", "Implementation"],
+                lcUrl: "#",
+                description: `
+                    <p>A natural number <strong>N</strong> is considered valid if it satisfies all of the following conditions:</p>
+                    <ul>
+                        <li>Its <strong>first</strong> and <strong>last</strong> digits have the same parity (both must be even, or both must be odd).</li>
+                        <li>No two adjacent digits have an absolute difference of exactly <strong>3</strong>.</li>
+                        <li>It does not contain the digits <strong>2</strong> and <strong>8</strong> adjacent to each other (i.e., no "28" or "82").</li>
+                    </ul>
+                    <p>Given a list of natural numbers, your task is to determine whether each number is valid or not.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Line 1: An integer <strong>T</strong> representing the number of numbers to check.</li>
+                        <li>Next <strong>T</strong> lines: Each line contains a natural number <strong>N</strong>.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; T &le; 1000</li>
+                        <li><strong>N</strong> is a natural number containing up to 1000 digits.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>For each test case, print <strong>YES</strong> if <strong>N</strong> is valid, otherwise print <strong>NO</strong> on a new line.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Valid Number
+#include <bits/stdc++.h>
+using namespace std;
+
+bool check(string s) {
+	int first = s[0] - '0';
+	int last = s.back() - '0';
+	if(first % 2 != last % 2) {
+		return false;
+	}
+	for(int i = 0; i < s.size(); i++) {
+		if(abs(s[i] - s[i+1]) == 3) {
+			return false;
+		}
+		if(s[i] == 2 && s[i+1] == 8) {
+			return false;
+		}
+		if(s[i] == 8 && s[i+1] == 2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+int main() {
+
+	int n;
+	cin>>n;
+	while(n--) {
+		string s;
+		cin>>s;
+		if(check(s)) {
+			cout<<"YES"<<endl;
+		} else {
+			cout<<"NO"<<endl;
+		}
+	}
+
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "10\n4768945971937769\n6616397219777\n97929238629171\n546746487838715\n5795211668124639114\n9828511627867787611\n3527572613185\n96146749649\n26511881655\n522121849147419685", 
+                        output: "NO\nNO\nYES\nNO\nNO\nNO\nNO\nNO\nNO\nNO", 
+                        explain: "Explanation:\n- '4768945971937769': Ends and starts with different parities (4 is even, 9 is odd) -> NO.\n- '97929238629171': Starts with 9 (odd) and ends with 1 (odd). It does not contain '28'/'82', and no adjacent digits differ by exactly 3 -> YES.\n- '546746487838715': Contains adjacent digits with a difference of 3 (e.g., 7 and 4) -> NO.\n- '9828511627867787611': Contains '82' and '28' -> NO." 
+                    }
+                ],
+                timeComplexity: "O(T * L)", // T is the number of test cases, L is the length of the string
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "10\n4768945971937769\n6616397219777\n97929238629171\n546746487838715\n5795211668124639114\n9828511627867787611\n3527572613185\n96146749649\n26511881655\n522121849147419685", expectedOutput: "NO\nNO\nYES\nNO\nNO\nNO\nNO\nNO\nNO\nNO" },
+                    { input: "1\n22", expectedOutput: "YES" },
+                    { input: "1\n25", expectedOutput: "NO" },
+                    { input: "1\n13579", expectedOutput: "YES" },
+                    { input: "1\n2468", expectedOutput: "YES" },
+                    { input: "1\n12345", expectedOutput: "YES" },
+                    { input: "1\n147", expectedOutput: "NO" },
+                    { input: "1\n8888", expectedOutput: "YES" },
+                    { input: "1\n1212", expectedOutput: "NO" },
+                    { input: "3\n111111111\n222222222\n333333333", expectedOutput: "YES\nYES\nYES" },
+                    { input: "3\n1414141\n2525252\n3636363", expectedOutput: "NO\nNO\nNO" },
+                    { input: "2\n9000000000000000000000000000000000000000000000000000000000000000000009\n2000000000000000000000000000000000000000000000000000000000000000000008", expectedOutput: "YES\nYES" },
+                    { input: "1\n1010101010101010101010101010101010101010101010101010101010101010101010", expectedOutput: "NO" },
+                    { input: "2\n124579\n975421", expectedOutput: "YES\nYES" },
+                    { input: "1\n19191919191919191919191919191919191919191919191919191919191919191919191", expectedOutput: "YES" }
+                ]
             }
         ]
     },
