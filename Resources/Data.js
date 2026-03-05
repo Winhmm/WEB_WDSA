@@ -3477,29 +3477,29 @@ return 0;
                 tags: ["String", "Implementation", "Validation"],
                 lcUrl: "#",
                 description: `
-                    <p>Một địa chỉ email được coi là hợp lệ nếu thỏa mãn <strong>tất cả</strong> các điều kiện sau:</p>
+                    <p>An email address is considered valid if it satisfies <strong>all</strong> of the following conditions:</p>
                     <ul>
-                        <li>Bắt buộc kết thúc bằng 1 trong các đuôi: <code>@gmail.com</code>, <code>@28tech.com.vn</code>, <code>@yahoo.com</code>, <code>@hotmail.com</code></li>
-                        <li>Không được chứa các ký tự đặc biệt và dấu cách, chỉ được chứa các ký tự là chữ số và chữ cái, ngoại trừ ký tự <code>@</code>, dấu chấm (<code>.</code>) và dấu gạch dưới (<code>_</code>)</li>
-                        <li>Không được chứa nhiều hơn 1 ký tự <code>@</code></li>
+                        <li>It must end with one of the following domains: <code>@gmail.com</code>, <code>@28tech.com.vn</code>, <code>@yahoo.com</code>, <code>@hotmail.com</code></li>
+                        <li>It must not contain special characters or spaces. It can only contain alphanumeric characters (letters and digits), except for the <code>@</code> symbol, dot (<code>.</code>), and underscore (<code>_</code>)</li>
+                        <li>It must not contain more than one <code>@</code> symbol</li>
                     </ul>
-                    <p>Bạn được cung cấp một loạt các email, hãy xác định xem email này có hợp lệ hay không.</p>
+                    <p>You are given a list of emails. Determine whether each email is valid or not.</p>
                     
                     <strong>Input Format:</strong>
                     <ul>
-                        <li>Dòng 1 là số nguyên <strong>T</strong> đại diện cho số lượng email cần kiểm tra.</li>
-                        <li><strong>T</strong> dòng tiếp theo, mỗi dòng chứa một chuỗi ký tự đại diện cho một email.</li>
+                        <li>Line 1: An integer <strong>T</strong> representing the number of emails to check.</li>
+                        <li>Next <strong>T</strong> lines: Each line contains a string representing an email.</li>
                     </ul>
 
                     <strong>Constraints:</strong>
                     <ul>
                         <li>1 &le; T &le; 1000</li>
-                        <li>Độ dài của mỗi email không vượt quá 1000 ký tự.</li>
+                        <li>The length of each email does not exceed 1000 characters.</li>
                     </ul>
 
                     <strong>Output Format:</strong>
                     <ul>
-                        <li>In ra <strong>YES</strong> nếu email hợp lệ, ngược lại in ra <strong>NO</strong>. Mỗi đáp án in trên một dòng mới.</li>
+                        <li>Print <strong>YES</strong> if the email is valid, otherwise print <strong>NO</strong>. Print each answer on a new line.</li>
                     </ul>
                 `,
                 sampleSolution: `// Solution for Valid Email
@@ -3552,7 +3552,7 @@ return 0;
                     { 
                         input: "10\n1b2ac2adcd@mail.com\n2d2414d4eedb@gmail.com\nc3ec3214dd14de3a4@teche@.com\n13c12b4ae4@28tech.com.vn\nde12ad131ca242221@yahoo.com\nde132241c12bbb414e@yahoo.com\n2b1121cb1144@apple.com\n312dc324144ceab4@mail.com\ne22cac1b144acdcd34@hotmail.com\ne4d3e2c4b3b421442c@xyz.com", 
                         output: "NO\nYES\nNO\nYES\nYES\nYES\nNO\nNO\nYES\nNO", 
-                        explain: "Explanation:\n- '1b2ac2adcd@mail.com' không kết thúc bằng các đuôi hợp lệ.\n- '2d2414d4eedb@gmail.com' hợp lệ vì kết thúc bằng @gmail.com và ký tự hợp lệ.\n- 'c3ec3214dd14de3a4@teche@.com' chứa 2 ký tự '@'." 
+                        explain: "Explanation:\n- '1b2ac2adcd@mail.com' does not end with a valid domain.\n- '2d2414d4eedb@gmail.com' is valid because it ends with @gmail.com and contains only valid characters.\n- 'c3ec3214dd14de3a4@teche@.com' contains two '@' symbols." 
                     }
                 ],
                 timeComplexity: "O(T * L)",
