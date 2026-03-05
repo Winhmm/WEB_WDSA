@@ -3467,6 +3467,129 @@ return 0;
                     { input: "2\n124579\n975421", expectedOutput: "YES\nYES" },
                     { input: "1\n19191919191919191919191919191919191919191919191919191919191919191919191", expectedOutput: "YES" }
                 ]
+            },
+            {
+                lcNumber: 2032,
+                customId: 26,
+                title: "Valid Email",
+                link: "https://drive.google.com/file/d/1_vHLbwn4YC3hwoRtMNl3GFa5Y3oPT2o-/view?usp=sharing",
+                difficulty: "medium",
+                tags: ["String", "Implementation", "Validation"],
+                lcUrl: "#",
+                description: `
+                    <p>Một địa chỉ email được coi là hợp lệ nếu thỏa mãn <strong>tất cả</strong> các điều kiện sau:</p>
+                    <ul>
+                        <li>Bắt buộc kết thúc bằng 1 trong các đuôi: <code>@gmail.com</code>, <code>@28tech.com.vn</code>, <code>@yahoo.com</code>, <code>@hotmail.com</code></li>
+                        <li>Không được chứa các ký tự đặc biệt và dấu cách, chỉ được chứa các ký tự là chữ số và chữ cái, ngoại trừ ký tự <code>@</code>, dấu chấm (<code>.</code>) và dấu gạch dưới (<code>_</code>)</li>
+                        <li>Không được chứa nhiều hơn 1 ký tự <code>@</code></li>
+                    </ul>
+                    <p>Bạn được cung cấp một loạt các email, hãy xác định xem email này có hợp lệ hay không.</p>
+                    
+                    <strong>Input Format:</strong>
+                    <ul>
+                        <li>Dòng 1 là số nguyên <strong>T</strong> đại diện cho số lượng email cần kiểm tra.</li>
+                        <li><strong>T</strong> dòng tiếp theo, mỗi dòng chứa một chuỗi ký tự đại diện cho một email.</li>
+                    </ul>
+
+                    <strong>Constraints:</strong>
+                    <ul>
+                        <li>1 &le; T &le; 1000</li>
+                        <li>Độ dài của mỗi email không vượt quá 1000 ký tự.</li>
+                    </ul>
+
+                    <strong>Output Format:</strong>
+                    <ul>
+                        <li>In ra <strong>YES</strong> nếu email hợp lệ, ngược lại in ra <strong>NO</strong>. Mỗi đáp án in trên một dòng mới.</li>
+                    </ul>
+                `,
+                sampleSolution: `// Solution for Valid Email
+#include <bits/stdc++.h>
+using namespace std;
+bool check(string s) {
+	string a[] = {"@gmail.com", "@28tech.com.vn", "@yahoo.com", "@hotmail.com"};
+	bool ok = false;
+	for(string words : a) {
+		if(s.find(words) != string::npos) {
+			ok = true;
+			break;
+		}
+	}
+	if(!ok) {
+		return false;
+	}
+	for(char x : s) {
+		int dem = count(s.begin(), s.end(), '@');
+		if(dem > 1) {
+			return false;
+		}
+	}
+	
+	for(char x : s) {
+		if(x == '@' || x == '.' || x == '_') {
+			continue;
+		}
+		if(!isdigit(x) && !isalpha(x)) {
+			return false;
+		}
+	}
+	return true;
+}
+int main() {
+	int n;
+	cin>>n;
+	while(n--) {
+		string s;
+		cin>>s;
+		if(check(s)) {
+			cout<<"YES"<<endl;
+		} else {
+			cout<<"NO"<<endl;
+		}
+	}
+return 0;
+}`,
+                examples: [
+                    { 
+                        input: "10\n1b2ac2adcd@mail.com\n2d2414d4eedb@gmail.com\nc3ec3214dd14de3a4@teche@.com\n13c12b4ae4@28tech.com.vn\nde12ad131ca242221@yahoo.com\nde132241c12bbb414e@yahoo.com\n2b1121cb1144@apple.com\n312dc324144ceab4@mail.com\ne22cac1b144acdcd34@hotmail.com\ne4d3e2c4b3b421442c@xyz.com", 
+                        output: "NO\nYES\nNO\nYES\nYES\nYES\nNO\nNO\nYES\nNO", 
+                        explain: "Explanation:\n- '1b2ac2adcd@mail.com' không kết thúc bằng các đuôi hợp lệ.\n- '2d2414d4eedb@gmail.com' hợp lệ vì kết thúc bằng @gmail.com và ký tự hợp lệ.\n- 'c3ec3214dd14de3a4@teche@.com' chứa 2 ký tự '@'." 
+                    }
+                ],
+                timeComplexity: "O(T * L)",
+                spaceComplexity: "O(L)",
+                testCases: [
+                    { input: "10\n1b2ac2adcd@mail.com\n2d2414d4eedb@gmail.com\nc3ec3214dd14de3a4@teche@.com\n13c12b4ae4@28tech.com.vn\nde12ad131ca242221@yahoo.com\nde132241c12bbb414e@yahoo.com\n2b1121cb1144@apple.com\n312dc324144ceab4@mail.com\ne22cac1b144acdcd34@hotmail.com\ne4d3e2c4b3b421442c@xyz.com", expectedOutput: "NO\nYES\nNO\nYES\nYES\nYES\nNO\nNO\nYES\nNO" },
+                    { input: "5\nadmin@gmail.com\nadmin@@gmail.com\nuser_name@yahoo.com\nuser!name@hotmail.com\nhello@28tech.com.vn", expectedOutput: "YES\nNO\nYES\nNO\nYES" },
+                    { input: "3\nmy email@gmail.com\nspace@yahoo.com\ncorrect123@28tech.com.vn", expectedOutput: "NO\nYES\nYES" },
+                    { 
+                        input: "4\nemail 1@gmail.com\nemail#1@yahoo.com\nemail_1@hotmail.com\nemail.1@28tech.com.vn", 
+                        expectedOutput: "NO\nYES\nNO\nYES" 
+                    },
+                    { 
+                        input: "3\na@b@gmail.com\n@@yahoo.com\nvalid@gmail.com", 
+                        expectedOutput: "NO\nNO\nYES" 
+                    },
+                    { 
+                        input: "4\ntest@gmail.con\ntest@yahoo.com.vn\ntest@28tech.com\ntest@hotmail.co", 
+                        expectedOutput: "NO\nYES\nNO\nNO" 
+                    },
+                    { 
+                        input: "3\n@gmail.com\n_@yahoo.com\n.@hotmail.com", 
+                        expectedOutput: "YES\nYES\nYES" 
+                    },
+                    { 
+                        input: "2\nthis_is_a_very_long_email_name_1234567890@28tech.com.vn\nanother.long.email.with.dots@hotmail.com", 
+                        expectedOutput: "YES\nYES" 
+                    },
+                    { 
+                        input: "5\nuser(name)@gmail.com\nuser=name@yahoo.com\nuser+name@hotmail.com\nuser/name@28tech.com.vn\nuser\\name@gmail.com", 
+                        expectedOutput: "NO\nNO\nNO\nNO\nNO" 
+                    },
+                    { 
+                        input: "3\nuser@\nuser@gmail\nuser@yahoo", 
+                        expectedOutput: "NO\nNO\nNO" 
+                    }
+                ]
             }
         ]
     },
@@ -3579,6 +3702,7 @@ int main() {
                     { input: "6\n1 5\n1 10\n1 15\n2\n1 20\n1 25", expectedOutput: "5 10 20 25" }
                 ]
             }
+            
         ]
     }
 ];
